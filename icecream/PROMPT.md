@@ -68,7 +68,7 @@ index.html (단일 파일) ├─ <canvas> 픽셀아트 렌더링 (image-renderi
 
 
 
-게임 파일을 만들어 공유했어요. index-1.html 이 최신 완성본(단일 파일, 다운로드 후 브라우저에서 바로 열면 실행)이고, src.zip 은 분리된 소스(head.html / data.js / draw.js / game.js + 노드 테스트 스크립트)입니다.
+게임 파일을 만들어 공유했어요. claw.html 이 최신 완성본(단일 파일, 다운로드 후 브라우저에서 바로 열면 실행)이고, src.zip 은 분리된 소스(head.html / data.js / draw.js / game.js + 노드 테스트 스크립트)입니다.
 
 
 
