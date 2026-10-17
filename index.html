@@ -1,8 +1,415 @@
-tiny-web-games
-<br><br>
-<a href="./class/class-v4.html">Class 열기</a><br><br>
-<a href="./claw/claw-v1.html">Claw 열기</a><br><br>
-<a href="./icecream/icecream-v1.html">Icecream 열기</a><br><br>
-<a href="./pet-cafe/pet-cafe-v2.html">Pet Cafe v1 열기</a><br><br>
-<a href="./pets/pets-v2.html">Pets 열기</a><br><br>
-<a href="./sushi/sushi-v10.html">Sushi 열기</a><br><br>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff7ed">
+  <title>Tiny Web Games 🎮</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #51465c;
+      --muted: #82758c;
+      --accent: #bc70a0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Arial Rounded MT Bold", "Apple SD Gothic Neo",
+                   "Malgun Gothic", sans-serif;
+      color: var(--text);
+      background-color: #fff9f3;
+      background-image: radial-gradient(#eadbd5 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+
+    .page {
+      width: min(100% - 36px, 940px);
+      margin: 0 auto;
+      padding: 64px 0 30px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 38px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 1px solid #efdde6;
+      border-radius: 999px;
+      background: #ffffffd9;
+      color: #92617f;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .mascot {
+      margin-top: 22px;
+      font-size: 64px;
+      line-height: 1.2;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    h1 {
+      margin: 16px 0 12px;
+      font-size: clamp(32px, 7vw, 52px);
+      line-height: 1.15;
+      letter-spacing: -0.05em;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+      word-break: keep-all;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -0.04em;
+    }
+
+    .count {
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: #f0e6ee;
+      color: #725a79;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .games {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .game-card {
+      --card-bg: #fff;
+      --icon-bg: #f7f7f7;
+      --button-bg: #ececec;
+
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 24px;
+      border: 2px solid #ffffff;
+      border-radius: 26px;
+      background: var(--card-bg);
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0 5px 0 #e9ded8, 0 10px 24px #67504f08;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .game-card:hover {
+      transform: translateY(-6px) rotate(-1deg);
+      box-shadow: 0 9px 0 #e9ded8, 0 18px 28px #67504f12;
+    }
+
+    .game-card:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #e9ded8;
+    }
+
+    .game-card:focus-visible {
+      outline: 3px solid #8b58a3;
+      outline-offset: 5px;
+    }
+
+    .game-icon {
+      display: grid;
+      place-items: center;
+      width: 76px;
+      height: 76px;
+      margin-bottom: 20px;
+      border-radius: 24px;
+      background: var(--icon-bg);
+      font-size: 42px;
+      transform: rotate(-6deg);
+    }
+
+    .game-card:hover .game-icon {
+      transform: rotate(6deg);
+    }
+
+    .game-icon {
+      transition: transform 180ms ease;
+    }
+
+    .game-number {
+      position: absolute;
+      top: 24px;
+      right: 22px;
+      color: #51465c80;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .game-card h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: -0.04em;
+    }
+
+    .game-card p {
+      margin: 0 0 24px;
+      color: #716578;
+      font-size: 14px;
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+    .play {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      margin-top: auto;
+      padding: 12px 15px;
+      border-radius: 14px;
+      background: var(--button-bg);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .class {
+      --card-bg: #fff5d9;
+      --icon-bg: #ffebaf;
+      --button-bg: #f6e3a6;
+    }
+
+    .claw {
+      --card-bg: #ffedf3;
+      --icon-bg: #ffd7e6;
+      --button-bg: #f9cede;
+    }
+
+    .icecream {
+      --card-bg: #edf7ff;
+      --icon-bg: #d8edff;
+      --button-bg: #cfe6f8;
+    }
+
+    .pet-cafe {
+      --card-bg: #f4eeff;
+      --icon-bg: #e7dafe;
+      --button-bg: #e3d5f6;
+    }
+
+    .pets {
+      --card-bg: #edf8ec;
+      --icon-bg: #d8efd5;
+      --button-bg: #d0e8cc;
+    }
+
+    .sushi {
+      --card-bg: #fff0e7;
+      --icon-bg: #ffe0cb;
+      --button-bg: #f6d8c2;
+    }
+
+    footer {
+      margin-top: 44px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(-5deg);
+      }
+      50% {
+        transform: translateY(-8px) rotate(5deg);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .games {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .page {
+        padding-top: 40px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .page {
+        width: calc(100% - 28px);
+      }
+
+      .game-card {
+        padding: 18px;
+        border-radius: 22px;
+      }
+
+      .game-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 34px;
+      }
+
+      .game-number {
+        top: 20px;
+        right: 16px;
+        font-size: 10px;
+      }
+
+      .game-card h3 {
+        font-size: 19px;
+      }
+
+      .game-card p {
+        font-size: 12px;
+      }
+
+      .play {
+        padding: 11px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 320px) {
+      .games {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="badge">작고 귀여운 즐거움이 모이는 곳</div>
+      <div class="mascot" aria-hidden="true">🎮</div>
+
+      <h1>Tiny <span>Web Games</span></h1>
+
+      <p class="intro">
+        잠깐 쉬어가도 괜찮아!<br>
+        마음에 드는 게임을 골라 작은 모험을 시작해 봐.
+      </p>
+    </header>
+
+    <main>
+      <div class="section-heading">
+        <h2 id="games-heading">오늘은 뭐 하고 놀까? ✨</h2>
+        <span class="count">6 GAMES</span>
+      </div>
+
+      <nav class="games" aria-labelledby="games-heading">
+        <a class="game-card class" href="./class/class-v4.html">
+          <span class="game-number" aria-hidden="true">01</span>
+          <span class="game-icon" aria-hidden="true">🏫</span>
+          <h3>Class</h3>
+          <p>오늘도 즐거운<br>우리들의 교실 시간!</p>
+          <span class="play">
+            놀러 가기
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+
+        <a class="game-card claw" href="./claw/claw-v1.html">
+          <span class="game-number" aria-hidden="true">02</span>
+          <span class="game-icon" aria-hidden="true">🧸</span>
+          <h3>Claw</h3>
+          <p>두근두근!<br>이번엔 꼭 뽑을 수 있을까?</p>
+          <span class="play">
+            도전하기
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+
+        <a class="game-card icecream" href="./icecream/icecream-v1.html">
+          <span class="game-number" aria-hidden="true">03</span>
+          <span class="game-icon" aria-hidden="true">🍦</span>
+          <h3>Icecream</h3>
+          <p>달콤하고 시원한<br>아이스크림 한 스쿱!</p>
+          <span class="play">
+            만나러 가기
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+
+        <a class="game-card pet-cafe" href="./pet-cafe/pet-cafe-v2.html">
+          <span class="game-number" aria-hidden="true">04</span>
+          <span class="game-icon" aria-hidden="true">🐱</span>
+          <h3>Pet Cafe</h3>
+          <p>귀여운 친구들과<br>포근한 카페에서 만나요.</p>
+          <span class="play">
+            놀러 가기
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+
+        <a class="game-card pets" href="./pets/pets-v2.html">
+          <span class="game-number" aria-hidden="true">05</span>
+          <span class="game-icon" aria-hidden="true">🐶</span>
+          <h3>Pets</h3>
+          <p>보기만 해도 행복한<br>나의 작은 동물 친구들!</p>
+          <span class="play">
+            만나러 가기
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+
+        <a class="game-card sushi" href="./sushi/sushi-v10.html">
+          <span class="game-number" aria-hidden="true">06</span>
+          <span class="game-icon" aria-hidden="true">🍣</span>
+          <h3>Sushi</h3>
+          <p>한 입 가득 행복!<br>맛있는 초밥 시간이야.</p>
+          <span class="play">
+            놀러 가기
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+      </nav>
+    </main>
+
+    <footer>
+      작은 게임, 커다란 즐거움 🌷<br>
+      Tiny Web Games
+    </footer>
+  </div>
+</body>
+</html>
