@@ -1,4 +1,6 @@
-{game-name} 게임을 만들려고 해. 웹 게임 형식으로 만들고 싶어. 게임 제작을 위한 인터뷰 INTERVIEW 를 시작하자.
+{game-name} = ...
+{game-name} 게임을 위한 폴더로 이동해줘.
+{game-name} 게임을 만들려고 해. 웹과 모바일 게임 형식으로 만들고 싶어. 게임 제작을 위한 인터뷰 INTERVIEW 를 시작하자.
 작업 결과 및 업데이트 결과는 {gmae-name}-v{version}.html 파일로 저장해줘.
 
 
