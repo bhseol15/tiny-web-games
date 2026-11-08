@@ -5,22 +5,34 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>냠냠 스시 🍣</title>
 <style>
-  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#fff4e6;}
-  canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#fff4e6;}
+  canvas{display:block;width:100%;height:100%;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <script>
 'use strict';
+// 프리뷰 환경 오류 시 화면 표시
+window.onerror = function(msg, url, line) {
+  const d = document.getElementById('err-banner') || document.createElement('div');
+  d.id = 'err-banner';
+  d.style = 'position:fixed;top:0;left:0;right:0;background:#e03131;color:#fff;padding:8px 12px;font-size:12px;z-index:99999;font-family:sans-serif;';
+  d.textContent = '실행 오류: ' + msg + ' (라인: ' + line + ')';
+  document.body.appendChild(d);
+};
+
 // ───────────────────────── 기본 세팅 ─────────────────────────
 const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
 const FONT = "'Nunito','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif";
-let W = 0, H = 0, DPR = 1, U = 1;
+let W = 800, H = 600, DPR = 1, U = 1;
 function resize() {
   DPR = Math.min(window.devicePixelRatio || 1, 2);
-  W = window.innerWidth; H = window.innerHeight;
+  const curW = window.innerWidth || document.documentElement.clientWidth || 800;
+  const curH = window.innerHeight || document.documentElement.clientHeight || 600;
+  W = curW > 0 ? curW : 800;
+  H = curH > 0 ? curH : 600;
   cv.width = W * DPR; cv.height = H * DPR;
   cv.style.width = W + 'px'; cv.style.height = H + 'px';
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -38,16 +50,18 @@ const won = n => n.toLocaleString('ko-KR') + '원';
 let AC = null;
 function audio() {
   if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
-  if (AC && AC.state === 'suspended') AC.resume();
+  if (AC && AC.state === 'suspended') { try { AC.resume(); } catch(e){} }
 }
 function tone(f, d, type = 'sine', v = 0.2, slide = 0, delay = 0) {
   if (!AC) return;
-  const t0 = AC.currentTime + delay;
-  const o = AC.createOscillator(), g = AC.createGain();
-  o.type = type; o.frequency.setValueAtTime(f, t0);
-  if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, f + slide), t0 + d);
-  g.gain.setValueAtTime(v, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + d);
-  o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + d);
+  try {
+    const t0 = AC.currentTime + delay;
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t0);
+    if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, f + slide), t0 + d);
+    g.gain.setValueAtTime(v, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + d);
+    o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + d);
+  } catch(e){}
 }
 const SFX = {
   eat()   { tone(520, 0.08, 'square', 0.1); tone(780, 0.1, 'square', 0.1, 0, 0.07); },
@@ -127,7 +141,6 @@ function drawSushi(x, y, s, id, opt = {}) {
   if (id === 'wasabi') {
     ctx.fillStyle = '#7cc242'; circ(x, y - s * 0.25, s * 0.26); ctx.fill();
     ctx.fillStyle = '#9ad45e'; circ(x - s * 0.05, y - s * 0.42, s * 0.14); ctx.fill();
-    // 화난 얼굴
     ctx.strokeStyle = '#2d5016'; ctx.lineWidth = s * 0.04; ctx.lineCap = 'round';
     ctx.beginPath(); ctx.moveTo(x - s * 0.16, y - s * 0.34); ctx.lineTo(x - s * 0.05, y - s * 0.29); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(x + s * 0.16, y - s * 0.34); ctx.lineTo(x + s * 0.05, y - s * 0.29); ctx.stroke();
@@ -156,7 +169,7 @@ function drawSushi(x, y, s, id, opt = {}) {
     text('₩', x, y - s * 0.33 + bob, s * 0.28, '#b8860b');
     return;
   }
-  if (id === 'babyshu') { // 베이비 슈 2개
+  if (id === 'babyshu') {
     for (const dx of [-0.26, 0.26]) {
       const cx = x + dx * s, cy = y - s * 0.3, r = s * 0.24;
       ctx.fillStyle = '#d9a066'; circ(cx, cy + r * 0.25, r); ctx.fill();
@@ -165,7 +178,7 @@ function drawSushi(x, y, s, id, opt = {}) {
       ctx.fillStyle = '#f3c88f'; circ(cx - r * 0.25, cy - r * 0.65, r * 0.35); ctx.fill();
       ctx.fillStyle = '#fff'; for (let i = 0; i < 4; i++) { circ(cx - r * 0.5 + i * r * 0.33, cy - r * 0.9 + (i % 2) * r * 0.15, r * 0.06); ctx.fill(); }
     }
-  } else if (id === 'pudding') { // 푸딩 + 체리
+  } else if (id === 'pudding') {
     const cy = y - s * 0.12;
     ctx.fillStyle = '#ffd43b'; ctx.beginPath(); ctx.moveTo(x - s * 0.38, cy); ctx.lineTo(x + s * 0.38, cy); ctx.lineTo(x + s * 0.3, cy - s * 0.5); ctx.lineTo(x - s * 0.3, cy - s * 0.5); ctx.closePath(); ctx.fill();
     ctx.fillStyle = '#8a5a3c'; ctx.beginPath(); ctx.moveTo(x - s * 0.3, cy - s * 0.5); ctx.lineTo(x + s * 0.3, cy - s * 0.5); ctx.lineTo(x + s * 0.33, cy - s * 0.3); ctx.quadraticCurveTo(x + s * 0.1, cy - s * 0.2, x, cy - s * 0.32); ctx.quadraticCurveTo(x - s * 0.15, cy - s * 0.18, x - s * 0.33, cy - s * 0.3); ctx.closePath(); ctx.fill();
@@ -173,7 +186,7 @@ function drawSushi(x, y, s, id, opt = {}) {
     ctx.fillStyle = '#e03131'; circ(x + s * 0.02, cy - s * 0.58, s * 0.07); ctx.fill();
     ctx.strokeStyle = '#2b8a3e'; ctx.lineWidth = s * 0.02; ctx.beginPath(); ctx.moveTo(x + s * 0.02, cy - s * 0.64); ctx.quadraticCurveTo(x + s * 0.08, cy - s * 0.74, x + s * 0.12, cy - s * 0.72); ctx.stroke();
     ctx.fillStyle = 'rgba(255,255,255,0.5)'; ell(x - s * 0.2, cy - s * 0.25, s * 0.05, s * 0.12); ctx.fill();
-  } else if (id === 'karaage') { // 가라아게 + 레몬
+  } else if (id === 'karaage') {
     for (const [dx, dy, r] of [[-0.25, -0.28, 0.22], [0.12, -0.36, 0.2], [0.28, -0.14, 0.19], [-0.05, -0.1, 0.17]]) {
       ctx.fillStyle = '#c47a2c'; circ(x + dx * s, y + dy * s, r * s); ctx.fill();
       ctx.fillStyle = '#e09a4a'; circ(x + dx * s - r * s * 0.2, y + dy * s - r * s * 0.25, r * s * 0.5); ctx.fill();
@@ -181,7 +194,7 @@ function drawSushi(x, y, s, id, opt = {}) {
     }
     ctx.fillStyle = '#ffe066'; ctx.beginPath(); ctx.moveTo(x - s * 0.55, y - s * 0.05); ctx.arc(x - s * 0.55, y - s * 0.05, s * 0.18, -Math.PI * 0.5, Math.PI * 0.5); ctx.closePath(); ctx.fill();
     ctx.fillStyle = '#fff3bf'; ctx.beginPath(); ctx.moveTo(x - s * 0.55, y - s * 0.05); ctx.arc(x - s * 0.55, y - s * 0.05, s * 0.12, -Math.PI * 0.5, Math.PI * 0.5); ctx.closePath(); ctx.fill();
-  } else if (id === 'takoyaki') { // 타코야키 3개
+  } else if (id === 'takoyaki') {
     for (const dx of [-0.3, 0, 0.3]) {
       const cx = x + dx * s, cy = y - s * 0.28, r = s * 0.17;
       ctx.fillStyle = '#c98a3e'; circ(cx, cy, r); ctx.fill();
@@ -191,7 +204,7 @@ function drawSushi(x, y, s, id, opt = {}) {
       ctx.fillStyle = '#2b8a3e'; circ(cx + r * 0.3, cy + r * 0.4, r * 0.1); ctx.fill(); circ(cx - r * 0.4, cy + r * 0.5, r * 0.08); ctx.fill();
       ctx.fillStyle = '#d9a066'; ell(cx + r * 0.1, cy - r * 0.85, r * 0.3, r * 0.12); ctx.fill();
     }
-  } else if (id === 'ebifry') { // 새우튀김 2개
+  } else if (id === 'ebifry') {
     for (const [dx, dy, ang] of [[-0.12, -0.22, -0.35], [0.14, -0.38, -0.3]]) {
       ctx.save(); ctx.translate(x + dx * s, y + dy * s); ctx.rotate(ang);
       ctx.fillStyle = '#e0a048'; rr(-s * 0.4, -s * 0.13, s * 0.7, s * 0.26, s * 0.12); ctx.fill();
@@ -200,7 +213,7 @@ function drawSushi(x, y, s, id, opt = {}) {
       ctx.restore();
     }
     ctx.fillStyle = '#5bb85d'; ell(x - s * 0.45, y - s * 0.12, s * 0.12, s * 0.07); ctx.fill();
-  } else if (id === 'ikura') { // 연어알 군함
+  } else if (id === 'ikura') {
     ctx.fillStyle = '#2f2f2f'; rr(x - s * 0.4, y - s * 0.62, s * 0.8, s * 0.6, s * 0.1); ctx.fill();
     ctx.fillStyle = '#fff'; rr(x - s * 0.34, y - s * 0.3, s * 0.68, s * 0.24, s * 0.06); ctx.fill();
     ctx.fillStyle = '#ff7b2b';
@@ -216,19 +229,18 @@ function drawSushi(x, y, s, id, opt = {}) {
       ctx.fillStyle = '#ffd43b'; circ(cx + r * 0.15, cy + r * 0.28, r * 0.14); ctx.fill();
     }
   } else {
-    // 밥
     ctx.fillStyle = '#fff'; rr(x - s * 0.45, y - s * 0.44, s * 0.9, s * 0.42, s * 0.15); ctx.fill();
     ctx.strokeStyle = '#e6e6e6'; ctx.lineWidth = 1.5; ctx.stroke();
     ctx.fillStyle = '#f0f0f0';
     circ(x - s * 0.25, y - s * 0.3, s * 0.03); ctx.fill(); circ(x + s * 0.3, y - s * 0.12, s * 0.03); ctx.fill();
     const ty = y - s * 0.55;
-    if (id === 'hirame') { // 광어 (희고 반투명)
+    if (id === 'hirame') {
       ctx.fillStyle = '#f4f1ec'; rr(x - s * 0.52, ty - s * 0.1, s * 1.04, s * 0.28, s * 0.1); ctx.fill();
       ctx.strokeStyle = '#d9d4cc'; ctx.lineWidth = s * 0.03;
       for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(x + i * s * 0.3 - s * 0.08, ty - s * 0.06); ctx.lineTo(x + i * s * 0.3 + s * 0.06, ty + s * 0.14); ctx.stroke(); }
       ctx.fillStyle = '#c9b9a6'; rr(x - s * 0.52, ty + s * 0.1, s * 1.04, s * 0.08, s * 0.04); ctx.fill();
       ctx.fillStyle = '#5bb85d'; circ(x + s * 0.3, ty - s * 0.1, s * 0.05); ctx.fill();
-    } else if (id === 'tako') { // 문어 (흰 살 + 보라 가장자리 + 빨판)
+    } else if (id === 'tako') {
       ctx.fillStyle = '#8e5aa8'; rr(x - s * 0.52, ty - s * 0.14, s * 1.04, s * 0.32, s * 0.1); ctx.fill();
       ctx.fillStyle = '#fbf6ff'; rr(x - s * 0.5, ty - s * 0.08, s * 1.0, s * 0.22, s * 0.08); ctx.fill();
       ctx.fillStyle = '#b388c9'; for (let i = 0; i < 4; i++) { circ(x - s * 0.36 + i * s * 0.24, ty - s * 0.1, s * 0.035); ctx.fill(); }
@@ -258,7 +270,6 @@ function drawSushi(x, y, s, id, opt = {}) {
       ctx.fillStyle = '#2b2b2b'; rr(x - s * 0.08, ty - s * 0.12, s * 0.16, s * 0.56, s * 0.03); ctx.fill();
     }
   }
-  // 카와이 얼굴 (밥 앞면)
   if (opt.face !== false) {
     const fy = id === 'maki' ? y - s * 0.02 : y - s * 0.2;
     ctx.fillStyle = '#444'; circ(x - s * 0.14, fy, s * 0.035); ctx.fill(); circ(x + s * 0.14, fy, s * 0.035); ctx.fill();
@@ -276,15 +287,12 @@ function drawChar(x, y, r, mood, o = {}) {
   const blink = (tGlobal + (o.seed || 0)) % 3.3 < 0.12;
   const wob = o.noWob ? 0 : Math.sin(tGlobal * 2 + (o.seed || 0)) * r * 0.03;
   y += wob;
-  // 몸
   ctx.fillStyle = shirt; rr(x - r * 1.05, y + r * 0.7, r * 2.1, r * 1.6, r * 0.5); ctx.fill();
   if (o.chef) { ctx.fillStyle = '#fff'; rr(x - r * 0.75, y + r * 0.9, r * 1.5, r * 1.4, r * 0.25); ctx.fill(); ctx.fillStyle = '#ffd43b'; circ(x, y + r * 1.1, r * 0.08); ctx.fill(); circ(x, y + r * 1.4, r * 0.08); ctx.fill(); }
-  // 머리
   ctx.fillStyle = '#ffe3c8'; circ(x, y, r); ctx.fill();
-  // 머리카락
   ctx.fillStyle = hair;
   ctx.beginPath(); ctx.arc(x, y - r * 0.05, r, Math.PI, 0); ctx.lineTo(x + r, y + r * 0.05); ctx.quadraticCurveTo(x + r * 0.6, y - r * 0.35, x + r * 0.3, y - r * 0.4); ctx.quadraticCurveTo(x, y - r * 0.2, x - r * 0.4, y - r * 0.45); ctx.quadraticCurveTo(x - r * 0.7, y - r * 0.3, x - r, y + r * 0.05); ctx.closePath(); ctx.fill();
-  if (o.chef) { // 요리사 모자
+  if (o.chef) {
     ctx.fillStyle = '#fff'; rr(x - r * 0.8, y - r * 1.05, r * 1.6, r * 0.4, r * 0.1); ctx.fill();
     circ(x - r * 0.45, y - r * 1.15, r * 0.38); ctx.fill(); circ(x + r * 0.45, y - r * 1.15, r * 0.38); ctx.fill(); circ(x, y - r * 1.3, r * 0.45); ctx.fill();
     ctx.fillStyle = '#ff6b6b'; rr(x - r * 0.8, y - r * 0.78, r * 1.6, r * 0.14, r * 0.05); ctx.fill();
@@ -292,7 +300,6 @@ function drawChar(x, y, r, mood, o = {}) {
     ctx.fillStyle = o.cap; ctx.beginPath(); ctx.arc(x, y - r * 0.1, r * 1.02, Math.PI, 0); ctx.closePath(); ctx.fill();
     rr(x - r * 1.1, y - r * 0.2, r * 2.2, r * 0.18, r * 0.08); ctx.fill();
   }
-  // 눈·입
   const ex = r * 0.36, ey = y + r * 0.05, er = r * 0.1;
   ctx.strokeStyle = '#333'; ctx.fillStyle = '#333'; ctx.lineWidth = r * 0.08; ctx.lineCap = 'round';
   const dots = () => { if (blink) { for (const sx of [-1, 1]) { ctx.beginPath(); ctx.moveTo(x + sx * ex - er, ey); ctx.lineTo(x + sx * ex + er, ey); ctx.stroke(); } } else { circ(x - ex, ey, er); ctx.fill(); circ(x + ex, ey, er); ctx.fill(); ctx.fillStyle = '#fff'; circ(x - ex + er * 0.3, ey - er * 0.3, er * 0.35); ctx.fill(); circ(x + ex + er * 0.3, ey - er * 0.3, er * 0.35); ctx.fill(); ctx.fillStyle = '#333'; } };
@@ -355,11 +362,24 @@ function drawSparks(g) { for (const s of g.sparks) { ctx.globalAlpha = clamp(s.t
 
 // ───────────────────────── 상태 ─────────────────────────
 let scene = 'title', game = null, last = 0, tGlobal = 0, hover = { x: -1, y: -1 };
+function safeGetStorage(key, def = 0) {
+  try { return +(localStorage.getItem(key) || def); } catch(e) { return def; }
+}
+function safeSetStorage(key, val) {
+  try { localStorage.setItem(key, val); } catch(e) {}
+}
 const best = {
-  customer: +(localStorage.getItem('nyam_best_customer') || 0),
-  boss: +(localStorage.getItem('nyam_best_boss') || 0),
+  customer: safeGetStorage('nyam_best_customer', 0),
+  boss: safeGetStorage('nyam_best_boss', 0),
 };
-function saveBest(mode, score) { if (score > best[mode]) { best[mode] = score; localStorage.setItem('nyam_best_' + mode, score); return true; } return false; }
+function saveBest(mode, score) {
+  if (score > best[mode]) {
+    best[mode] = score;
+    safeSetStorage('nyam_best_' + mode, score);
+    return true;
+  }
+  return false;
+}
 function comboMult(c) { return c >= 20 ? 3 : c >= 10 ? 2 : c >= 5 ? 1.5 : 1; }
 
 // ═════════════════════════ 손님 모드 ═════════════════════════
@@ -379,11 +399,9 @@ function layoutCustomer(g) {
   g.slotY = Math.min(H - 30 * U, g.tableY + 46 * U);
   const gapX = Math.min(120 * U, W * 0.26);
   g.slotX = [g.charX - gapX, g.charX, g.charX + gapX];
-  // 반찬(상 위 고정 아이템) 줄
   g.sideY = Math.min(H - 26 * U, g.slotY + 64 * U);
   g.sideX = { soup: g.charX - gapX, wasabi: g.charX, garlic: g.charX + gapX };
   g.sideR = 24 * U;
-  // 사장님 (벨트 뒤쪽)
   g.chefR = 30 * U; g.chefX = Math.min(W - 60 * U, W * 0.8); g.chefY = g.beltY - g.chefR * 0.9;
   g.orderBtn = { x: W - 110 * U, y: 98 * U, w: 98 * U, h: 38 * U };
 }
@@ -433,7 +451,6 @@ function drawSide(g, id) {
     }
   }
   ctx.restore();
-  // 쿨다운 링
   if (!ready) {
     const f = 1 - cd / SIDES[id].cd;
     ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 3 * U; ctx.beginPath(); ctx.arc(x, y - r * 0.3, r * 1.25, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * f); ctx.stroke();
@@ -443,7 +460,6 @@ function drawSide(g, id) {
   g.menuBtn = { x: W - 74 * U, y: 12 * U, w: 62 * U, h: 34 * U };
 }
 const CHOP_T = 0.55;
-// 접시를 테이블로 가져오기
 function takePlate(g, it) {
   const px = it.x, py = g.plateY - g.s * 0.6;
   const def = SUSHI.find(s => s.id === it.type);
@@ -457,14 +473,12 @@ function takePlate(g, it) {
   g.items = g.items.filter(i => i !== it);
   g.mood = 'happy'; g.moodT = 0.5; SFX.pop();
 }
-// 젓가락으로 먹기 시작
 function eatSlot(g, si) {
   const sl = g.slots[si];
   if (!sl || sl.state !== 'ready' || g.chop) return;
   sl.state = 'eating';
   g.chop = { si, t: 0 }; SFX.click();
 }
-// 먹기 효과 적용
 function applyEat(g, type, px, py) {
   const def = SUSHI.find(s => s.id === type);
   if (def) {
@@ -486,7 +500,6 @@ function applyEat(g, type, px, py) {
     addPop(g, px, py, '시원~ 🍵', '#2b8a3e');
   }
 }
-// 다 먹음 → 계산하기
 function startPay(g) {
   if (g.over || g.paying) return;
   if (g.slots.some(s => s) || g.chop) { SFX.bad(); addPop(g, g.charX, g.charY - g.charR * 1.6, '아직 접시가 남았어요!', '#868e96', 18); return; }
@@ -557,7 +570,6 @@ function drawPay(g) {
     g.btnCard = g.btnCash = null;
   }
 }
-// 주문판으로 주문 → 사장님이 만들어서 직접 전달
 function placeOrder(g, id) {
   const def = SUSHI.find(d => d.id === id); if (!def) return;
   if (g.order) { SFX.bad(); addPop(g, g.chefX, g.chefY - g.chefR * 1.8, '잠시만요, 만드는 중!', '#868e96', 15); return; }
@@ -616,7 +628,6 @@ function updCustomer(g, dt) {
   updOrder(g, dt);
   const speed = Math.min(330, 95 + g.time * 3) * U;
   g.speed = speed;
-  // 스폰
   g.spawnT -= dt;
   const gap = g.s * 1.6;
   const lastItem = g.items[g.items.length - 1];
@@ -626,7 +637,6 @@ function updCustomer(g, dt) {
     let type;
     if (r < wasabiP) type = 'wasabi';
     else {
-      // 비싼 초밥이 조금 더 드물게
       const w = BELT_MENU.map((s, i) => 6 - i * 0.6); const tot = w.reduce((a, b) => a + b);
       let q = Math.random() * tot, idx = 0; while (q > w[idx]) { q -= w[idx]; idx++; }
       type = BELT_MENU[idx].id;
@@ -636,7 +646,6 @@ function updCustomer(g, dt) {
   }
   for (const it of g.items) it.x -= speed * dt;
   g.items = g.items.filter(it => it.x > -g.s);
-  // 테이블 접시 이동 애니메이션
   g.slots.forEach((sl, i) => {
     if (!sl || sl.state !== 'moving') return;
     sl.t = Math.min(1, sl.t + dt / (sl.dur || 0.4));
@@ -645,7 +654,6 @@ function updCustomer(g, dt) {
     sl.y = sl.fy + (g.slotY - sl.fy) * e - Math.sin(sl.t * Math.PI) * (sl.arc || 40 * U);
     if (sl.t >= 1) { sl.state = 'ready'; sl.x = g.slotX[i]; sl.y = g.slotY; }
   });
-  // 젓가락 애니메이션
   if (g.chop) {
     g.chop.t += dt / CHOP_T;
     if (g.chop.t >= 1) {
@@ -664,7 +672,6 @@ function updCustomer(g, dt) {
   for (const s of g.sparks) { s.t -= dt; s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 400 * U * dt; }
   g.sparks = g.sparks.filter(s => s.t > 0);
   if (g.shake > 0) g.shake -= dt;
-  // 게임오버
   if (g.full >= 100) endGame(g, '배가 터질 것 같아요! 🤢');
   else if (g.money - g.bill < CHEAPEST && !g.slots.some(s => s) && !g.chop && !g.order) { g.paying = true; g.payMethod = null; g.mood = 'sad'; g.moodT = 99; SFX.bad(); }
 }
@@ -675,26 +682,21 @@ function endGame(g, msg) {
 }
 function tapCustomer(g, x, y) {
   if (g.over) return;
-  // 0) 반찬 탭
   for (const id in SIDES) {
     if (Math.abs(x - g.sideX[id]) < g.sideR * 1.4 && Math.abs(y - (g.sideY - g.sideR * 0.3)) < g.sideR * 1.3) { useSide(g, id); return; }
   }
-  // 1) 테이블 접시 탭 → 젓가락으로 먹기
   for (let i = 0; i < g.slots.length; i++) {
     const sl = g.slots[i]; if (!sl) continue;
     if (Math.abs(x - g.slotX[i]) < g.s * 0.7 && Math.abs(y - (g.slotY - g.s * 0.3)) < g.s * 0.65) { eatSlot(g, i); return; }
   }
-  // 2) 벨트 접시 탭 → 테이블로 가져오기
   let bestIt = null, bd = 1e9;
   for (const it of g.items) {
     const dx = Math.abs(it.x - x), dy = Math.abs(g.plateY - g.s * 0.25 - y);
     if (dx < g.s * 0.85 && dy < g.s * 0.75 && dx < bd) { bd = dx; bestIt = it; }
   }
   if (!bestIt) return;
-  const it = bestIt, px = it.x, py = g.plateY - g.s * 0.6;
-  takePlate(g, it);
+  takePlate(g, bestIt);
 }
-// 젓가락 그리기 (x,y = 집게 끝, ang = 손 방향 각도, open = 벌림)
 function drawChopsticks(x, y, len, ang, open) {
   const dx = Math.cos(ang) * len, dy = Math.sin(ang) * len;
   const nx = -Math.sin(ang) * open, ny = Math.cos(ang) * open;
@@ -712,15 +714,12 @@ function drawCustomer(g) {
   ctx.save();
   if (g.shake > 0) ctx.translate(rnd(-6, 6) * U, rnd(-6, 6) * U);
   drawBG();
-  // 벽 장식
   text('🍣 회전초밥 🍣', W / 2, g.beltY - 48 * U, 22 * U, 'rgba(120,80,60,0.35)');
-  // 사장님 (벨트 뒤) + 조리 애니메이션
   {
     const o = g.order;
     const bob = o ? Math.abs(Math.sin(o.t * 14)) * 4 * U : 0;
     drawChar(g.chefX, g.chefY - bob, g.chefR, g.chefMood || 'idle', { hair: '#1f1f1f', shirt: '#fff', chef: true, seed: 7 });
     if (o) {
-      // 도마 + 칼질
       const bx = g.chefX - g.chefR * 1.6, by = g.chefY + g.chefR * 0.8;
       ctx.fillStyle = '#d9b48f'; rr(bx - 22 * U, by - 4 * U, 44 * U, 8 * U, 3 * U); ctx.fill();
       const def = SUSHI.find(d => d.id === o.type);
@@ -733,32 +732,26 @@ function drawCustomer(g) {
       ctx.fillStyle = '#ff922b'; rr(g.chefX - 26 * U, g.chefY - g.chefR * 1.55, 52 * U * pr, 7 * U, 3.5 * U); ctx.fill();
     } else {
       const sl = g.slots.find(s => s && s.fromChef && s.state === 'moving');
-      if (sl) { // 전달 팔 내밀기
+      if (sl) {
         ctx.strokeStyle = '#ffe3c8'; ctx.lineWidth = 9 * U; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(g.chefX - g.chefR * 0.8, g.chefY + g.chefR * 0.9);
         const r = Math.min(1, sl.t * 2.2), ax = g.chefX + (sl.x - g.chefX) * Math.min(r, 0.35), ay = g.chefY + g.chefR * 0.9 + (sl.y - g.chefY - g.chefR * 0.9) * Math.min(r, 0.35);
         ctx.lineTo(ax, ay); ctx.stroke();
       }
     }
   }
-  // 카운터 (벨트 아래)
   ctx.fillStyle = '#d9b48f'; ctx.fillRect(0, g.beltY + g.beltH, W, H);
   ctx.fillStyle = '#c99e78'; ctx.fillRect(0, g.beltY + g.beltH + 8, W, 10 * U);
-  // 캐릭터 (뒤)
   drawChar(g.charX, g.charY, g.charR, g.mood, { hair: '#4a3528', shirt: '#ff8787', seed: 1 });
-  // 테이블
   ctx.fillStyle = '#b6855c'; rr(-10, g.tableY, W + 20, H, 20); ctx.fill();
   ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fillRect(0, g.tableY + 6, W, 6 * U);
-  // 테이블 자리 표시
   for (let i = 0; i < g.slots.length; i++) {
     ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 2; ctx.setLineDash([6, 5]);
     ell(g.slotX[i], g.slotY, g.s * 0.8, g.s * 0.3); ctx.stroke(); ctx.setLineDash([]);
     if (!g.slots[i]) text(String(i + 1), g.slotX[i], g.slotY, 13 * U, 'rgba(255,255,255,0.5)');
     else if (g.slots[i].state === 'reserved') text('주문중…', g.slotX[i], g.slotY, 11 * U, 'rgba(255,255,255,0.7)');
   }
-  // 벨트
   drawBelt(g.beltY, g.beltH, -1, g.speed || 100);
   for (const it of g.items) drawSushi(it.x, g.plateY, g.s, it.type);
-  // 테이블 접시 + 젓가락
   const handX = g.charX + g.charR * 1.25, handY = g.charY + g.charR * 1.0;
   const mouthX = g.charX, mouthY = g.charY + g.charR * 0.45;
   let chopDrawn = false;
@@ -768,10 +761,10 @@ function drawCustomer(g) {
       const t = g.chop.t;
       const pickX = sl.x, pickY = sl.y - g.s * 0.35;
       let tipX, tipY, open, lifted = null;
-      if (t < 0.4) { // 젓가락이 접시로
+      if (t < 0.4) {
         const e = t / 0.4; tipX = handX + (pickX - handX) * e; tipY = (handY - 55 * U) + (pickY - handY + 55 * U) * e; open = (7 - e * 3) * U;
         drawSushi(sl.x, sl.y, g.s, sl.type);
-      } else { // 초밥을 집어 입으로
+      } else {
         const e = (t - 0.4) / 0.6, ee = 1 - Math.pow(1 - e, 2);
         tipX = pickX + (mouthX - pickX) * ee; tipY = pickY + (mouthY - pickY) * ee - Math.sin(e * Math.PI) * 30 * U; open = 4 * U;
         drawSushi(sl.x, sl.y, g.s, sl.type, { empty: true });
@@ -788,12 +781,10 @@ function drawCustomer(g) {
   if (!chopDrawn) drawChopsticks(handX + 6 * U, handY - 58 * U, g.s * 1.0, Math.PI / 2 + 0.2, 6 * U);
   for (const id in SIDES) drawSide(g, id);
   drawSparks(g);
-  // HUD
   const hy = 14 * U;
   ctx.fillStyle = 'rgba(255,255,255,0.75)'; rr(10 * U, hy - 4 * U, Math.min(W - 100 * U, 420 * U), 64 * U, 14 * U); ctx.fill();
   text('⭐ ' + g.score.toLocaleString(), 22 * U, hy + 14 * U, 20 * U, '#e8590c', 'left');
   text('💰 ' + won(g.money) + '  🧾 ' + won(g.bill), 22 * U, hy + 42 * U, 15 * U, '#495057', 'left');
-  // 배부름 게이지
   const gx = Math.min(W - 100 * U, 420 * U) - 170 * U + 10 * U, gw = 160 * U;
   if (gx > 150 * U) {
     text('배부름', gx, hy + 10 * U, 13 * U, '#868e96', 'left');
@@ -802,7 +793,6 @@ function drawCustomer(g) {
     ctx.fillStyle = col; rr(gx, hy + 22 * U, Math.max(0, gw * g.full / 100), 22 * U, 11 * U); ctx.fill();
     text(Math.round(g.full) + '%', gx + gw / 2, hy + 33 * U, 13 * U, '#333');
   } else {
-    // 좁은 화면: 게이지를 HUD 아래로
     ctx.fillStyle = '#e9ecef'; rr(10 * U, hy + 66 * U, W - 20 * U, 18 * U, 9 * U); ctx.fill();
     const col = g.full > 78 ? '#fa5252' : g.full > 50 ? '#ffa94d' : '#69db7c';
     ctx.fillStyle = col; rr(10 * U, hy + 66 * U, Math.max(0, (W - 20 * U) * g.full / 100), 18 * U, 9 * U); ctx.fill();
@@ -813,7 +803,6 @@ function drawCustomer(g) {
     textO(`${g.combo} COMBO ×${comboMult(g.combo)}`, g.charX, g.charY - g.charR * 1.7, 24 * U * sc, '#ff922b', '#fff');
   }
   drawBtn(g.menuBtn, '메뉴', '#adb5bd', 15 * U);
-  // 먹은 접시 탑 (테이블 오른쪽)
   {
     const sx = Math.min(W - 40 * U, g.slotX[2] + 95 * U), base = g.slotY + 8 * U;
     const n = Math.min(g.plates.length, 14);
@@ -823,7 +812,6 @@ function drawCustomer(g) {
     }
     if (g.plates.length) text(g.plates.length + '접시', sx, base - n * 5 * U - 16 * U, 12 * U, '#5a3a24');
   }
-  // 다 먹음 버튼
   drawBtn(g.orderBtn, g.order ? '📋 조리중…' : '📋 주문판', g.order ? '#adb5bd' : '#ff922b', 15 * U);
   g.doneBtn = { x: W - 110 * U, y: 54 * U, w: 98 * U, h: 38 * U };
   drawBtn(g.doneBtn, '🧾 다 먹음', g.eaten > 0 ? '#40c057' : '#adb5bd', 15 * U);
@@ -841,7 +829,7 @@ function newBossGame() {
     spawnT: 0.8, time: 0, pops: [], sparks: [], cooldown: 0, served: 0, chefMood: 'idle', chefT: 0, over: false, overMsg: '', shake: 0, newBest: false, btns: [], wasted: 0,
     day: 1, dayT: 0, dayOver: false, dayServed: 0, dayEarned: 0, dayWasted: 0, dayAngry: 0 };
 }
-const DAY_LEN = 120; // 하루 영업 시간(초)
+const DAY_LEN = 120;
 function endDay(g) {
   g.dayOver = true; g.chefMood = 'happy'; g.chefT = 99; g.chop = null;
   g.btnNext = null; SFX.serve();
@@ -862,7 +850,6 @@ function layoutBoss(g) {
   const n = g.seats.length, x0 = W * 0.18, x1 = W * 0.9;
   g.seats.forEach((st, i) => st.x = x0 + (x1 - x0) * (n === 1 ? 0.5 : i / (n - 1)));
   g.menuBtn = { x: W - 74 * U, y: 12 * U, w: 62 * U, h: 34 * U };
-  // 버튼
   const nm = BELT_MENU.length;
   const rowCap = Math.floor((W - 24 * U) / (78 * U));
   const cols = rowCap >= nm ? nm : Math.ceil(nm / 2), rows = Math.ceil(nm / cols);
@@ -884,19 +871,16 @@ function updBoss(g, dt) {
   g.time += dt; g.dayT += dt;
   if (g.dayT >= DAY_LEN) { endDay(g); return; }
   const speed = Math.min(230, 75 + g.time * 1.6) * U; g.speed = speed;
-  // 손님 스폰
   g.spawnT -= dt;
   if (g.spawnT <= 0) {
     const empty = g.seats.filter(s => !s.cust);
     if (empty.length) spawnCustomer(g, pick(empty));
     g.spawnT = clamp(4.5 - g.time * 0.035, 1.6, 4.5) * rnd(0.8, 1.2);
   }
-  // 벨트 이동
   for (const it of g.items) { it.x += speed * dt; if (it.x > W + g.s) { it.x = -g.s; it.loops++; } }
   const stale = g.items.filter(it => it.loops >= 2);
   for (const it of stale) { g.score = Math.max(0, g.score - 100); g.wasted++; g.dayWasted++; addPop(g, g.s, g.plateY - g.s, '폐기 -100 🗑️', '#868e96', 16); }
   g.items = g.items.filter(it => it.loops < 2);
-  // 손님 처리
   for (const st of g.seats) {
     const c = st.cust; if (!c) continue;
     if (c.state === 'wait') {
@@ -941,34 +925,26 @@ function drawBoss(g) {
   ctx.save();
   if (g.shake > 0) ctx.translate(rnd(-5, 5) * U, rnd(-5, 5) * U);
   drawBG();
-  // 뒤 벽 / 노렌
   ctx.fillStyle = '#c92a2a'; ctx.fillRect(0, 0, W, 10 * U);
-  // 손님 (몸은 벨트 뒤)
   for (const st of g.seats) {
     const c = st.cust; if (!c) {
-      // 빈 의자
       ctx.fillStyle = '#d9b48f'; rr(st.x - 26 * U, g.seatY - 10 * U, 52 * U, 36 * U, 10 * U); ctx.fill(); continue;
     }
     const mood = c.state === 'wait' ? (c.patience / c.maxP < 0.3 ? 'angry' : c.patience / c.maxP < 0.6 ? 'sad' : 'idle') : c.state === 'happy' ? 'yum' : 'angry';
     const lift = c.state !== 'wait' ? (1.4 - c.leaveT) * 20 * U : 0;
     drawChar(st.x, g.seatY - lift, g.seatR, mood, { hair: c.hair, shirt: c.shirt, seed: c.seed, cap: c.cap });
     if (c.state === 'wait') {
-      // 말풍선 (주문만 표시, 인내심은 보이지 않음)
       const bw = 70 * U, bh = 50 * U, by = g.seatY - g.seatR * 1.5 - bh / 2;
       bubble(st.x, by, bw, bh, 'down');
       drawSushi(st.x, by + 8 * U, 34 * U, c.want, { face: false });
     }
   }
-  // 벨트
   drawBelt(g.beltY, g.beltH, 1, g.speed || 80);
   for (const it of g.items) { drawSushi(it.x, g.plateY, g.s, it.type); if (it.loops >= 1) { ctx.globalAlpha = 0.8; text('⏳', it.x + g.s * 0.6, g.plateY - g.s * 0.7, 14 * U); ctx.globalAlpha = 1; } }
-  // 카운터 & 셰프
   ctx.fillStyle = '#d9b48f'; ctx.fillRect(0, g.beltY + g.beltH, W, H);
   ctx.fillStyle = '#c99e78'; ctx.fillRect(0, g.beltY + g.beltH + 8, W, 10 * U);
   drawChar(g.chefX, g.chefY, g.chefR, g.chefMood, { hair: '#1f1f1f', shirt: '#fff', chef: true, seed: 3 });
-  // 셰프 말풍선 (초반 안내)
   if (g.time < 6 && !g.over) { const bw = Math.min(240 * U, W - 40), by = g.chefY - g.chefR * 1.9; bubble(g.chefX, by, bw, 34 * U); text('주문대로 만들어 벨트에 올려요!', g.chefX, by, 13 * U, '#555'); }
-  // 작업대 + 버튼
   ctx.fillStyle = '#8b5a2b'; rr(-10, g.btnTop - 14 * U, W + 20, H, 20 * U); ctx.fill();
   g.btns.forEach((b, i) => {
     const d = BELT_MENU[i];
@@ -987,21 +963,19 @@ function drawBoss(g) {
     text(MENU_KEYS[i], b.x + 10 * U, b.y + 10 * U, 10 * U, '#adb5bd');
   });
   drawSparks(g);
-  // HUD
   const hy = 14 * U;
   ctx.fillStyle = 'rgba(255,255,255,0.75)'; rr(10 * U, hy - 4 * U, Math.min(W - 100 * U, 330 * U), 64 * U, 14 * U); ctx.fill();
   text('💰 ' + g.score.toLocaleString() + '원', 22 * U, hy + 14 * U, 20 * U, '#e8590c', 'left');
   let hearts = ''; for (let i = 0; i < 3; i++) hearts += i < g.lives ? '❤️' : '🖤';
   text(hearts, 22 * U, hy + 42 * U, 17 * U, '#333', 'left');
   text(`손님 ${g.served}명`, 130 * U, hy + 42 * U, 14 * U, '#868e96', 'left');
-  // 날짜 + 영업 타이머
   {
     const left = Math.max(0, DAY_LEN - g.dayT), mm = Math.floor(left / 60), ss = Math.floor(left % 60);
     const tw = 118 * U, tx = Math.min(W - 84 * U - tw, 340 * U + 12 * U);
     ctx.fillStyle = 'rgba(255,255,255,0.75)'; rr(tx, hy - 4 * U, tw, 64 * U, 14 * U); ctx.fill();
     text(`DAY ${g.day}`, tx + tw / 2, hy + 14 * U, 17 * U, '#5c7cfa');
     const urgent = left <= 10 && Math.floor(tGlobal * 4) % 2 === 0;
-    text(`⏰ ${mm}:${String(ss).padStart(2, '0')}`, tx + tw / 2, hy + 42 * U, 18 * U, urgent ? '#e03131' : '#333');
+    text(`⏰ ${mm}:${String(ss).padStart(2, '0')}`, tx + tw / 2, hy + 42 * U, urgent ? '#e03131' : '#333');
   }
   if (g.combo >= 2) textO(`${g.combo} COMBO ×${comboMult(g.combo)}`, W / 2, g.beltY - 20 * U, 22 * U, '#ff922b', '#fff');
   drawBtn(g.menuBtn, '메뉴', '#adb5bd', 15 * U);
@@ -1046,7 +1020,6 @@ function drawOver(g) {
 let titleBtns = {};
 function drawTitle() {
   drawBG();
-  // 떠다니는 초밥
   const deco = ['tuna', 'salmon', 'ebi', 'babyshu', 'tamago', 'unagi', 'maki', 'pudding'];
   deco.forEach((id, i) => {
     const x = (W * (i + 0.5) / deco.length), y = H * 0.12 + Math.sin(tGlobal * 1.5 + i) * 12 * U;
@@ -1059,11 +1032,10 @@ function drawTitle() {
   titleBtns.boss = { x: bx, y: H * 0.44 + bh + 22 * U, w: bw, h: bh };
   drawBtn(titleBtns.customer, '🍴 손님 모드', '#ff8787', 22 * U, `최고 ${best.customer.toLocaleString()}점 · 벨트 초밥을 탭해서 먹기`);
   drawBtn(titleBtns.boss, '👨‍🍳 사장 모드', '#5c7cfa', 22 * U, `최고 ${best.boss.toLocaleString()}원 · 주문대로 만들어 올리기`);
-  // 캐릭터 둘
   const r = Math.min(46 * U, W * 0.1);
   drawChar(W * 0.18, H * 0.82, r, 'happy', { hair: '#4a3528', shirt: '#ff8787', seed: 1 });
   drawChar(W * 0.82, H * 0.82, r, 'happy', { hair: '#1f1f1f', shirt: '#fff', chef: true, seed: 2 });
-  text('벨트 접시 탭 → 테이블로  ·  테이블 접시 탭(1~3) → 젓가락으로 냄!', W / 2, H - 22 * U, 12 * U, '#adb5bd');
+  text('벨트 접시 탭 → 테이블로  ·  테이블 접시 탭(1~3) → 젓가락으로 냠!', W / 2, H - 22 * U, 12 * U, '#adb5bd');
 }
 
 // ───────────────────────── 입력 ─────────────────────────
@@ -1126,14 +1098,25 @@ window.addEventListener('keydown', e => {
 
 // ───────────────────────── 루프 ─────────────────────────
 function loop(ts) {
+  const curW = window.innerWidth || document.documentElement.clientWidth || 800;
+  const curH = window.innerHeight || document.documentElement.clientHeight || 600;
+  if (curW > 0 && curH > 0 && (Math.abs(curW - W) > 2 || Math.abs(curH - H) > 2)) {
+    resize();
+  }
   const dt = Math.min(0.05, (ts - last) / 1000 || 0); last = ts; tGlobal += dt;
   if (scene === 'customer') { updCustomer(game, dt); drawCustomer(game); }
   else if (scene === 'boss') { updBoss(game, dt); drawBoss(game); }
   else drawTitle();
   requestAnimationFrame(loop);
 }
+
+// 초기화 보장
+resize();
 drawTitle();
 requestAnimationFrame(loop);
+window.addEventListener('load', () => { resize(); drawTitle(); });
+setTimeout(() => { resize(); drawTitle(); }, 100);
+setTimeout(() => { resize(); drawTitle(); }, 400);
 </script>
 </body>
 </html>
