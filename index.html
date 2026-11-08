@@ -3,15 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#fff7ed">
+  <meta name="theme-color" content="#ffeef5" id="meta-theme-color">
   <title>Tiny Web Games 🎮</title>
 
   <style>
-    :root {
+    :root,
+    [data-season="spring"] {
       color-scheme: light;
-      --text: #51465c;
-      --muted: #82758c;
-      --accent: #bc70a0;
+      --bg-color: #fff4f8;
+      --bg-gradient: linear-gradient(180deg, #ffe6f0 0%, #fff7fa 55%, #fff9f2 100%);
+      --dot-color: #f2cade;
+      --text: #54414e;
+      --muted: #8a7382;
+      --accent: #e06d9f;
+      --badge-bg: #ffffffd9;
+      --badge-border: #f5d8e6;
+      --badge-text: #b85683;
+      --count-bg: #f8e4ee;
+      --count-text: #8c4d6c;
+      --card-shadow: #eed5e0;
+      --focus-ring: #d66296;
+    }
+
+    [data-season="summer"] {
+      --bg-color: #eef9ff;
+      --bg-gradient: linear-gradient(180deg, #d4f0ff 0%, #f0faff 55%, #e8fff9 100%);
+      --dot-color: #bce0f7;
+      --text: #284657;
+      --muted: #5d7e91;
+      --accent: #1d92d6;
+      --badge-bg: #ffffffd9;
+      --badge-border: #c5e6fa;
+      --badge-text: #1975ad;
+      --count-bg: #dbf0fc;
+      --count-text: #1e628c;
+      --card-shadow: #cbe4f5;
+      --focus-ring: #1d92d6;
+    }
+
+    [data-season="autumn"] {
+      --bg-color: #fff6ec;
+      --bg-gradient: linear-gradient(180deg, #ffe5cc 0%, #fff6ec 55%, #fceddb 100%);
+      --dot-color: #e8cbb3;
+      --text: #543f34;
+      --muted: #8c7060;
+      --accent: #d4652f;
+      --badge-bg: #ffffffd9;
+      --badge-border: #f2dac7;
+      --badge-text: #a84e22;
+      --count-bg: #f7e3d4;
+      --count-text: #804324;
+      --card-shadow: #ebd5c3;
+      --focus-ring: #d4652f;
+    }
+
+    [data-season="winter"] {
+      --bg-color: #f2f6fc;
+      --bg-gradient: linear-gradient(180deg, #dfe9fc 0%, #f4f7fc 55%, #eef2ff 100%);
+      --dot-color: #c9d5ed;
+      --text: #384257;
+      --muted: #6e7a94;
+      --accent: #5e72e4;
+      --badge-bg: #ffffffd9;
+      --badge-border: #d5dff7;
+      --badge-text: #4c5ec4;
+      --count-bg: #e1e8fa;
+      --count-text: #4453a3;
+      --card-shadow: #d5def2;
+      --focus-ring: #5e72e4;
     }
 
     * {
@@ -19,48 +78,88 @@
     }
 
     body {
+      position: relative;
       margin: 0;
       min-height: 100vh;
       font-family: "Arial Rounded MT Bold", "Apple SD Gothic Neo",
                    "Malgun Gothic", sans-serif;
       color: var(--text);
-      background-color: #fff9f3;
-      background-image: radial-gradient(#eadbd5 1px, transparent 1px);
-      background-size: 22px 22px;
+      background-color: var(--bg-color);
+      background-image:
+        radial-gradient(var(--dot-color) 1.35px, transparent 1.35px),
+        var(--bg-gradient);
+      background-size: 22px 22px, 100% 100%;
+      background-attachment: fixed;
+      transition: background 350ms ease, color 280ms ease;
+      overflow-x: hidden;
+    }
+
+    /* 계절 배경 효과 레이어 */
+    .season-bg-effects {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .season-particle {
+      position: absolute;
+      top: -10%;
+      user-select: none;
+      opacity: 0.65;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.04));
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translate3d(0, -10vh, 0) rotate(0deg);
+      }
+      50% {
+        transform: translate3d(24px, 50vh, 0) rotate(180deg);
+      }
+      100% {
+        transform: translate3d(-16px, 112vh, 0) rotate(360deg);
+      }
     }
 
     .page {
+      position: relative;
+      z-index: 1;
       width: min(100% - 36px, 940px);
       margin: 0 auto;
-      padding: 64px 0 30px;
+      padding: 52px 0 36px;
     }
 
     .hero {
       text-align: center;
-      margin-bottom: 38px;
+      margin-bottom: 36px;
     }
 
     .badge {
       display: inline-block;
       padding: 8px 16px;
-      border: 1px solid #efdde6;
+      border: 1px solid var(--badge-border);
       border-radius: 999px;
-      background: #ffffffd9;
-      color: #92617f;
+      background: var(--badge-bg);
+      color: var(--badge-text);
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.04em;
+      backdrop-filter: blur(4px);
+      transition: all 240ms ease;
     }
 
     .mascot {
-      margin-top: 22px;
+      margin-top: 20px;
       font-size: 64px;
       line-height: 1.2;
       animation: float 3s ease-in-out infinite;
     }
 
     h1 {
-      margin: 16px 0 12px;
+      margin: 14px 0 12px;
       font-size: clamp(32px, 7vw, 52px);
       line-height: 1.15;
       letter-spacing: -0.05em;
@@ -68,14 +167,75 @@
 
     h1 span {
       color: var(--accent);
+      transition: color 240ms ease;
     }
 
     .intro {
-      margin: 0;
+      margin: 0 0 22px;
       color: var(--muted);
       font-size: 15px;
       line-height: 1.8;
       word-break: keep-all;
+    }
+
+    /* 계절 선택 스위치 */
+    .season-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .season-switcher {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 999px;
+      background: #ffffffd4;
+      border: 1px solid var(--badge-border);
+      box-shadow: 0 4px 14px #00000008;
+      backdrop-filter: blur(6px);
+    }
+
+    .season-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 180ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .season-btn:hover {
+      color: var(--text);
+      background: #00000008;
+    }
+
+    .season-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 3px 10px #00000018;
+    }
+
+    .season-btn:focus-visible {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .season-status {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
     }
 
     .section-heading {
@@ -93,14 +253,21 @@
       letter-spacing: -0.04em;
     }
 
+    .heading-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .count {
       padding: 6px 11px;
       border-radius: 999px;
-      background: #f0e6ee;
-      color: #725a79;
+      background: var(--count-bg);
+      color: var(--count-text);
       font-size: 12px;
       font-weight: 700;
       white-space: nowrap;
+      transition: background-color 240ms ease, color 240ms ease;
     }
 
     .games {
@@ -124,23 +291,27 @@
       background: var(--card-bg);
       color: inherit;
       text-decoration: none;
-      box-shadow: 0 5px 0 #e9ded8, 0 10px 24px #67504f08;
-      transition: transform 180ms ease, box-shadow 180ms ease;
+      box-shadow: 0 5px 0 var(--card-shadow), 0 10px 24px #67504f08;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
       -webkit-tap-highlight-color: transparent;
+    }
+
+    .game-card.is-liked {
+      border-color: #ffb8d1;
     }
 
     .game-card:hover {
       transform: translateY(-6px) rotate(-1deg);
-      box-shadow: 0 9px 0 #e9ded8, 0 18px 28px #67504f12;
+      box-shadow: 0 9px 0 var(--card-shadow), 0 18px 28px #67504f12;
     }
 
     .game-card:active {
       transform: translateY(2px);
-      box-shadow: 0 2px 0 #e9ded8;
+      box-shadow: 0 2px 0 var(--card-shadow);
     }
 
     .game-card:focus-visible {
-      outline: 3px solid #8b58a3;
+      outline: 3px solid var(--focus-ring);
       outline-offset: 5px;
     }
 
@@ -154,24 +325,64 @@
       background: var(--icon-bg);
       font-size: 42px;
       transform: rotate(-6deg);
+      transition: transform 180ms ease;
     }
 
     .game-card:hover .game-icon {
       transform: rotate(6deg);
     }
 
-    .game-icon {
-      transition: transform 180ms ease;
+    .card-top-right {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
     }
 
     .game-number {
-      position: absolute;
-      top: 24px;
-      right: 22px;
       color: #51465c80;
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.08em;
+    }
+
+    .heart-btn {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border: 1.5px solid #ffffff;
+      border-radius: 50%;
+      background: #ffffffb8;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 2px 6px #00000010;
+      transition: transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1), background-color 160ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .heart-btn:hover {
+      transform: scale(1.14);
+      background: #ffffff;
+    }
+
+    .heart-btn:active {
+      transform: scale(0.92);
+    }
+
+    .heart-btn[aria-pressed="true"] {
+      background: #ffeef4;
+      border-color: #ffc2d6;
+    }
+
+    .heart-btn:focus-visible {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
     }
 
     .game-card h3 {
@@ -286,13 +497,23 @@
       }
 
       .page {
-        padding-top: 40px;
+        padding-top: 36px;
       }
     }
 
     @media (max-width: 420px) {
       .page {
         width: calc(100% - 28px);
+      }
+
+      .season-switcher {
+        gap: 4px;
+        padding: 5px;
+      }
+
+      .season-btn {
+        padding: 7px 10px;
+        font-size: 12px;
       }
 
       .game-card {
@@ -306,10 +527,20 @@
         font-size: 34px;
       }
 
+      .card-top-right {
+        top: 14px;
+        right: 14px;
+        gap: 6px;
+      }
+
       .game-number {
-        top: 20px;
-        right: 16px;
         font-size: 10px;
+      }
+
+      .heart-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
       }
 
       .game-card h3 {
@@ -337,15 +568,21 @@
         animation: none !important;
         transition: none !important;
       }
+      .season-bg-effects {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- 계절별 배경 파티클이 렌더링되는 영역 -->
+  <div class="season-bg-effects" id="season-bg-effects" aria-hidden="true"></div>
+
   <div class="page">
     <header class="hero">
-      <div class="badge">작고 귀여운 즐거움이 모이는 곳</div>
-      <div class="mascot" aria-hidden="true">🎮</div>
+      <div class="badge" id="season-badge">작고 귀여운 즐거움이 모이는 곳</div>
+      <div class="mascot" id="season-mascot" aria-hidden="true">🎮</div>
 
       <h1>Tiny <span>Web Games</span></h1>
 
@@ -353,17 +590,34 @@
         잠깐 쉬어가도 괜찮아!<br>
         마음에 드는 게임을 골라 작은 모험을 시작해 봐.
       </p>
+
+      <div class="season-controls">
+        <div class="season-switcher" role="group" aria-label="계절 테마 선택">
+          <button type="button" class="season-btn" data-season-btn="auto">✨ 자동</button>
+          <button type="button" class="season-btn" data-season-btn="spring">🌸 봄</button>
+          <button type="button" class="season-btn" data-season-btn="summer">🌻 여름</button>
+          <button type="button" class="season-btn" data-season-btn="autumn">🍁 가을</button>
+          <button type="button" class="season-btn" data-season-btn="winter">❄️ 겨울</button>
+        </div>
+        <div class="season-status" id="season-status">현재 계절에 맞춰 자동으로 테마가 적용되었어요</div>
+      </div>
     </header>
 
     <main>
       <div class="section-heading">
         <h2 id="games-heading">오늘은 뭐 하고 놀까? ✨</h2>
-        <span class="count">10 GAMES</span>
+        <div class="heading-meta">
+          <span class="count" id="liked-count" hidden>❤️ 0</span>
+          <span class="count">10 GAMES</span>
+        </div>
       </div>
 
-      <nav class="games" aria-labelledby="games-heading">
-        <a class="game-card class" href="./class/class-v4.html">
-          <span class="game-number" aria-hidden="true">01</span>
+      <nav class="games" id="games-grid" aria-labelledby="games-heading">
+        <a class="game-card class" data-game-id="class" data-order="1" href="./class/class-v4.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">01</span>
+            <button type="button" class="heart-btn" aria-label="Class 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🏫</span>
           <h3>Class</h3>
           <p>오늘도 즐거운<br>우리들의 교실 시간!</p>
@@ -373,8 +627,11 @@
           </span>
         </a>
 
-        <a class="game-card claw" href="./claw/claw-v7.html">
-          <span class="game-number" aria-hidden="true">02</span>
+        <a class="game-card claw" data-game-id="claw" data-order="2" href="./claw/claw-v7.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">02</span>
+            <button type="button" class="heart-btn" aria-label="Claw 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🧸</span>
           <h3>Claw</h3>
           <p>두근두근!<br>이번엔 꼭 뽑을 수 있을까?</p>
@@ -384,8 +641,11 @@
           </span>
         </a>
 
-        <a class="game-card icecream" href="./icecream/icecream-v1.html">
-          <span class="game-number" aria-hidden="true">03</span>
+        <a class="game-card icecream" data-game-id="icecream" data-order="3" href="./icecream/icecream-v1.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">03</span>
+            <button type="button" class="heart-btn" aria-label="Icecream 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🍦</span>
           <h3>Icecream</h3>
           <p>달콤하고 시원한<br>아이스크림 한 스쿱!</p>
@@ -395,8 +655,11 @@
           </span>
         </a>
 
-        <a class="game-card pet-cafe" href="./pet-cafe/pet-cafe-v2.html">
-          <span class="game-number" aria-hidden="true">04</span>
+        <a class="game-card pet-cafe" data-game-id="pet-cafe" data-order="4" href="./pet-cafe/pet-cafe-v2.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">04</span>
+            <button type="button" class="heart-btn" aria-label="Pet Cafe 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🐱</span>
           <h3>Pet Cafe</h3>
           <p>귀여운 친구들과<br>포근한 카페에서 만나요.</p>
@@ -406,8 +669,11 @@
           </span>
         </a>
 
-        <a class="game-card pets" href="./pets/pets-v2.html">
-          <span class="game-number" aria-hidden="true">05</span>
+        <a class="game-card pets" data-game-id="pets" data-order="5" href="./pets/pets-v2.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">05</span>
+            <button type="button" class="heart-btn" aria-label="Pets 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🐶</span>
           <h3>Pets</h3>
           <p>보기만 해도 행복한<br>나의 작은 동물 친구들!</p>
@@ -417,8 +683,11 @@
           </span>
         </a>
 
-        <a class="game-card sushi" href="./sushi/sushi-v10.html">
-          <span class="game-number" aria-hidden="true">06</span>
+        <a class="game-card sushi" data-game-id="sushi" data-order="6" href="./sushi/sushi-v10.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">06</span>
+            <button type="button" class="heart-btn" aria-label="Sushi 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🍣</span>
           <h3>Sushi</h3>
           <p>한 입 가득 행복!<br>맛있는 초밥 시간이야.</p>
@@ -428,8 +697,11 @@
           </span>
         </a>
 
-        <a class="game-card spa" href="./spa/spa-v11.html">
-          <span class="game-number" aria-hidden="true">07</span>
+        <a class="game-card spa" data-game-id="spa" data-order="7" href="./spa/spa-v11.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">07</span>
+            <button type="button" class="heart-btn" aria-label="Spa 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🧖</span>
           <h3>Spa</h3>
           <p>가족과 함께 찜질방!<br>불가마부터 식혜까지 힐링.</p>
@@ -439,8 +711,11 @@
           </span>
         </a>
 
-        <a class="game-card mala" href="./mala/mala-v13.html">
-          <span class="game-number" aria-hidden="true">08</span>
+        <a class="game-card mala" data-game-id="mala" data-order="8" href="./mala/mala-v13.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">08</span>
+            <button type="button" class="heart-btn" aria-label="Mala 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🍲</span>
           <h3>Mala</h3>
           <p>취향대로 재료 듬뿍!<br>얼큰하고 맛있는 마라탕.</p>
@@ -450,8 +725,11 @@
           </span>
         </a>
 
-        <a class="game-card meat" href="./meat/meat-v10.html">
-          <span class="game-number" aria-hidden="true">09</span>
+        <a class="game-card meat" data-game-id="meat" data-order="9" href="./meat/meat-v10.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">09</span>
+            <button type="button" class="heart-btn" aria-label="Meat 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🥩</span>
           <h3>Meat</h3>
           <p>지글지글 노릇노릇!<br>오늘은 내가 고기 굽는 날.</p>
@@ -461,8 +739,11 @@
           </span>
         </a>
 
-        <a class="game-card frog" href="./frog/frog-v3.html">
-          <span class="game-number" aria-hidden="true">10</span>
+        <a class="game-card frog" data-game-id="frog" data-order="10" href="./frog/frog-v3.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">10</span>
+            <button type="button" class="heart-btn" aria-label="Frog 하트 주기" aria-pressed="false">🤍</button>
+          </div>
           <span class="game-icon" aria-hidden="true">🐸</span>
           <h3>Frog</h3>
           <p>망치로 쾅! 시소를 쳐서<br>개구리를 골대에 쏙 날려봐!</p>
@@ -475,9 +756,212 @@
     </main>
 
     <footer>
-      작은 게임, 커다란 즐거움 🌷<br>
+      <span id="footer-text">작은 게임, 커다란 즐거움 🌸</span><br>
       Tiny Web Games
     </footer>
   </div>
+
+  <script>
+    (function () {
+      const LIKES_STORAGE_KEY = 'tiny-web-games-likes';
+
+      const seasonConfig = {
+        spring: {
+          name: '봄',
+          themeColor: '#ffeef5',
+          badge: '따스한 봄바람과 함께 찾아온 즐거움 🌸',
+          mascot: '🌸',
+          footer: '작은 게임, 커다란 즐거움 🌷',
+          particles: ['🌸', '🌷', '🌱', '🦋']
+        },
+        summer: {
+          name: '여름',
+          themeColor: '#e3f5ff',
+          badge: '시원한 여름날의 반짝이는 모험 🏖️',
+          mascot: '🌻',
+          footer: '작은 게임, 커다란 즐거움 🍉',
+          particles: ['🫧', '✨', '🌊', '🐚']
+        },
+        autumn: {
+          name: '가을',
+          themeColor: '#fff0e0',
+          badge: '포근한 가을빛이 머무는 놀이터 🍂',
+          mascot: '🍁',
+          footer: '작은 게임, 커다란 즐거움 🌰',
+          particles: ['🍁', '🍂', '🌾', '🌰']
+        },
+        winter: {
+          name: '겨울',
+          themeColor: '#eaf0fc',
+          badge: '하얀 눈꽃처럼 포근한 겨울의 즐거움 ⛄',
+          mascot: '❄️',
+          footer: '작은 게임, 커다란 즐거움 ☃️',
+          particles: ['❄️', '❅', '✨', '🤍']
+        }
+      };
+
+      const seasonButtons = document.querySelectorAll('[data-season-btn]');
+      const badgeEl = document.getElementById('season-badge');
+      const mascotEl = document.getElementById('season-mascot');
+      const footerTextEl = document.getElementById('footer-text');
+      const statusEl = document.getElementById('season-status');
+      const metaThemeColor = document.getElementById('meta-theme-color');
+      const bgEffectsEl = document.getElementById('season-bg-effects');
+      const gamesGrid = document.getElementById('games-grid');
+      const likedCountBadge = document.getElementById('liked-count');
+
+      // 계절별 배경 파티클 생성
+      function renderSeasonParticles(symbols) {
+        if (!bgEffectsEl) return;
+        bgEffectsEl.innerHTML = '';
+
+        const count = 14;
+        for (let i = 0; i < count; i++) {
+          const item = document.createElement('span');
+          item.className = 'season-particle';
+          item.textContent = symbols[i % symbols.length];
+
+          const left = (i * (100 / count)) + (Math.random() * 5);
+          const duration = 11 + Math.random() * 10;
+          const delay = -(Math.random() * 20);
+          const size = 14 + Math.random() * 12;
+
+          item.style.left = `${Math.min(left, 96)}%`;
+          item.style.fontSize = `${size.toFixed(0)}px`;
+          item.style.animationDuration = `${duration.toFixed(1)}s`;
+          item.style.animationDelay = `${delay.toFixed(1)}s`;
+
+          bgEffectsEl.appendChild(item);
+        }
+      }
+
+      // 현재 날짜(월) 기준으로 계절 자동 감지
+      function detectCurrentSeason() {
+        const month = new Date().getMonth() + 1; // 1 ~ 12월
+        if (month >= 3 && month <= 5) return 'spring';
+        if (month >= 6 && month <= 8) return 'summer';
+        if (month >= 9 && month <= 11) return 'autumn';
+        return 'winter';
+      }
+
+      // 계절 테마 적용 (mode가 'auto'면 현재 날짜 기준, 아니면 선택한 계절 적용)
+      function applySeason(mode) {
+        const isAuto = mode === 'auto';
+        const currentMonth = new Date().getMonth() + 1;
+        const detectedSeason = detectCurrentSeason();
+        const targetSeason = isAuto ? detectedSeason : (seasonConfig[mode] ? mode : detectedSeason);
+        const info = seasonConfig[targetSeason];
+
+        document.documentElement.setAttribute('data-season', targetSeason);
+        metaThemeColor.setAttribute('content', info.themeColor);
+        badgeEl.textContent = info.badge;
+        mascotEl.textContent = info.mascot;
+        footerTextEl.textContent = info.footer;
+
+        renderSeasonParticles(info.particles);
+
+        seasonButtons.forEach((btn) => {
+          const btnType = btn.getAttribute('data-season-btn');
+          const isMatch = isAuto ? btnType === 'auto' : btnType === targetSeason;
+          btn.classList.toggle('active', isMatch);
+        });
+
+        if (statusEl) {
+          if (isAuto) {
+            statusEl.textContent = `지금은 ${currentMonth}월! 현재 계절(${info.name}) 테마가 자동 적용 중이에요`;
+          } else {
+            statusEl.textContent = `${info.name} 테마를 미리 보고 있어요 ('✨ 자동'을 누르면 현재 계절로 돌아갑니다)`;
+          }
+        }
+      }
+
+      // 저장된 하트 목록 불러오기
+      function getLikedGames() {
+        try {
+          const raw = localStorage.getItem(LIKES_STORAGE_KEY);
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      // 하트 목록 저장하기
+      function saveLikedGames(likedIds) {
+        try {
+          localStorage.setItem(LIKES_STORAGE_KEY, JSON.stringify(likedIds));
+        } catch (e) {}
+      }
+
+      // 카드 UI 업데이트 및 정렬 (하트 받은 게임을 위쪽으로 배치)
+      function updateAndSortCards(likedIds) {
+        const cards = Array.from(gamesGrid.querySelectorAll('.game-card'));
+
+        cards.forEach((card) => {
+          const id = card.getAttribute('data-game-id');
+          const isLiked = likedIds.includes(id);
+          const heartBtn = card.querySelector('.heart-btn');
+
+          card.classList.toggle('is-liked', isLiked);
+          if (heartBtn) {
+            heartBtn.setAttribute('aria-pressed', isLiked ? 'true' : 'false');
+            heartBtn.textContent = isLiked ? '❤️' : '🤍';
+          }
+        });
+
+        cards.sort((a, b) => {
+          const aLiked = likedIds.includes(a.getAttribute('data-game-id')) ? 1 : 0;
+          const bLiked = likedIds.includes(b.getAttribute('data-game-id')) ? 1 : 0;
+
+          if (aLiked !== bLiked) {
+            return bLiked - aLiked;
+          }
+          return Number(a.getAttribute('data-order')) - Number(b.getAttribute('data-order'));
+        });
+
+        cards.forEach((card) => gamesGrid.appendChild(card));
+
+        if (likedIds.length > 0) {
+          likedCountBadge.hidden = false;
+          likedCountBadge.textContent = `❤️ ${likedIds.length}`;
+        } else {
+          likedCountBadge.hidden = true;
+        }
+      }
+
+      // 계절 버튼 이벤트 연결
+      seasonButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const selected = btn.getAttribute('data-season-btn');
+          applySeason(selected);
+        });
+      });
+
+      // 하트 버튼 이벤트 연결 (링크 이동 방지)
+      gamesGrid.addEventListener('click', (event) => {
+        const heartBtn = event.target.closest('.heart-btn');
+        if (!heartBtn) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const card = heartBtn.closest('.game-card');
+        const gameId = card.getAttribute('data-game-id');
+        let likedIds = getLikedGames();
+
+        if (likedIds.includes(gameId)) {
+          likedIds = likedIds.filter((id) => id !== gameId);
+        } else {
+          likedIds.push(gameId);
+        }
+
+        saveLikedGames(likedIds);
+        updateAndSortCards(likedIds);
+      });
+
+      // 페이지 열릴 때 항상 현재 계절을 자동으로 감지해 시작
+      applySeason('auto');
+      updateAndSortCards(getLikedGames());
+    })();
+  </script>
 </body>
 </html>
