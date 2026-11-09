@@ -1650,6 +1650,157 @@ h1{font:clamp(34px,7vw,68px) Jua,sans-serif;margin:0;line-height:1}
   cursor: default;
 }
 
+
+
+/* v16 업데이트: 펫 & 리뷰 할인 & 셰프 요청사항 스타일 */
+.discount-badge {
+  background: #e91e63;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 99px;
+  margin-left: 6px;
+  animation: pulse 1s infinite alternate;
+}
+.order-option-card {
+  background: #fff8e7;
+  border: 1.5px solid #ecd5b3;
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-top: 10px;
+}
+.order-opt-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  user-select: none;
+}
+.order-opt-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--red);
+  cursor: pointer;
+}
+.chef-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.chef-chip {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 99px;
+  padding: 4px 10px;
+  font: 900 11px 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  color: var(--ink);
+  transition: all 0.15s ease;
+}
+.chef-chip:hover {
+  border-color: var(--red);
+  transform: translateY(-1px);
+}
+.chef-chip.active {
+  background: var(--red);
+  color: #fff;
+  border-color: #9f3026;
+}
+.chef-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  font: 700 12px 'Noto Sans KR', sans-serif;
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+}
+.chef-input:focus {
+  border-color: var(--red);
+}
+
+/* 펫 무대 & 말풍선 */
+.stage-actors {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 12px;
+  position: relative;
+  min-height: 200px;
+  margin: 0 auto 4px;
+}
+.pet-companion-stage {
+  position: absolute;
+  right: 15px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+.pet-avatar {
+  font-size: 48px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+  transition: transform 0.2s ease;
+  animation: petBreathe 2s infinite ease-in-out;
+}
+.pet-bubble {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #5d4037;
+  color: #2b1d1a;
+  border-radius: 12px;
+  padding: 4px 8px;
+  font: 900 11px 'Noto Sans KR', sans-serif;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  position: relative;
+  animation: pop 0.3s ease-out;
+}
+.pet-bubble:after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 5px 0;
+  border-style: solid;
+  border-color: #5d4037 transparent;
+  display: block;
+  width: 0;
+}
+@keyframes petBreathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.04); }
+}
+.pet-chew .pet-avatar {
+  animation: petChewAnim 0.35s 3 alternate ease-in-out !important;
+}
+@keyframes petChewAnim {
+  0% { transform: scale(0.9) rotate(-6deg); }
+  100% { transform: scale(1.15) rotate(6deg); }
+}
+.pet-spicy .pet-avatar {
+  animation: petSpicyAnim 0.15s infinite alternate ease-in-out !important;
+}
+@keyframes petSpicyAnim {
+  0% { transform: translateY(-4px) rotate(-8deg); }
+  100% { transform: translateY(4px) rotate(8deg); }
+}
+.pet-happy .pet-avatar {
+  animation: petJumpAnim 0.45s 2 ease-in-out !important;
+}
+@keyframes petJumpAnim {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-16px) scale(1.18); }
+}
+
 </style>
 </head>
 <body>
@@ -1746,8 +1897,9 @@ h1{font:clamp(34px,7vw,68px) Jua,sans-serif;margin:0;line-height:1}
           <button type="button" class="shop-btn" id="shopOpenBtn">🛍️ 상점</button>
         </div>
 
- <!-- 먹는 캐릭터 & 애니메이션 무대 -->
+ <!-- 먹는 캐릭터 & 애니메이션 무대 (반려동물 펫 동행) -->
  <div class="eatstage" id="eatstage">
+ <div class="stage-actors">
  <div class="character-wrap">
  <div class="character" id="character">
  <div class="char-fx" id="charFx"></div>
@@ -1801,6 +1953,10 @@ h1{font:clamp(34px,7vw,68px) Jua,sans-serif;margin:0;line-height:1}
  </div>
  </div>
  </div>
+ </div>
+ <div class="pet-companion-stage" id="petStage" style="display:none;">
+ <div class="pet-bubble" id="petBubble">꿀꿀! 🍲</div>
+ <div class="pet-avatar" id="petAvatar">🐷</div>
  </div>
  </div>
  
@@ -1861,6 +2017,25 @@ h1{font:clamp(34px,7vw,68px) Jua,sans-serif;margin:0;line-height:1}
  <div>예상 금액 <span class="price" id="price">0원</span></div>
  <div id="detail">아직 담은 재료가 없어요</div>
  <div class="side-picked" id="sideDetail"></div>
+ </div>
+
+ <!-- 결제 전 옵션: 영수증 리뷰 30% 할인 & 셰프 주의사항 -->
+ <div class="order-option-card">
+ <label class="order-opt-label">
+ <input type="checkbox" id="reviewDiscountCheckbox">
+ <span class="opt-text">📝 <b>영수증 포토 리뷰 약속하기</b> <span class="discount-badge">30% 할인!</span></span>
+ </label>
+ </div>
+
+ <div class="order-option-card">
+ <div style="font-weight:900;font-size:13px;color:#c94232;margin-bottom:6px;">👨‍🍳 셰프님께 전할 주의사항</div>
+ <div class="chef-chips" id="chefChips">
+ <button type="button" class="chef-chip" data-req="🌱 고수 빼주세요">🌱 고수 빼기</button>
+ <button type="button" class="chef-chip" data-req="🥜 땅콩 빼주세요">🥜 땅콩 빼기</button>
+ <button type="button" class="chef-chip" data-req="🌶️ 고추기름 적게">🌶️ 고추기름 적게</button>
+ <button type="button" class="chef-chip" data-req="🥣 국물 많이">🥣 국물 많이</button>
+ </div>
+ <input type="text" id="chefCustomReq" class="chef-input" placeholder="직접 입력 (예: 대파 빼주세요, 덜 뜨겁게 등)" maxlength="35">
  </div>
 
  <button class="action" id="pay">💳 주문하고 결제하기</button>
@@ -1943,6 +2118,7 @@ h1{font:clamp(34px,7vw,68px) Jua,sans-serif;margin:0;line-height:1}
       <button type="button" class="shop-tab" data-tab="clothes">👗 옷/앞치마</button>
       <button type="button" class="shop-tab" data-tab="spoon">🥄 수저</button>
       <button type="button" class="shop-tab" data-tab="bowl">🍲 그릇</button>
+      <button type="button" class="shop-tab" data-tab="pet">🐾 반려동물 펫</button>
     </div>
 
     <!-- 상점 아이템 그리드 -->
@@ -2547,6 +2723,9 @@ let dragStart = 0;
 let dragX = 0;
 let currentHair = 0;
 let mixedBowlItems = [];
+let isReviewDiscount = false;
+let chefSelectedReqs = [];
+let chefCustomText = '';
 
 const STORE_KEY = 'maratang_wallet_v2';
 const savedWallet = localStorage.getItem(STORE_KEY);
@@ -2594,6 +2773,14 @@ const shopCatalog = {
     { id: 'b_gold', name: '팰리스 골드 보울 👑', price: 50, icon: '👑', metalBg: 'radial-gradient(ellipse at 42% 38%, #fffde7 0%, #fff9c4 35%, #ffd54f 75%, #ffb300 100%)', border: '#ffb300' },
     { id: 'b_blossom', name: '핑크 블라썸 세라믹 🌸', price: 55, icon: '🌸', metalBg: 'radial-gradient(ellipse at 42% 38%, #ffffff 0%, #fce4ec 45%, #f8bbd0 80%, #f06292 100%)', border: '#f48fb1' },
     { id: 'b_midnight', name: '오로라 미드나잇 블랙 🌌', price: 65, icon: '🌌', metalBg: 'radial-gradient(ellipse at 42% 38%, #eceff1 0%, #546e7a 40%, #263238 80%, #0d1317 100%)', border: '#455a64' }
+  ],
+  pet: [
+    { id: 'p_none', name: '펫 동행 안 함', price: 0, icon: '❌', desc: '혼자서 오롯이 즐겨요', speech: '' },
+    { id: 'p_pig', name: '먹보 핑키 돼지 🐷', price: 40, icon: '🐷', desc: '국물까지 탐내는 꿀꿀이', speech: '꿀꿀! 마라탕 냄새 최고!' },
+    { id: 'p_rabbit', name: '달콤 토끼 베베 🐰', price: 45, icon: '🐰', desc: '채소를 아삭아삭 뺏어 먹는 귀염둥이', speech: '깡총! 청경채는 내 차지야!' },
+    { id: 'p_octopus', name: '타코 문어 뾱뾱 🐙', price: 50, icon: '🐙', desc: '어묵탕 속에 뛰어들고 싶은 문어', speech: '뾱뾱! 문어어묵 친구 어디써?' },
+    { id: 'p_fox', name: '사막 여우 폭시 🦊', price: 55, icon: '🦊', desc: '매운맛 챌린지를 즐기는 당찬 여우', speech: '콘콘! 매운맛도 끄떡없어!' },
+    { id: 'p_dog', name: '시바견 댕댕이 🐶', price: 60, icon: '🐶', desc: '꼬리를 살랑살랑 흔드는 댕댕이', speech: '멍멍! 같이 먹으니까 더 맛있어!' }
   ]
 };
 
@@ -2603,7 +2790,8 @@ let inventory = {
   clothes: ['c_default'],
   spoon: ['s_wood'],
   bowl: ['b_default'],
-  equipped: { hair: 0, clothes: 'c_default', spoon: 's_wood', bowl: 'b_default' }
+  pet: ['p_none'],
+  equipped: { hair: 0, clothes: 'c_default', spoon: 's_wood', bowl: 'b_default', pet: 'p_none' }
 };
 
 const savedInv = localStorage.getItem(INV_KEY);
@@ -2675,11 +2863,19 @@ function updateGemsUI() {
 
 // 착용 아이템 렌더링
 function applyEquippedVisuals() {
-  // 1) 헤어스타일
-  if (inventory.equipped && typeof inventory.equipped.hair === 'number') {
-    currentHair = inventory.equipped.hair % hairStyles.length;
-    renderHair(false);
+  if (!inventory.equipped) {
+    inventory.equipped = { hair: 0, clothes: 'c_default', spoon: 's_wood', bowl: 'b_default' };
   }
+  if (!inventory.hair) inventory.hair = [0, 1, 2, 3];
+  if (!inventory.clothes) inventory.clothes = ['c_default'];
+  if (!inventory.spoon) inventory.spoon = ['s_wood'];
+  if (!inventory.bowl) inventory.bowl = ['b_default'];
+  if (!inventory.pet) inventory.pet = ['p_none'];
+  if (!inventory.equipped.pet) inventory.equipped.pet = 'p_none';
+
+  // 1) 헤어스타일
+  currentHair = (inventory.equipped.hair || 0) % hairStyles.length;
+  renderHair(false);
 
   // 2) 옷/앞치마
   const curCloth = shopCatalog.clothes.find(c => c.id === (inventory.equipped && inventory.equipped.clothes)) || shopCatalog.clothes[0];
@@ -2709,6 +2905,21 @@ function applyEquippedVisuals() {
   if (bowlWrap && bowlWrap.classList.contains('metal-bowl')) {
     bowlWrap.style.background = curBowl.metalBg;
     bowlWrap.style.borderColor = curBowl.border;
+  }
+
+  // 5) 반려동물 펫
+  const curPet = shopCatalog.pet.find(p => p.id === (inventory.equipped && inventory.equipped.pet)) || shopCatalog.pet[0];
+  const petStage = $('petStage');
+  const petAvatar = $('petAvatar');
+  const petBubble = $('petBubble');
+  if (petStage) {
+    if (!curPet || curPet.id === 'p_none') {
+      petStage.style.display = 'none';
+    } else {
+      petStage.style.display = 'flex';
+      if (petAvatar) petAvatar.textContent = curPet.icon;
+      if (petBubble) petBubble.textContent = curPet.speech || `${curPet.icon} 냠냠!`;
+    }
   }
 }
 
@@ -2831,12 +3042,20 @@ function recordOrderSuccess(level) {
 
 const $ = (id) => document.getElementById(id);
 
-function cost() {
+function baseCost() {
  return picked.reduce((a,i) => a + items[i][2], 0)
  + pickedSides.reduce((a,i) => a + sides[i][2], 0)
  + spice[sp][1]
  + extras[extra][1]
  + pickedTops.reduce((a,i) => a + toppings[i][1], 0);
+}
+
+function discountAmount() {
+ return isReviewDiscount ? Math.round(baseCost() * 0.3) : 0;
+}
+
+function cost() {
+ return baseCost() - discountAmount();
 }
 
 function toast(t) {
@@ -2936,12 +3155,23 @@ function render() {
  ).join('');
 
  const w = picked.reduce((a, i) => a + items[i][3], 0);
+ const bCost = baseCost();
+ const dAmt = discountAmount();
  const curCost = cost();
- $('price').textContent = curCost + '원';
+ 
+ if (isReviewDiscount && dAmt > 0) {
+   $('price').innerHTML = `${curCost.toLocaleString()}원 <small style="font-size:13px;color:#e91e63;font-weight:900;">(30% 할인 -${dAmt.toLocaleString()}원)</small>`;
+ } else {
+   $('price').textContent = curCost.toLocaleString() + '원';
+ }
  $('weight').textContent = w + 'g';
- $('detail').textContent = picked.length 
+ 
+ const allReqs = [...chefSelectedReqs, chefCustomText.trim()].filter(Boolean);
+ const reqStr = allReqs.length ? `<div style="color:#c94232;font-size:12px;margin-top:2px;">👨‍🍳 셰프 요청: <b>${allReqs.join(', ')}</b></div>` : '';
+ 
+ $('detail').innerHTML = (picked.length 
 ? `탕 ${picked.length}가지 · ${spice[sp][0]} · ${extras[extra][0]}` + (pickedTops.length ? ' · ' + pickedTops.map(i => toppings[i][0]).join('·') : '')
- : '아직 담은 재료가 없어요';
+ : '아직 담은 재료가 없어요') + reqStr;
  $('sideDetail').textContent = pickedSides.length 
 ? '사이드: ' + pickedSides.map(i => sides[i][0]).join(' · ') 
 : '사이드 메뉴를 선택하지 않았어요';
@@ -3381,6 +3611,13 @@ function updateCharacterExpression(state, customLabel = null) {
  sweatDrop.classList.add('hidden');
  charFx.innerHTML = '';
  char.classList.remove('spicy-storm', 'chewing', 'eating-spoon', 'eating-chopsticks');
+ const pStageIdle = $('petStage');
+ const pBubbleIdle = $('petBubble');
+ if (pStageIdle && pStageIdle.style.display !== 'none') {
+   pStageIdle.className = 'pet-companion-stage';
+   const curPetInfo = shopCatalog.pet.find(p => p.id === (inventory.equipped && inventory.equipped.pet));
+   if (pBubbleIdle && curPetInfo) pBubbleIdle.textContent = curPetInfo.speech || '행복해! 💕';
+ }
  head.style.background = '#ffd0a6';
 
  if (state === 'idle') {
@@ -3410,6 +3647,12 @@ else if (state === 'chew') {
  char.classList.add('chewing');
  mouth.classList.add('open');
  faceLabel.textContent = customLabel || '아— 냠냠냠!';
+ const pStage = $('petStage');
+ const pBubble = $('petBubble');
+ if (pStage && pStage.style.display !== 'none') {
+   pStage.className = 'pet-companion-stage pet-chew';
+   if (pBubble) pBubble.textContent = '냠냠! 😋';
+ }
  }
  else if (state === 'react') {
  if (sp === 0) {
@@ -3446,6 +3689,12 @@ else if (sp === 3) {
  mouth.classList.add('spicy-gasp');
  fireBreath.classList.remove('hidden');
  charFx.innerHTML = '<span class="fire-fx">🔥</span><span class="steam">♨️</span><span class="fire-fx">🔥</span>';
+ const pStageSpicy = $('petStage');
+ const pBubbleSpicy = $('petBubble');
+ if (pStageSpicy && pStageSpicy.style.display !== 'none') {
+   pStageSpicy.className = 'pet-companion-stage pet-spicy';
+   if (pBubbleSpicy) pBubbleSpicy.textContent = '으악! 매워!! 💦';
+ }
  head.style.background = '#ff9988';
  cheekL.classList.add('hot');
  cheekR.classList.add('hot');
@@ -3743,7 +3992,10 @@ function paid() {
  $('money').textContent = money;
  $('pay').disabled = true;
  $('payModal').classList.add('hidden');
- $('status').textContent = '주방에서 보글보글 끓이며 재료를 섞는 중… 🍲';
+ const activeChefReqs = [...chefSelectedReqs, chefCustomText.trim()].filter(Boolean);
+ $('status').textContent = activeChefReqs.length 
+   ? `주방 셰프: '[${activeChefReqs.join(', ')}] 반영하여 보글보글 조리 중… 🍲'`
+   : '주방에서 보글보글 끓이며 재료를 섞는 중… 🍲';
  toast('결제 성공! 주문이 접수됐어요 ♨️');
 
  clearTimeout(cookTimer);
@@ -3861,6 +4113,40 @@ document.querySelectorAll('.shop-tab').forEach(b => {
     renderShop();
   };
 });
+
+// 리뷰 30% 할인 체크박스
+const revChk = $('reviewDiscountCheckbox');
+if (revChk) {
+  revChk.onchange = () => {
+    isReviewDiscount = revChk.checked;
+    render();
+    if (isReviewDiscount) toast('📝 영수증 리뷰 약속! 30% 즉시 할인 적용 완료 ✨');
+  };
+}
+
+// 셰프 주의사항 태그 선택
+document.querySelectorAll('.chef-chip').forEach(btn => {
+  btn.onclick = () => {
+    const req = btn.dataset.req;
+    if (chefSelectedReqs.includes(req)) {
+      chefSelectedReqs = chefSelectedReqs.filter(r => r !== req);
+      btn.classList.remove('active');
+    } else {
+      chefSelectedReqs.push(req);
+      btn.classList.add('active');
+    }
+    render();
+  };
+});
+
+// 셰프 주의사항 직접 입력
+const chefInp = $('chefCustomReq');
+if (chefInp) {
+  chefInp.oninput = () => {
+    chefCustomText = chefInp.value;
+    render();
+  };
+}
 
 $('hairToggleBtn').onclick = nextHair;
 $('charHead').onclick = () => nextHair();
