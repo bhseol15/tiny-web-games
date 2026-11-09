@@ -1,0 +1,3611 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>오늘은 내가 마라탕 손님 — v15 (선반 재료통 & 사운드)</title>
+<style>
+:root{
+ --ink:#291a18;
+ --red:#c94232;
+ --hot:#f16b45;
+ --cream:#fff4df;
+ --paper:#fffaf0;
+ --line:#ead9c0;
+ --gold:#f6b846;
+ --mint:#d8eadc;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;
+ color:var(--ink);
+ font-family:'Noto Sans KR',sans-serif;
+ background:radial-gradient(#f3dec2 1px,transparent 1px) 0 0/18px 18px,#fff3df;
+}
+.wrap{max-width:1160px;margin:auto;padding:20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.logo{font:36px Jua,sans-serif;color:var(--red);letter-spacing:-2px}
+.logo small{font:16px 'Noto Sans KR',sans-serif;color:var(--ink);display:block;letter-spacing:0}
+.wallet-badge{
+ background:var(--ink);
+ color:#fff;
+ padding:10px 17px;
+ border-radius:99px;
+ font-weight:900;
+ box-shadow:0 4px #9c3428;
+}
+.hero{
+ background:var(--red);
+ color:#fff;
+ border-radius:30px;
+ padding:28px 30px;
+ position:relative;
+ overflow:hidden;
+ box-shadow:0 8px 0 #9f3026;
+}
+.hero:after{
+ content:'🥬 🍄 🥩 🦐';
+ position:absolute;
+ right:25px;
+ bottom:16px;
+ font-size:34px;
+ transform:rotate(-5deg);
+}
+h1{font:clamp(34px,7vw,68px) Jua,sans-serif;margin:0;line-height:1}
+.hero p{font-weight:700;margin:12px 0 0}
+.modebar{display:flex;gap:10px;margin:18px 0}
+.modebar button{
+ flex:1;
+ padding:14px;
+ font:20px Jua,sans-serif;
+ border-radius:18px;
+ border:2px solid var(--line);
+ background:#fffaf0;
+ cursor:pointer;
+ transition:0.15s;
+}
+.modebar button.active{
+ background:var(--red);
+ color:#fff;
+ border-color:#9f3026;
+ box-shadow:0 5px #9f3026;
+}
+.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:20px}
+.card{
+ background:rgba(255,250,240,.94);
+ border:2px solid var(--line);
+ border-radius:25px;
+ padding:21px;
+ box-shadow:0 7px 0 var(--line);
+ margin-bottom:18px;
+}
+.card h2{font:25px Jua,sans-serif;margin:0 0 14px}
+.filters,.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px}
+.choice,.filter{
+ border:2px solid var(--line);
+ background:#fffdf7;
+ border-radius:14px;
+ padding:10px 12px;
+ font-weight:900;
+ cursor:pointer;
+ transition:0.12s;
+}
+.choice:hover,.filter:hover{border-color:var(--hot);transform:translateY(-2px)}
+.choice.on,.filter.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* v15 재료 선반 & 재료통(Tub) 스타일 */
+.shelf-showcase{
+ background: linear-gradient(180deg, #3d4a54 0%, #2b353d 100%);
+ border: 4px solid #1f272e;
+ border-radius: 24px;
+ padding: 16px 14px 20px;
+ box-shadow: inset 0 3px 12px rgba(0,0,0,0.5), 0 8px 18px rgba(0,0,0,0.25);
+ margin-bottom: 22px;
+ position: relative;
+}
+.shelf-header{
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ color: #fff;
+ font: 900 15px 'Noto Sans KR', sans-serif;
+ margin-bottom: 12px;
+ padding: 0 4px;
+ text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+.shelf-cool-badge{
+ background: #0288d1;
+ color: #e1f5fe;
+ font-size: 11px;
+ padding: 3px 10px;
+ border-radius: 99px;
+ box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.shelf{
+ display: grid;
+ grid-template-columns: repeat(4, 1fr);
+ gap: 12px;
+}
+/* 재료가 여러 개 담긴 투명 냉장 통(Tub/Tray) */
+.ing{
+ position: relative;
+ word-break: keep-all;
+ border: 2px solid rgba(255,255,255,0.3);
+ background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(240,244,248,0.85) 60%, rgba(210,220,230,0.9) 100%);
+ border-radius: 18px;
+ padding: 8px 5px 10px;
+ min-height: 116px;
+ font-weight: 900;
+ color: var(--ink);
+ cursor: pointer;
+ box-shadow: inset 0 2px 4px rgba(255,255,255,0.9), 0 6px 10px rgba(0,0,0,0.2);
+ transition: all 0.16s ease;
+ overflow: hidden;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: space-between;
+}
+.ing:before{
+ content: '';
+ position: absolute;
+ top: 0;
+ left: 0;
+ right: 0;
+ height: 9px;
+ background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(200,215,225,0.4));
+ border-bottom: 1px solid rgba(160,180,195,0.6);
+ border-radius: 16px 16px 0 0;
+}
+.ing:hover{
+ transform: translateY(-4px) scale(1.02);
+ border-color: #f16b45;
+ box-shadow: 0 10px 18px rgba(241,107,69,0.3);
+}
+.ing.on{
+ background: linear-gradient(180deg, #ffe8d9 0%, #ffd0b5 100%);
+ border-color: #c94232;
+ box-shadow: inset 0 0 10px rgba(201,66,50,0.25), 0 6px 12px rgba(201,66,50,0.3);
+}
+/* 통 안의 수북한 재료 레이어 */
+.tub-stack{
+ position: relative;
+ width: 58px;
+ height: 44px;
+ margin: 6px auto 2px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+.tub-stack .sub-item{
+ position: absolute;
+ width: 32px;
+ height: 26px;
+ opacity: 0.45;
+ pointer-events: none;
+}
+.tub-stack .sub-item.s1{ top: -2px; left: 2px; transform: rotate(-14deg) scale(0.85); }
+.tub-stack .sub-item.s2{ top: -1px; right: 2px; transform: rotate(16deg) scale(0.85); }
+.tub-stack .main-item{
+ position: relative;
+ z-index: 2;
+ width: 50px;
+ height: 38px;
+ filter: drop-shadow(0 3px 4px rgba(0,0,0,0.25));
+}
+.tub-badge{
+ position: absolute;
+ top: 5px;
+ right: 6px;
+ background: #c94232;
+ color: #fff;
+ font-size: 10px;
+ font-weight: 900;
+ padding: 1px 6px;
+ border-radius: 99px;
+ box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+ z-index: 10;
+}
+.tub-qty{
+ font-size: 10px;
+ color: #607d8b;
+ margin-top: 1px;
+}
+/* 커다란 보울 (대형 스텐 믹싱볼) */
+.bowl-container{
+ position: relative;
+ width: min(100%, 340px);
+ aspect-ratio: 1/1;
+ margin: 10px auto 0;
+}
+.bowl.metal-bowl{
+ background: radial-gradient(ellipse at 42% 38%, #ffffff 0%, #edf1f5 25%, #c8d3dd 55%, #8f9ea9 82%, #55626e 100%) !important;
+ border: 10px solid #d5dee6 !important;
+ box-shadow: inset 0 0 35px rgba(25,38,50,0.6), inset 0 4px 14px rgba(255,255,255,0.95), 0 10px 28px rgba(0,0,0,0.3) !important;
+}
+.food.uncooked button{
+ animation: dropIn 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+@keyframes dropIn{
+ 0%{ transform: translateY(-24px) scale(0.7); opacity: 0; }
+ 100%{ transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.side-note{
+ background:#fff0c9;
+ border:2px dashed #e0a83f;
+ border-radius:14px;
+ padding:10px;
+ margin:-3px 0 12px;
+ font-weight:700;
+ font-size:13px;
+}
+.side-picked{color:var(--red);font-weight:900}
+.ing{
+ word-break:keep-all;
+ border:2px solid var(--line);
+ background:#fffdf7;
+ border-radius:17px;
+ padding:10px 4px;
+ min-height:102px;
+ font-weight:900;
+ color:var(--ink);
+ cursor:pointer;
+ transition:.15s;
+}
+.ing:hover{transform:translateY(-3px);border-color:var(--hot)}
+.ing.on{background:#ffd7bb;border-color:var(--red);box-shadow:inset 0 -5px #d94d35}
+.emoji{display:block;margin-bottom:3px}
+.art{display:block;width:52px;height:42px;margin:auto}
+
+/* 캐릭터 & 식사 무대 */
+.eatstage{
+ position:relative;
+ padding-top:6px;
+ text-align:center;
+}
+.character-wrap{
+ position:relative;
+ width:220px;
+ height:200px;
+ margin:0 auto 4px;
+ user-select:none;
+}
+.character{
+ position:relative;
+ width:100%;
+ height:100%;
+}
+.char-fx{
+ position:absolute;
+ top:-22px;
+ left:50%;
+ transform:translateX(-50%);
+ display:flex;
+ gap:8px;
+ pointer-events:none;
+ z-index:25;
+}
+.steam{
+ font-size:24px;
+ animation:steamFloat 1.2s infinite ease-out;
+}
+@keyframes steamFloat{
+ 0%{transform:translateY(8px) scale(0.7);opacity:0}
+ 40%{opacity:1}
+ 100%{transform:translateY(-18px) scale(1.2);opacity:0}
+}
+.fire-fx{
+ font-size:28px;
+ animation:fireFlare 0.4s infinite alternate ease-in-out;
+}
+@keyframes fireFlare{
+ 0%{transform:scale(0.8) rotate(-8deg)}
+ 100%{transform:scale(1.25) rotate(8deg)}
+}
+
+/* 캐릭터 머리 */
+.head{
+ width:112px;
+ height:100px;
+ background:#ffd0a6;
+ border:4px solid #291a18;
+ border-radius:48% 48% 44% 44%;
+ margin:0 auto;
+ position:relative;
+ z-index:6;
+ box-shadow:inset 0 -8px #f2b282;
+ transition:background 0.3s, transform 0.2s;
+ cursor:pointer;
+}
+.head:hover{transform:scale(1.02)}
+
+/* 헤어스타일 시스템 (4가지 스타일) */
+.hair-container{
+ position:absolute;
+ inset:0;
+ pointer-events:none;
+ z-index:7;
+}
+
+/* 스타일 0: 마라 똥머리 + 고추핀 🌶️ */
+.hair-bun{
+ position:absolute;
+ top:-34px;
+ left:35px;
+ width:42px;
+ height:38px;
+ background:#39231d;
+ border:4px solid #291a18;
+ border-radius:50%;
+ box-shadow:inset -3px -3px #231410;
+ z-index:10;
+}
+.hair-bun-band{
+ position:absolute;
+ top:-11px;
+ left:39px;
+ width:34px;
+ height:11px;
+ background:#c94232;
+ border:2.5px solid #291a18;
+ border-radius:6px;
+ z-index:11;
+}
+.hair-chili-pin{
+ position:absolute;
+ top:-26px;
+ left:68px;
+ font-size:19px;
+ transform:rotate(28deg);
+ z-index:12;
+ filter:drop-shadow(1px 2px 1px rgba(0,0,0,0.3));
+}
+.hair-top-base{
+ position:absolute;
+ top:-8px;
+ left:8px;
+ width:96px;
+ height:38px;
+ background:#39231d;
+ border-radius:55% 55% 35% 25%;
+ border-top:3px solid #291a18;
+}
+.hair-bangs{
+ position:absolute;
+ top:20px;
+ left:18px;
+ width:76px;
+ height:14px;
+ background:#39231d;
+ border-radius:0 0 12px 12px;
+}
+.hair-sideburn-l{
+ position:absolute;
+ top:28px;
+ left:4px;
+ width:12px;
+ height:24px;
+ background:#39231d;
+ border-radius:0 0 6px 6px;
+}
+.hair-sideburn-r{
+ position:absolute;
+ top:28px;
+ right:4px;
+ width:12px;
+ height:24px;
+ background:#39231d;
+ border-radius:0 0 6px 6px;
+}
+
+/* 스타일 1: 양갈래 만두머리 + 리본 🎀 */
+.twin-bun-l{
+ position:absolute;
+ top:-18px;
+ left:-14px;
+ width:36px;
+ height:36px;
+ background:#39231d;
+ border:3.5px solid #291a18;
+ border-radius:50%;
+ z-index:10;
+}
+.twin-ribbon-l{position:absolute;top:2px;left:-8px;font-size:16px;z-index:12}
+.twin-bun-r{
+ position:absolute;
+ top:-18px;
+ right:-14px;
+ width:36px;
+ height:36px;
+ background:#39231d;
+ border:3.5px solid #291a18;
+ border-radius:50%;
+ z-index:10;
+}
+.twin-ribbon-r{position:absolute;top:2px;right:-8px;font-size:16px;z-index:12}
+
+/* 스타일 2: 상큼 보브 단발 + 골드핀 ✨ */
+.bob-hair-back{
+ position:absolute;
+ top:-6px;
+ left:-8px;
+ width:128px;
+ height:76px;
+ background:#4a2f26;
+ border:4px solid #291a18;
+ border-radius:50% 50% 35% 35%;
+ z-index:1;
+}
+.gold-hair-pin{
+ position:absolute;
+ top:16px;
+ left:18px;
+ width:18px;
+ height:6px;
+ background:#f6b846;
+ border:2px solid #a87922;
+ border-radius:4px;
+ transform:rotate(-15deg);
+ z-index:12;
+}
+
+/* 스타일 3: 힙스터 캡모자 🧢 */
+.cap-crown{
+ position:absolute;
+ top:-22px;
+ left:-4px;
+ width:120px;
+ height:52px;
+ background:#c94232;
+ border:4px solid #291a18;
+ border-radius:50% 50% 12% 12%;
+ z-index:10;
+ box-shadow:inset 0 4px #e05e4f;
+}
+.cap-bill{
+ position:absolute;
+ top:-2px;
+ right:-20px;
+ width:38px;
+ height:14px;
+ background:#9f3026;
+ border:3.5px solid #291a18;
+ border-radius:8px 16px 4px 4px;
+ transform:rotate(-12deg);
+ z-index:9;
+}
+.cap-badge{
+ position:absolute;
+ top:-12px;
+ left:38px;
+ font:900 11px 'Noto Sans KR',sans-serif;
+ color:#fff;
+ background:#291a18;
+ padding:2px 7px;
+ border-radius:6px;
+ z-index:12;
+ letter-spacing:-0.5px;
+}
+
+/* 헤어 변경 버튼 */
+.hair-toggle-wrap{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ gap:6px;
+ margin-top:2px;
+ margin-bottom:4px;
+}
+.hair-toggle-btn{
+ background:#fffaf0;
+ border:2px solid var(--line);
+ color:var(--ink);
+ font:900 12px 'Noto Sans KR',sans-serif;
+ padding:4px 12px;
+ border-radius:99px;
+ cursor:pointer;
+ box-shadow:0 3px 0 var(--line);
+ transition:all 0.15s;
+}
+.hair-toggle-btn:hover{
+ background:#ffd7bb;
+ border-color:var(--red);
+ transform:translateY(-1px);
+}
+.hair-pop-anim{
+ animation:hairPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes hairPop{
+ 0%{transform:scale(0.85);opacity:0.7}
+ 100%{transform:scale(1);opacity:1}
+}
+
+/* 얼굴 부품들 */
+.eyes{
+ position:absolute;
+ top:46px;
+ left:0;
+ right:0;
+ display:flex;
+ justify-content:space-between;
+ padding:0 26px;
+ z-index:8;
+}
+.eye{
+ width:10px;
+ height:10px;
+ background:#291a18;
+ border-radius:50%;
+ transition:all 0.15s;
+}
+.eye.happy{
+ background:transparent!important;
+ border-top:3.5px solid #291a18;
+ border-radius:50% 50% 0 0;
+ height:8px;
+}
+.eye.spicy{
+ background:transparent!important;
+ border-top:3.5px solid #291a18;
+ border-bottom:3.5px solid #291a18;
+ border-radius:2px;
+ height:4px;
+ transform:rotate(15deg);
+}
+.eye.l.spicy{transform:rotate(-15deg)}
+.eye.fire{
+ background:transparent!important;
+ border:none;
+ font-size:16px;
+ margin-top:-6px;
+}
+.eye.fire:before{content:'🔥'}
+
+.eyebrows{
+ position:absolute;
+ top:38px;
+ left:0;
+ right:0;
+ display:flex;
+ justify-content:space-between;
+ padding:0 24px;
+ z-index:8;
+}
+.eyebrow{
+ width:14px;
+ height:3px;
+ background:#291a18;
+ border-radius:2px;
+ transition:transform 0.2s;
+}
+.eyebrow.l{transform:rotate(4deg)}
+.eyebrow.r{transform:rotate(-4deg)}
+.eyebrow.worried.l{transform:rotate(-16deg)}
+.eyebrow.worried.r{transform:rotate(16deg)}
+
+.cheeks{
+ position:absolute;
+ top:58px;
+ left:0;
+ right:0;
+ display:flex;
+ justify-content:space-between;
+ padding:0 12px;
+ z-index:8;
+}
+.cheek{
+ width:16px;
+ height:10px;
+ background:#f38d7d;
+ border-radius:50%;
+ opacity:0.65;
+ transition:all 0.3s;
+}
+.cheek.hot{
+ background:#ff3823;
+ opacity:0.9;
+ transform:scale(1.4);
+}
+.mouth-wrap{
+ position:absolute;
+ top:65px;
+ left:0;
+ right:0;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ z-index:8;
+}
+.mouth{
+ width:24px;
+ height:10px;
+ border:3.5px solid #291a18;
+ border-top:0;
+ border-radius:0 0 18px 18px;
+ transition:all 0.15s;
+ background:#7a1d1d;
+}
+.mouth.open{
+ width:26px;
+ height:24px;
+ border:3.5px solid #291a18;
+ border-radius:50%;
+ background:#7a1d1d;
+}
+.mouth.happy{
+ width:28px;
+ height:12px;
+ border:3.5px solid #291a18;
+ border-top:0;
+ border-radius:0 0 20px 20px;
+ background:#c94232;
+}
+.mouth.spicy-gasp{
+ width:32px;
+ height:28px;
+ border:4px solid #291a18;
+ border-radius:45% 45% 55% 55%;
+ background:#a11c1c;
+}
+.tongue{
+ font-size:18px;
+ margin-top:-7px;
+ animation:tonguePant 0.25s infinite alternate;
+}
+@keyframes tonguePant{
+ 0%{transform:translateY(0) scale(0.95)}
+ 100%{transform:translateY(3px) scale(1.1)}
+}
+.fire-breath{
+ font-size:26px;
+ margin-top:-14px;
+ animation:fireBreath 0.3s infinite alternate ease-in-out;
+}
+@keyframes fireBreath{
+ 0%{transform:scale(0.8) translateY(0)}
+ 100%{transform:scale(1.3) translateY(4px)}
+}
+.sweat{
+ position:absolute;
+ top:30px;
+ right:6px;
+ font-size:20px;
+ animation:sweatDrop 0.8s infinite;
+ z-index:9;
+}
+@keyframes sweatDrop{
+ 0%{transform:translateY(0);opacity:0}
+ 40%{opacity:1}
+ 100%{transform:translateY(12px);opacity:0}
+}
+
+/* 몸통 & 앞치마 */
+.torso{
+ position:absolute;
+ bottom:0;
+ left:50%;
+ transform:translateX(-50%);
+ width:140px;
+ height:88px;
+ z-index:4;
+}
+.neck{
+ width:30px;
+ height:16px;
+ background:#f2b282;
+ border:3.5px solid #291a18;
+ border-top:none;
+ margin:-6px auto 0;
+ border-radius:0 0 10px 10px;
+}
+.body-shirt{
+ width:120px;
+ height:78px;
+ background:#f16b45;
+ border:4px solid #291a18;
+ border-radius:30px 30px 12px 12px;
+ margin:-4px auto 0;
+ position:relative;
+ box-shadow:inset 0 -6px #c44e2b;
+}
+.apron{
+ position:absolute;
+ inset:6px 14px 0;
+ background:#fffaf0;
+ border:3px solid #76584d;
+ border-bottom:none;
+ border-radius:16px 16px 0 0;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+.apron-logo{
+ font:900 11px 'Noto Sans KR',sans-serif;
+ color:#c94232;
+ letter-spacing:-0.5px;
+}
+
+/* 양팔 & 손 */
+.arm{
+ position:absolute;
+ top:22px;
+ width:36px;
+ height:60px;
+ z-index:7;
+ transform-origin:top center;
+ transition:transform 0.25s ease;
+}
+.arm-left{left:-6px}
+.arm-right{right:-6px}
+.hand{
+ position:absolute;
+ bottom:0;
+ width:24px;
+ height:24px;
+ background:#ffd0a6;
+ border:3.5px solid #291a18;
+ border-radius:50%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ box-shadow:0 2px #d9a073;
+}
+.held-spoon{
+ position:absolute;
+ left:-28px;
+ top:-14px;
+ transform:rotate(-32deg);
+ pointer-events:none;
+}
+.mini-spoon{width:46px;height:24px}
+.held-chopsticks{
+ position:absolute;
+ right:-16px;
+ top:-22px;
+ font-size:32px;
+ transform:rotate(18deg);
+ pointer-events:none;
+}
+
+/* 먹기 애니메이션 */
+.character.eating-spoon .arm-left{
+ animation:armEatSpoon 1.05s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+@keyframes armEatSpoon{
+ 0%{transform:translate(0,0) rotate(0deg)}
+ 35%{transform:translate(28px,48px) rotate(42deg)}
+ 65%{transform:translate(42px,-26px) rotate(-55deg)}
+ 100%{transform:translate(0,0) rotate(0deg)}
+}
+
+.character.eating-chopsticks .arm-right{
+ animation:armEatChop 1.05s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+@keyframes armEatChop{
+ 0%{transform:translate(0,0) rotate(0deg)}
+ 35%{transform:translate(-28px,48px) rotate(-42deg)}
+ 65%{transform:translate(-44px,-26px) rotate(52deg)}
+ 100%{transform:translate(0,0) rotate(0deg)}
+}
+
+.character.chewing .head{
+ animation:headChew 0.28s 4 alternate ease-in-out;
+}
+@keyframes headChew{
+ 0%{transform:translateY(0) rotate(0deg)}
+ 100%{transform:translateY(6px) rotate(-2deg)}
+}
+
+.character.spicy-storm{
+ animation:stormShake 0.1s infinite alternate ease-in-out;
+}
+@keyframes stormShake{
+ 0%{transform:translate(-3px,0)}
+ 100%{transform:translate(3px,-2px)}
+}
+
+.face-label{
+ text-align:center;
+ font-weight:900;
+ color:var(--red);
+ font-size:15px;
+ min-height:22px;
+ margin-top:2px;
+}
+
+/* 그릇: 정원 고정 */
+.bowl-container{
+ position:relative;
+ width:min(100%,310px);
+ aspect-ratio:1/1;
+ margin:10px auto 0;
+}
+.bowl{
+ position:relative;
+ width:100%;
+ height:100%;
+ border-radius:50%;
+ overflow:hidden;
+ box-sizing:border-box;
+ box-shadow:inset 0 0 35px rgba(0,0,0,0.45),0 8px 22px rgba(60,20,10,0.22);
+ transition:background 0.5s, box-shadow 0.5s, border 0.5s;
+}
+
+/* 철 그릇(스테인리스 볼) 스타일 */
+.bowl.metal-bowl{
+ background:
+ radial-gradient(ellipse at 42% 38%, #ffffff 0%, #edf1f5 25%, #c8d3dd 55%, #8f9ea9 82%, #55626e 100%) !important;
+ border: 8px solid #cdd6df !important;
+ box-shadow:
+ inset 0 0 28px rgba(35,50,65,0.5),
+ inset 0 4px 10px rgba(255,255,255,0.95),
+ 0 8px 22px rgba(0,0,0,0.25) !important;
+}
+.bowl.metal-bowl:after{
+ background:
+ linear-gradient(135deg, rgba(255,255,255,0.45) 0%, transparent 40%, rgba(255,255,255,0.25) 60%, transparent 100%),
+ radial-gradient(circle, transparent 65%, rgba(40,50,60,0.12) 68%, transparent 72%) !important;
+ opacity:0.85 !important;
+}
+
+/* 회색 연기 구름 */
+.smoke-overlay{
+ position:absolute;
+ inset:-25px;
+ pointer-events:none;
+ z-index:35;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+.smoke-cloud{
+ position:absolute;
+ border-radius:50%;
+ background:radial-gradient(circle, rgba(195,200,205,0.9) 0%, rgba(140,145,150,0.7) 48%, rgba(100,105,110,0) 80%);
+ filter:blur(9px);
+ opacity:0;
+}
+.smoke-active .smoke-cloud{
+ animation:smokePuff 1.35s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+.smoke-cloud.s1{ width:180px; height:180px; top:18%; left:12%; animation-delay:0s; }
+.smoke-cloud.s2{ width:220px; height:220px; top:8%; left:24%; animation-delay:0.1s; }
+.smoke-cloud.s3{ width:190px; height:190px; top:14%; right:14%; animation-delay:0.18s; }
+.smoke-cloud.s4{ width:170px; height:170px; bottom:18%; left:26%; animation-delay:0.25s; }
+.smoke-cloud.s5{ width:240px; height:240px; top:4%; left:18%; animation-delay:0.32s; }
+
+@keyframes smokePuff{
+ 0%{ transform:translateY(35px) scale(0.35) rotate(0deg); opacity:0; }
+ 30%{ opacity:0.95; transform:translateY(0px) scale(1.05) rotate(15deg); }
+ 70%{ opacity:0.8; transform:translateY(-40px) scale(1.35) rotate(-10deg); }
+ 100%{ opacity:0; transform:translateY(-85px) scale(1.7) rotate(22deg); }
+}
+
+.soup-boil-pop{
+ animation:boilMix 0.85s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes boilMix{
+ 0%{transform:scale(0.92) rotate(-6deg);filter:brightness(1.2) contrast(1.1)}
+ 45%{transform:scale(1.06) rotate(4deg);filter:brightness(1.1)}
+ 100%{transform:scale(1) rotate(0deg)}
+}
+
+/* 맵기별 국물 색상 */
+.bowl.spice0{
+ background:radial-gradient(ellipse at 50% 47%,#e58b4a 0 34%,#f0a86c 35% 43%,#f8dcb0 44% 48%,#fffaf0 49% 63%,#b9895b 64% 67%,#fff 68%);
+ box-shadow:inset 0 0 34px #a9743a55,0 8px 20px #8a502333;
+}
+.bowl.spice1{
+ background:radial-gradient(ellipse at 50% 47%,#d2552b 0 34%,#e8783f 35% 43%,#f6d6a6 44% 48%,#fffaf0 49% 63%,#b9895b 64% 67%,#fff 68%);
+ box-shadow:inset 0 0 34px #8c3a1e55,0 8px 20px #70260f33;
+}
+.bowl.spice2{
+ background:radial-gradient(ellipse at 50% 47%,#a8241a 0 34%,#d13f22 35% 43%,#f4d4a2 44% 48%,#fffaf0 49% 63%,#b9895b 64% 67%,#fff 68%);
+ box-shadow:inset 0 0 36px #6e211d77,0 8px 20px #500f0b44;
+}
+.bowl.spice3{
+ background:radial-gradient(ellipse at 50% 47%,#650b0e 0 34%,#961418 35% 43%,#e09e74 44% 48%,#fffaf0 49% 63%,#b9895b 64% 67%,#fff 68%);
+ box-shadow:inset 0 0 44px #330406aa,inset 0 0 0 5px #c0392b44,0 8px 22px #33040655;
+}
+.bowl.tomato{
+ background:radial-gradient(ellipse at 50% 47%,#e0432c 0 34%,#f26a3e 35% 43%,#ffd9a8 44% 48%,#fffaf0 49% 63%,#b9895b 64% 67%,#fff 68%)!important;
+ box-shadow:inset 0 0 34px #9b2a1a55,0 8px 20px #72190e33!important;
+}
+
+/* 국물 기름방울 및 윤기 텍스처 (고추기름 광택 보강) */
+.bowl:after{
+ content:'';
+ position:absolute;
+ inset:10%;
+ border-radius:50%;
+ pointer-events:none;
+ background:
+ radial-gradient(circle, rgba(255,210,108,0.7) 0 3px, transparent 4px) 0 0/34px 26px,
+ radial-gradient(circle, rgba(220,50,20,0.45) 0 4px, transparent 6px) 14px 10px/42px 32px;
+ opacity:0.75;
+ z-index:2;
+}
+.bowl.spice3:after{
+ background:
+ radial-gradient(circle, #ff8c3a 0 4px, transparent 5px) 0 0/28px 21px,
+ radial-gradient(circle, #4a0505 0 3px, transparent 4px) 14px 10px/40px 30px,
+ radial-gradient(circle, rgba(255,60,0,0.6) 0 5px, transparent 7px) 7px 15px/35px 25px;
+ opacity:0.9;
+}
+
+/* 그릇 안 음식 영역 */
+.food{
+ position:absolute;
+ left:50%;
+ top:50%;
+ transform:translate(-50%,-50%);
+ width:80%;
+ height:80%;
+ border-radius:50%;
+ overflow:hidden;
+ display:flex;
+ flex-wrap:wrap;
+ align-content:center;
+ justify-content:center;
+ gap:2px;
+ padding:4px;
+ z-index:3;
+}
+.empty-bowl-msg{
+ color:#fff;
+ font-weight:900;
+ font-size:14px;
+ text-shadow:0 1px 3px #5f1712;
+ line-height:1.4;
+}
+.food.uncooked .empty-bowl-msg{
+ color:#425260;
+ text-shadow:none;
+}
+
+/* 재료 기본 스타일 */
+.food button{
+ position:relative;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ border:1px solid rgba(255,255,255,0.5);
+ background:rgba(255,255,255,0.28);
+ backdrop-filter:blur(1px);
+ border-radius:14px;
+ padding:3px 5px;
+ margin:-4px -3px;
+ cursor:pointer;
+ box-shadow:0 4px 10px rgba(50,10,10,0.38);
+ transition:transform 0.16s ease, z-index 0.1s, background 0.16s, box-shadow 0.16s;
+}
+.food button .art{
+ width:44px;
+ height:34px;
+ margin:0;
+ filter:drop-shadow(0 2px 4px rgba(60,10,10,0.45));
+}
+.food-name{
+ font:9px/1.1 'Noto Sans KR',sans-serif;
+ font-weight:900;
+ color:#fff;
+ text-shadow:0 1px 2px #5f1712;
+ white-space:nowrap;
+ max-width:56px;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ margin-top:1px;
+}
+
+/* 마우스 올리면 젓가락으로 쏙 건져 올리는 효과 */
+.food button:hover{
+ transform:scale(1.24) translateY(-6px) rotate(0deg)!important;
+ z-index:40!important;
+ background:rgba(255,255,255,0.95);
+ box-shadow:0 8px 18px rgba(0,0,0,0.5);
+}
+.food button:hover .food-name{
+ color:#291a18;
+ text-shadow:none;
+}
+
+/* 토핑 스타일 */
+.food button.topping{
+ background:rgba(255,244,194,0.88);
+ border:2px solid #f6b846;
+ box-shadow:0 4px 8px rgba(90,50,10,0.4);
+}
+.food button.topping .art{width:36px;height:28px}
+.food button.topping .food-name{
+ color:#764516;
+ text-shadow:none;
+}
+
+/* 조리 전(담는 중) 철 그릇 위 신선 재료 스타일 */
+.food.uncooked button{
+ margin:2px 2px;
+ border-radius:10px;
+ background:rgba(255,255,255,0.9);
+ border:1.5px solid #b4c2ce;
+ box-shadow:0 3px 6px rgba(40,55,70,0.25);
+}
+.food.uncooked button .food-name{
+ color:#291a18;
+ text-shadow:none;
+}
+
+/* 국물 마시기 숟가락 버튼 */
+.spoon{
+ position:absolute;
+ cursor:pointer;
+ pointer-events:auto;
+ z-index:20;
+ right:12px;
+ bottom:16px;
+ width:130px;
+ height:40px;
+ padding:0;
+ margin:0;
+ background:transparent!important;
+ border:0!important;
+ transform-origin:12px 19px;
+ transform:rotate(-28deg);
+ transition:transform 0.15s;
+ touch-action:manipulation;
+}
+.spoon:hover{transform:rotate(-20deg) scale(1.08)}
+.spoon-tap{animation:feedSpoon 1.05s cubic-bezier(.2,.8,.3,1)!important}
+@keyframes feedSpoon{
+ 0%{transform:rotate(-28deg) translate(0,0)}
+ 45%{transform:rotate(-70deg) translate(-50px,-110px)}
+ 100%{transform:rotate(-28deg) translate(0,0)}
+}
+
+/* 먹기 팝 텍스트 */
+.chop{
+ position:absolute;
+ font:26px Jua,sans-serif;
+ color:#fff;
+ pointer-events:none;
+ z-index:50;
+ text-shadow:0 2px 4px #871912;
+ animation:pop .55s forwards;
+}
+@keyframes pop{
+ from{opacity:1;transform:translateY(0) scale(0.9)}
+ to{opacity:0;transform:translateY(-55px) scale(1.2)}
+}
+
+/* 사이드 메뉴 전용 용기 */
+.side-serving{
+ margin-top:14px;
+ background:linear-gradient(135deg,#fffdf7,#fffaed);
+ border:2px solid #e2cb9d;
+ border-radius:20px;
+ padding:12px 14px;
+ box-shadow:0 4px 14px rgba(0,0,0,0.05);
+}
+.side-serving h3{
+ margin:0 0 10px;
+ font-size:15px;
+ color:#5c3c26;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+}
+.side-list{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+ gap:10px;
+}
+.side-vessel-btn{
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ background:#ffffff;
+ border:2px solid #eeddc8;
+ border-radius:16px;
+ padding:8px 6px;
+ cursor:pointer;
+ transition:all 0.18s ease;
+ box-shadow:0 3px 6px rgba(0,0,0,0.05);
+ text-align:center;
+ position:relative;
+}
+.side-vessel-btn * {
+ pointer-events:none;
+}
+@keyframes sideBiteFloat {
+ 0% { transform:translate(-50%,0) scale(0.6); opacity:0; }
+ 30% { transform:translate(-50%,-16px) scale(1.15); opacity:1; }
+ 100% { transform:translate(-50%,-38px) scale(1); opacity:0; }
+}
+.side-bite-float {
+ position:absolute;
+ top:30%;
+ left:50%;
+ transform:translate(-50%,0);
+ background:rgba(43,29,26,0.88);
+ color:#fff;
+ font-size:13px;
+ font-weight:800;
+ padding:3px 9px;
+ border-radius:12px;
+ pointer-events:none;
+ animation:sideBiteFloat 0.7s ease-out forwards;
+ z-index:20;
+ box-shadow:0 4px 10px rgba(0,0,0,0.25);
+ white-space:nowrap;
+}
+@keyframes vesselBitePop {
+ 0% { transform:scale(1); }
+ 40% { transform:scale(0.93) rotate(-2deg); }
+ 80% { transform:scale(1.05) rotate(1deg); }
+ 100% { transform:scale(1); }
+}
+.side-vessel-btn.vessel-bite-pop {
+ animation:vesselBitePop 0.35s ease-out;
+}
+.side-vessel-btn:hover:not(:disabled){
+ transform:translateY(-3px);
+ border-color:#d94d35;
+ box-shadow:0 6px 14px rgba(217,77,53,0.18);
+}
+.side-vessel-btn:disabled{cursor:default}
+.side-vessel-btn.done{
+ opacity:0.6;
+ filter:grayscale(0.8);
+ cursor:default;
+}
+.side-vessel-art{
+ width:100%;
+ height:72px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+.side-vessel-art svg{
+ width:100%;
+ height:100%;
+ filter:drop-shadow(0 3px 4px rgba(0,0,0,0.14));
+}
+.side-vessel-meta{
+ margin-top:4px;
+ width:100%;
+}
+.side-vessel-name{
+ font-size:13px;
+ font-weight:800;
+ color:#2b1d1a;
+ display:block;
+}
+.side-vessel-badge{
+ font-size:11px;
+ color:#a36a42;
+ font-weight:700;
+ display:block;
+ margin-top:2px;
+}
+
+/* 먹기 상태바 & 영수증 */
+.eatbar{margin-top:13px}
+.eatbar b{color:var(--red)}
+.bar{height:12px;background:#eadbc7;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--hot));transition:width .3s}
+.receipt{
+ background:#fff3d6;
+ border-radius:16px;
+ padding:14px;
+ margin-top:16px;
+ line-height:1.8;
+ font-weight:700;
+}
+.price{font-size:28px;color:var(--red);font-weight:900}
+.action{
+ width:100%;
+ border:0;
+ border-radius:16px;
+ background:var(--red);
+ color:#fff;
+ padding:16px;
+ font-size:19px;
+ font-weight:900;
+ margin-top:15px;
+ box-shadow:0 5px #9f3026;
+ cursor:pointer;
+ transition:0.15s;
+}
+.action:hover{transform:translateY(-2px);box-shadow:0 7px #9f3026}
+.action:disabled{opacity:.5;filter:grayscale(1);cursor:not-allowed;transform:none}
+.sub{display:flex;gap:8px;margin-top:10px}
+.ghost{
+ flex:1;
+ border:0;
+ border-radius:13px;
+ background:#f3e5d0;
+ padding:12px;
+ font-weight:900;
+ cursor:pointer;
+ transition:0.15s;
+}
+.ghost:hover{background:#ebd5bd}
+
+/* 지갑 & 결제 모달 */
+.overlay{
+ position:fixed;
+ inset:0;
+ background:rgba(41,26,24,0.85);
+ display:grid;
+ place-items:center;
+ padding:20px;
+ z-index:50;
+}
+.modal{
+ background:var(--cream);
+ border-radius:28px;
+ padding:28px;
+ max-width:500px;
+ width:100%;
+ text-align:center;
+ box-shadow:0 10px #9f3026;
+}
+.modal h2{font:36px Jua,sans-serif;margin:0 0 10px;color:var(--red)}
+.paymodal{text-align:left}
+.paymodal h2{text-align:center}
+.paynotice{
+ background:#fff0c9;
+ border:2px solid #e0a83f;
+ border-radius:14px;
+ padding:10px;
+ font-size:13px;
+ font-weight:900;
+ text-align:center;
+}
+.wallet{
+ background:linear-gradient(#8a5433,#5a3219);
+ border:2px solid #3d2010;
+ border-radius:18px;
+ padding:12px 12px 8px;
+ box-shadow:0 6px 0 #3d2010,inset 0 2px 0 #b57b52;
+ margin:14px 0 6px;
+ position:relative;
+}
+.wallet-flap{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ color:#f6e2c6;
+ font-weight:900;
+ margin-bottom:10px;
+}
+.wallet-flap small{font-weight:700;color:#e8c9a4;font-size:12px}
+.wallet-cards{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
+ gap:8px;
+ padding:4px 2px 6px;
+}
+.wcard{
+ width:100%;
+ height:74px;
+ border-radius:10px;
+ color:#fff;
+ padding:8px 9px;
+ font-size:11px;
+ font-weight:900;
+ cursor:pointer;
+ border:2px solid rgba(255,255,255,0.35);
+ box-shadow:0 3px 0 rgba(0,0,0,0.4);
+ transition:.15s;
+ text-align:left;
+ display:flex;
+ flex-direction:column;
+ position:relative;
+}
+.wcard:hover{transform:translateY(-4px);outline:2px solid #f6b846}
+.wcard.taken{opacity:.3;transform:translateY(6px);cursor:default;border-style:dashed}
+.wcard .wsub{font-weight:700;font-size:10px;opacity:.9;margin-top:2px}
+.wcard .wnum{margin-top:auto;font-size:10px;letter-spacing:1.5px;opacity:.95}
+.wcard .wchip{width:18px;height:13px;background:#e8bf67;border-radius:3px;position:absolute;right:8px;bottom:8px}
+
+.payarea{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:16px;
+ align-items:center;
+ margin:18px 0;
+}
+.card-slot{
+ height:118px;
+ border:3px dashed #d9b77d;
+ border-radius:16px;
+ display:grid;
+ place-items:center;
+ text-align:center;
+ color:#a36a42;
+ font-weight:900;
+ font-size:13px;
+ background:#fff6e5;
+}
+.virtual-card{
+ height:118px;
+ border-radius:16px;
+ background:linear-gradient(135deg,#25201e,#8d3028 55%,#f6b846);
+ color:#fff;
+ padding:16px;
+ box-shadow:0 8px 0 #b78a52;
+ cursor:grab;
+ touch-action:none;
+ user-select:none;
+ position:relative;
+ transition:transform .1s;
+}
+.virtual-card:active{cursor:grabbing}
+.virtual-card .cardsub{font-size:11px;opacity:.85;font-weight:700}
+.virtual-card .chip{width:38px;height:27px;background:#e8bf67;border-radius:6px;margin:10px 0}
+.virtual-card .cardnum{font-size:13px;letter-spacing:2px}
+.card-back{
+ display:block;
+ margin:10px auto 0;
+ border:0;
+ background:none;
+ color:#76584d;
+ font-weight:900;
+ cursor:pointer;
+ text-decoration:underline;
+ font-size:12px;
+}
+.reader{
+ height:126px;
+ border:3px dashed #c94232;
+ border-radius:18px;
+ background:#fffaf0;
+ display:grid;
+ place-items:center;
+ position:relative;
+ font-size:38px;
+}
+.reader small{display:block;font-size:12px;font-weight:900;color:#76584d}
+.reader:after{
+ content:'';
+ position:absolute;
+ left:18px;
+ right:18px;
+ bottom:17px;
+ height:7px;
+ border-radius:9px;
+ background:#eadbc7;
+}
+.reader .scanline{
+ position:absolute;
+ left:18px;
+ bottom:17px;
+ width:0;
+ height:7px;
+ border-radius:9px;
+ background:#f6b846;
+ transition:width .1s;
+}
+.paystatus{text-align:center;min-height:24px;font-weight:900;color:#c94232;font-size:14px}
+.pay-actions{display:flex;gap:8px}
+.pay-actions button{flex:1}
+.successflash{animation:successflash .5s}
+@keyframes successflash{50%{box-shadow:0 0 0 10px rgba(246,184,70,0.6)}}
+
+/* 알바 패널 */
+.jobpanel{
+ background:#fffaf0;
+ border:3px solid #c94232;
+ border-radius:25px;
+ padding:20px;
+ margin:18px 0;
+ box-shadow:0 7px #ead9c0;
+}
+.jobgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+.joborder{background:#fff0c9;border:2px dashed #e0a83f;border-radius:16px;padding:14px;line-height:1.7}
+.jobitems{display:grid;gap:14px}
+.jobgroup h4{margin:10px 0 7px;color:#c94232}
+.jobgroup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px}
+.jobitem{
+ border:2px solid #ead9c0;
+ background:#fffdf7;
+ border-radius:14px;
+ padding:8px;
+ font-weight:900;
+ cursor:pointer;
+ transition:0.12s;
+}
+.jobitem:hover{border-color:var(--hot)}
+.jobitem.sel{background:#ffd7bb;border-color:var(--red);box-shadow:inset 0 -4px #d94d35}
+.selected-panel{margin-top:12px;background:#d8eadc;border:2px solid #7caf86;border-radius:16px;padding:12px}
+.selected-row,.order-ingredient{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ background:#fffaf0;
+ border-radius:12px;
+ padding:7px;
+ margin:5px 0;
+}
+.selected-row button{
+ margin-left:auto;
+ border:0;
+ background:#c94232;
+ color:white;
+ border-radius:8px;
+ padding:4px 8px;
+ cursor:pointer;
+}
+.count{color:#c94232;margin-left:auto}
+.spice-dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.spice-dot.d0{background:#e58b4a}
+.spice-dot.d1{background:#d2552b}
+.spice-dot.d2{background:#a8241a}
+.spice-dot.d3{background:#6f0f12}
+
+.toast{
+ position:fixed;
+ z-index:90;
+ bottom:24px;
+ left:50%;
+ transform:translate(-50%,120px);
+ background:var(--ink);
+ color:#fff;
+ padding:13px 24px;
+ border-radius:99px;
+ font-weight:900;
+ transition:.3s;
+ box-shadow:0 6px 16px rgba(0,0,0,0.3);
+}
+.toast.show{transform:translate(-50%,0)}
+.hidden{display:none!important}
+
+@media(max-width:760px){
+ .wrap{padding:14px}
+ .layout,.jobgrid{grid-template-columns:1fr}
+ .shelf{grid-template-columns:repeat(3,1fr)}
+ .card{padding:16px}
+ .logo{font-size:29px}
+ .payarea{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+ <header class="top">
+ <div class="logo">마라탕 소풍 🍲<small>오늘은 내가 손님! — v15 (신선 재료 선반통 & 리얼 사운드)</small></div>
+ <div class="wallet-badge">🪙 <span id="money">50000</span>원</div>
+ </header>
+
+ <nav class="modebar" id="modebar">
+ <button class="active" id="customerTab">🍲 손님 모드</button>
+ <button id="workerTab">👩‍🍳 마라탕 만들기 알바</button>
+ </nav>
+
+ <!-- 알바 모드 패널 -->
+ <section class="jobpanel hidden" id="jobPanel">
+ <h2 style="font:28px Jua,sans-serif;margin:0 0 8px">오늘의 알바 주문표 🧾</h2>
+ <p class="notice">정확히 조리해 제공하면 <b>급여 10,000원</b> · 60초 동안 연속 주문 타임어택</p>
+ <div class="jobgrid">
+ <div>
+ <div class="joborder" id="jobOrder"></div>
+ <div class="joborder" id="jobTimer" style="margin-top:10px">
+ <b>시작 버튼을 눌러 타이머를 시작하세요.</b>
+ <div class="bar"><i id="jobBar"></i></div>
+ <strong id="jobSeconds">60초</strong>
+ </div>
+ <h3>재료 선택</h3>
+ <div class="jobitems" id="jobItems"></div>
+ <div class="selected-panel" id="jobSelected"></div>
+ <div class="controls" id="jobSpice"></div>
+ </div>
+ <div>
+ <div class="joborder"><b>조리 순서</b><br/>① 시작 → ② 주문 재료 선택 → ③ 조리하기</div>
+ <p class="jobstatus" id="jobStatus">주문표를 확인하고 시작하세요.</p>
+ <button class="action" id="startJob">⏱️ 알바 시작하기</button>
+ <button class="action" disabled="" id="cookJob">🔥 조리해서 제공</button>
+ <button class="ghost" id="newJob" style="width:100%;margin-top:10px">다른 주문 받기</button>
+ </div>
+ </div>
+ </section>
+
+ <!-- 손님 모드 본문 -->
+ <div class="layout" id="customerLayout">
+ <section>
+ <div class="card">
+ <h2>🥢 셀프바에서 골라 담기 <span class="notice" style="font-size:14px;color:#76584d">(최대 10개)</span></h2>
+ <div class="filters" id="filters"></div>
+ <div class="shelf-showcase">
+ <div class="shelf-header">
+ <span>❄️ 신선 냉장 재료 보관 쇼케이스</span>
+ <span class="shelf-cool-badge">항상 신선 보관중</span>
+ </div>
+ <div class="shelf" id="shelf"></div>
+ </div>
+
+ <h2 style="margin-top:22px">🍽️ 사이드 메뉴 <span class="notice" style="font-size:14px;color:#76584d">(마라탕과 따로 담아요)</span></h2>
+ <div class="side-note">마라탕 냄비에 섞이지 않는 곁들임 메뉴예요. 매운맛을 달래기에 딱 좋아요!</div>
+ <div class="shelf" id="sides"></div>
+
+ <h2 style="margin-top:22px">🌶️ 맵기 선택</h2>
+ <div class="controls" id="spice"></div>
+
+ <h2 style="margin-top:22px">🍜 국물 선택</h2>
+ <div class="controls" id="extras"></div>
+
+ <h2 style="margin-top:22px">🧀 토핑 추가 <span class="notice" style="font-size:14px;color:#76584d">(여러 개 가능)</span></h2>
+ <div class="side-note">마라탕이 완성되면 재료들과 함께 국물 속에 골고루 어우러져 나와요!</div>
+ <div class="controls" id="toppings"></div>
+ </div>
+
+ <div class="card">
+ <h2>🧾 주문 전 확인</h2>
+ <div class="bar"><i id="bar"></i></div>
+ <p id="status">재료를 하나 이상 골라보세요.</p>
+ </div>
+ </section>
+
+ <aside>
+ <div class="card">
+ <h2>🍲 내 그릇 <span class="notice" id="mode" style="font-size:14px;color:#c94232"></span></h2>
+
+ <!-- 먹는 캐릭터 & 애니메이션 무대 -->
+ <div class="eatstage" id="eatstage">
+ <div class="character-wrap">
+ <div class="character" id="character">
+ <div class="char-fx" id="charFx"></div>
+ 
+<!-- 머리 (클릭 시 헤어스타일 변경) -->
+ <div class="head" id="charHead" title="머리를 누르면 헤어스타일이 바뀌어요!">
+ <div class="hair-container" id="hairContainer"></div>
+ <div class="eyebrows">
+ <i class="eyebrow l" id="browL"></i>
+ <i class="eyebrow r" id="browR"></i>
+ </div>
+ <div class="eyes">
+ <div class="eye l" id="eyeL"></div>
+ <div class="eye r" id="eyeR"></div>
+ </div>
+ <div class="cheeks">
+ <i class="cheek l" id="cheekL"></i>
+ <i class="cheek r" id="cheekR"></i>
+ </div>
+ <div class="mouth-wrap">
+ <div class="mouth" id="mouth"></div>
+ <div class="tongue hidden" id="tongue">👅</div>
+ <div class="fire-breath hidden" id="fireBreath">🔥</div>
+ </div>
+ <div class="sweat hidden" id="sweatDrop">💧</div>
+ </div>
+
+ <!-- 몸통 & 앞치마 -->
+ <div class="torso">
+ <div class="neck"></div>
+ <div class="body-shirt">
+ <div class="apron">
+ <span class="apron-logo">마라탕❤️소풍</span>
+ </div>
+ </div>
+ <!-- 왼팔 & 숟가락 -->
+ <div class="arm arm-left" id="armLeft">
+ <div class="hand hand-left">
+ <div class="held-spoon">
+ <svg viewBox="0 0 46 24" class="mini-spoon">
+ <ellipse cx="12" cy="12" rx="10" ry="7" fill="#e6b37a" stroke="#7b4d2b" stroke-width="1.8"/>
+ <path d="M22 12h22" stroke="#8d542d" stroke-width="4" stroke-linecap="round"/>
+ </svg>
+ </div>
+ </div>
+ </div>
+ <!-- 오른팔 & 젓가락 -->
+ <div class="arm arm-right" id="armRight">
+ <div class="hand hand-right">
+ <div class="held-chopsticks">🥢</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+<!-- 헤어스타일 변경 토글 버튼 -->
+ <div class="hair-toggle-wrap">
+ <button type="button" class="hair-toggle-btn" id="hairToggleBtn" title="헤어스타일 변경하기">
+ 💇 스타일 변경: <span id="hairName">마라 똥머리 🌶️</span>
+ </button>
+ </div>
+
+ <div class="face-label" id="faceLabel">기대 가득!</div>
+ </div>
+
+ <!-- 그릇 & 회색 연기 이펙트 무대 -->
+ <div class="bowl-container">
+ <button aria-label="숟가락을 눌러 국물 한 모금 마시기" class="spoon" id="spoon" title="숟가락을 눌러 국물 한 모금 마시기" type="button">
+ <svg aria-hidden="true" style="width:100%;height:100%" viewBox="0 0 145 42">
+ <ellipse cx="18" cy="20" fill="#d7a66b" rx="14" ry="12" stroke="#7b4d2b" stroke-width="2"></ellipse>
+ <ellipse cx="18" cy="17" fill="#f5d6a3" opacity=".8" rx="8" ry="5"></ellipse>
+ <path d="M30 20H140" stroke="#b87942" stroke-linecap="round" stroke-width="7"></path>
+ <path d="M34 18H138" opacity=".7" stroke="#f0bd7f" stroke-linecap="round" stroke-width="2"></path>
+ </svg>
+ </button>
+ 
+<div class="bowl metal-bowl" id="bowlWrap">
+ <div class="food uncooked" id="bowl">
+ <div class="empty-bowl-msg">텅—<br/><small>집게로 스텐 볼에 재료를 담아주세요</small></div>
+ </div>
+ </div>
+
+ <div class="smoke-overlay hidden" id="smokeOverlay">
+ <div class="smoke-cloud s1"></div>
+ <div class="smoke-cloud s2"></div>
+ <div class="smoke-cloud s3"></div>
+ <div class="smoke-cloud s4"></div>
+ <div class="smoke-cloud s5"></div>
+ </div>
+ </div>
+
+ <!-- 사이드 메뉴 전용 용기 -->
+ <div class="side-serving" id="sideServing">
+ <h3>🍽️ 사이드 전용 용기 <span style="font-size:12px;color:#8c5836;font-weight:normal">(전용 식기 담김)</span></h3>
+ <div class="side-list" id="sideList">아직 주문한 사이드가 없어요</div>
+ </div>
+
+ <div style="font-size:13px;color:#76584d;font-weight:700;margin-top:8px;text-align:center">
+ 🥄 숟가락을 눌러 국물 한입 · 🥢 재료를 클릭해 한입씩 쏙쏙
+ </div>
+
+ <div class="eatbar">
+ <div>남은 양 <b id="remain">0 / 0</b></div>
+ <div class="bar"><i id="eatbar"></i></div>
+ <div>포만감 <b id="full">0%</b></div>
+ </div>
+
+ <div class="receipt">
+ <div>재료 중량 <b id="weight">0g</b></div>
+ <div>예상 금액 <span class="price" id="price">0원</span></div>
+ <div id="detail">아직 담은 재료가 없어요</div>
+ <div class="side-picked" id="sideDetail"></div>
+ </div>
+
+ <button class="action" id="pay">💳 주문하고 결제하기</button>
+ <div class="sub">
+ <button class="ghost" id="clear">↺ 빈 그릇으로</button>
+ <button class="ghost" id="reset">처음으로</button>
+ </div>
+ </div>
+ </aside>
+ </div>
+</main>
+
+<!-- 결제 모달 -->
+<div class="overlay hidden" id="payModal">
+ <div aria-labelledby="payTitle" aria-modal="true" class="modal paymodal" role="dialog">
+ <h2 id="payTitle">💳 모의 카드 결제</h2>
+ <div class="paynotice">
+ 게임 속 가상 결제 · 실제 돈이 결제되지 않아요<br/>
+ 실제 카드번호·개인정보를 수집하지 않습니다.
+ </div>
+ <p><b id="payAmount">0원</b>을 결제하려면 지갑에서 카드를 꺼낸 뒤, 리더기 위로 가져가 왼쪽에서 오른쪽으로 긁어주세요.</p>
+ 
+<div class="wallet" id="wallet" role="group" aria-label="내 지갑">
+ <div class="wallet-flap">👛 내 지갑 <small id="walletHint">카드를 눌러 꺼내세요</small></div>
+ <div class="wallet-cards" id="walletCards"></div>
+ </div>
+
+ <div class="payarea">
+ <div>
+ <div class="card-slot" id="cardSlot">👆 지갑에서 카드를 꺼내면<br/>여기에 놓여요</div>
+ <div aria-label="가상 카드. 리더기로 드래그하세요" class="virtual-card hidden" id="virtualCard" role="button" tabindex="0">
+ <div id="cardName">MARATANG PASS</div>
+ <div class="cardsub" id="cardSub">마라탕 전용 카드</div>
+ <div class="chip"></div>
+ <div class="cardnum" id="cardNum">•••• •••• •••• 2025</div>
+ </div>
+ <button type="button" class="card-back hidden" id="cardBack">↩ 지갑에 다시 넣기</button>
+ </div>
+
+ <div aria-label="카드 리더기" class="reader" id="reader">
+ <div>▣<small>카드를 긁어주세요</small></div>
+ <i class="scanline" id="scanline"></i>
+ </div>
+ </div>
+
+ <div class="bar"><i id="payProgress"></i></div>
+ <div aria-live="polite" class="paystatus" id="payStatus">지갑에서 카드를 한 장 꺼내 주세요.</div>
+ <div class="pay-actions">
+ <button class="ghost" id="keyPay">⌨ 키보드로 결제하기</button>
+ <button class="ghost" id="cancelPay">취소하고 주문 수정</button>
+ </div>
+ </div>
+</div>
+
+<!-- 시작 & 완식 모달 -->
+<div class="overlay" id="modal">
+ <div class="modal">
+ <h2>어서 와요, 손님! 🍲</h2>
+ <p>사장님이 아니라 <b>내가 직접 고르는 손님</b>이에요.<br/>스텐 볼에 재료를 골라 담고 주문한 뒤, 완성된 마라탕을 맛있게 드셔보세요!</p>
+ <button class="action" id="begin">셀프바 입장하기</button>
+ </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+/* ========================================================
+ 마라탕 게임 v15 — Web Audio 사운드 합성 엔진
+ ======================================================== */
+const AudioFX = (() => {
+ let ctx = null;
+ function getCtx() {
+ if (!ctx) {
+ const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+ if (AudioContextClass) ctx = new AudioContextClass();
+ }
+ if (ctx && ctx.state === 'suspended') ctx.resume();
+ return ctx;
+ }
+
+ return {
+ // 1) 재료통에서 큰 보울로 담을 때 (착! 퐁당)
+ pick() {
+ const c = getCtx();
+ if (!c) return;
+ const t = c.currentTime;
+ const osc = c.createOscillator();
+ const g = c.createGain();
+ osc.type = 'sine';
+ osc.frequency.setValueAtTime(320, t);
+ osc.frequency.exponentialRampToValueAtTime(580, t + 0.08);
+ g.gain.setValueAtTime(0.18, t);
+ g.gain.exponentialRampToValueAtTime(0.01, t + 0.09);
+ osc.connect(g); g.connect(c.destination);
+ osc.start(t); osc.stop(t + 0.1);
+ },
+ // 2) 재료 덜어낼 때 (가벼운 팝)
+ unpick() {
+ const c = getCtx();
+ if (!c) return;
+ const t = c.currentTime;
+ const osc = c.createOscillator();
+ const g = c.createGain();
+ osc.type = 'triangle';
+ osc.frequency.setValueAtTime(450, t);
+ osc.frequency.exponentialRampToValueAtTime(220, t + 0.07);
+ g.gain.setValueAtTime(0.14, t);
+ g.gain.exponentialRampToValueAtTime(0.01, t + 0.08);
+ osc.connect(g); g.connect(c.destination);
+ osc.start(t); osc.stop(t + 0.08);
+ },
+ // 3) 마라탕 재료 씹는 소리 (냠냠 / 아삭아삭)
+ crunch() {
+ const c = getCtx();
+ if (!c) return;
+ const t = c.currentTime;
+ [0, 0.08, 0.16].forEach((delay, idx) => {
+ const osc = c.createOscillator();
+ const g = c.createGain();
+ osc.type = 'triangle';
+ const startF = 380 - idx * 40;
+ osc.frequency.setValueAtTime(startF, t + delay);
+ osc.frequency.exponentialRampToValueAtTime(140, t + delay + 0.07);
+ g.gain.setValueAtTime(0.22, t + delay);
+ g.gain.exponentialRampToValueAtTime(0.01, t + delay + 0.07);
+ osc.connect(g); g.connect(c.destination);
+ osc.start(t + delay); osc.stop(t + delay + 0.08);
+ });
+ },
+ // 4) 국물 마시기 (후루룩— 꿀꺽)
+ slurp() {
+ const c = getCtx();
+ if (!c) return;
+ const t = c.currentTime;
+ const osc = c.createOscillator();
+ const g = c.createGain();
+ osc.type = 'sine';
+ osc.frequency.setValueAtTime(540, t);
+ osc.frequency.linearRampToValueAtTime(260, t + 0.22);
+ g.gain.setValueAtTime(0.2, t);
+ g.gain.exponentialRampToValueAtTime(0.01, t + 0.24);
+ osc.connect(g); g.connect(c.destination);
+ osc.start(t); osc.stop(t + 0.25);
+
+ // 삼키는 꿀꺽 드롭음
+ const gulp = c.createOscillator();
+ const gg = c.createGain();
+ gulp.type = 'sine';
+ gulp.frequency.setValueAtTime(180, t + 0.22);
+ gulp.frequency.exponentialRampToValueAtTime(95, t + 0.32);
+ gg.gain.setValueAtTime(0.22, t + 0.22);
+ gg.gain.exponentialRampToValueAtTime(0.01, t + 0.33);
+ gulp.connect(gg); gg.connect(c.destination);
+ gulp.start(t + 0.22); gulp.stop(t + 0.34);
+ },
+ // 5) 바삭한 튀김 소리 (꿔바로우 / 크림새우)
+ crisp() {
+ const c = getCtx();
+ if (!c) return;
+ const t = c.currentTime;
+ const buf = c.createBuffer(1, Math.floor(c.sampleRate * 0.16), c.sampleRate);
+ const data = buf.getChannelData(0);
+ for (let i = 0; i < buf.length; i++) {
+ data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (c.sampleRate * 0.035));
+ }
+ const src = c.createBufferSource();
+ const g = c.createGain();
+ src.buffer = buf;
+ g.gain.setValueAtTime(0.28, t);
+ src.connect(g); g.connect(c.destination);
+ src.start(t);
+ },
+ // 6) 음료 꿀꺽 소리 (복숭아 주스)
+ drink() {
+ const c = getCtx();
+ if (!c) return;
+ const t = c.currentTime;
+ [0, 0.12].forEach((delay) => {
+ const osc = c.createOscillator();
+ const g = c.createGain();
+ osc.type = 'sine';
+ osc.frequency.setValueAtTime(360, t + delay);
+ osc.frequency.exponentialRampToValueAtTime(160, t + delay + 0.1);
+ g.gain.setValueAtTime(0.24, t + delay);
+ g.gain.exponentialRampToValueAtTime(0.01, t + delay + 0.1);
+ osc.connect(g); g.connect(c.destination);
+ osc.start(t + delay); osc.stop(t + delay + 0.11);
+ });
+ }
+ };
+})();
+
+/* ========================================================
+ 마라탕 게임 v14 — 인라인 고화질 벡터 푸드 그래픽 전면 업그레이드
+ - 41종 전 재료 + 4종 사이드 + 4종 토핑 SVG 비주얼 대폭 개선
+ - 다층 그라데이션, 고유 마블링, 결/음영, 촉촉한 윤기 하이라이트 적용
+ - 단일 무의존성 유지 (외부 파일/CDN 0%)
+ ======================================================== */
+
+// 1. 고화질 SVG 푸드 아트 사전 (v14 리파인)
+const art = (name) => {
+ const body = {
+ // [채소류]
+ '알배추': `
+ <path d="M12 34 Q8 8 34 5 Q60 8 56 34 Q35 41 12 34Z" fill="#a4d86b" stroke="#3b7a3b" stroke-width="2"/>
+ <path d="M15 32 Q18 14 34 10 Q50 14 53 32 Q35 38 15 32Z" fill="#c3eb8b"/>
+ <path d="M26 33 Q30 18 34 8 Q38 18 42 33 Q34 36 26 33Z" fill="#f4fae1" stroke="#d5eaa6" stroke-width="1.5"/>
+ <path d="M20 28 Q28 17 34 13 M34 32 Q40 21 48 16" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+ `,
+ '배추': `
+ <path d="M11 35 Q6 7 34 4 Q62 7 57 35 Q35 42 11 35Z" fill="#78bf55" stroke="#2d682d" stroke-width="2"/>
+ <path d="M16 33 Q20 12 34 8 Q48 12 52 33 Q34 39 16 33Z" fill="#a6dc72"/>
+ <path d="M25 34 Q29 20 34 11 Q39 20 43 34" fill="#ebf7d0" stroke="#c5e89b" stroke-width="1.5"/>
+ <path d="M18 29 Q27 16 34 14 M34 34 Q41 20 50 17" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+ `,
+ '청경채': `
+ <path d="M18 24 Q10 11 22 5 Q32 10 32 24 Z" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+ <path d="M50 24 Q58 11 46 5 Q36 10 36 24 Z" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+ <path d="M34 26 Q20 12 28 4 Q40 4 40 26 Z" fill="#388e3c" stroke="#1b5e20" stroke-width="1.5"/>
+ <path d="M22 36 Q22 20 29 16 Q35 15 39 16 Q46 20 46 36 Q34 40 22 36 Z" fill="#f1f8e9" stroke="#81c784" stroke-width="2"/>
+ <path d="M29 36 Q30 22 34 18 Q38 22 39 36" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+ <path d="M24 22 Q34 24 44 22" stroke="#c8e6c9" stroke-width="2" stroke-linecap="round"/>
+ `,
+ '시금치': `
+ <path d="M14 26 Q12 12 24 8 Q32 15 26 28 Z" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+ <path d="M54 26 Q56 12 44 8 Q36 15 42 28 Z" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+ <path d="M34 28 Q24 10 34 4 Q44 10 34 28 Z" fill="#388e3c" stroke="#1b5e20" stroke-width="1.5"/>
+ <path d="M34 37 L34 20 M26 28 L34 33 M42 28 L34 33" stroke="#81c784" stroke-width="2.5" stroke-linecap="round"/>
+ <circle cx="34" cy="37" r="2.5" fill="#e57373"/>
+ `,
+ '숙주': `
+ <path d="M34 38 Q22 25 15 13" stroke="#f1f8e9" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+ <path d="M34 38 Q34 22 36 9" stroke="#f9fbe7" stroke-width="3" fill="none" stroke-linecap="round"/>
+ <path d="M34 38 Q46 26 53 15" stroke="#f1f8e9" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+ <ellipse cx="15" cy="12" rx="4.5" ry="3.5" fill="#fff59d" stroke="#c0ca33" stroke-width="1.2" transform="rotate(-20 15 12)"/>
+ <ellipse cx="36" cy="8" rx="4.5" ry="3.5" fill="#fff59d" stroke="#c0ca33" stroke-width="1.2" transform="rotate(10 36 8)"/>
+ <ellipse cx="53" cy="14" rx="4.5" ry="3.5" fill="#fff59d" stroke="#c0ca33" stroke-width="1.2" transform="rotate(30 53 14)"/>
+ `,
+ '옥수수': `
+ <rect x="18" y="8" width="32" height="26" rx="12" fill="#fbc02d" stroke="#f57f17" stroke-width="2"/>
+ <g fill="#fff59d" stroke="#f9a825" stroke-width="1.2">
+ <circle cx="24" cy="14" r="3"/><circle cx="34" cy="14" r="3"/><circle cx="44" cy="14" r="3"/>
+ <circle cx="24" cy="21" r="3"/><circle cx="34" cy="21" r="3"/><circle cx="44" cy="21" r="3"/>
+ <circle cx="24" cy="28" r="3"/><circle cx="34" cy="28" r="3"/><circle cx="44" cy="28" r="3"/>
+ </g>
+ <path d="M18 10 Q14 2 8 8 M50 10 Q54 2 60 8" stroke="#8bc34a" stroke-width="2" fill="none"/>
+ `,
+ '연근': `
+ <ellipse cx="34" cy="21" rx="20" ry="17" fill="#ebd2b0" stroke="#a07248" stroke-width="2.5"/>
+ <ellipse cx="34" cy="21" rx="16" ry="13" fill="#f7e8d3"/>
+ <circle cx="34" cy="21" r="3" fill="#8d5b32"/>
+ <circle cx="25" cy="15" r="3.2" fill="#8d5b32"/><circle cx="43" cy="15" r="3.2" fill="#8d5b32"/>
+ <circle cx="22" cy="23" r="3.2" fill="#8d5b32"/><circle cx="46" cy="23" r="3.2" fill="#8d5b32"/>
+ <circle cx="28" cy="29" r="3.2" fill="#8d5b32"/><circle cx="40" cy="29" r="3.2" fill="#8d5b32"/>
+ `,
+ '감자': `
+ <ellipse cx="34" cy="21" rx="23" ry="15" fill="#e0b36c" stroke="#8d5b24" stroke-width="2"/>
+ <ellipse cx="32" cy="19" rx="19" ry="11" fill="#f3cf8c"/>
+ <circle cx="24" cy="16" r="1.5" fill="#a46d2d"/><circle cx="42" cy="18" r="1.5" fill="#a46d2d"/>
+ <circle cx="31" cy="26" r="1.5" fill="#a46d2d"/><circle cx="36" cy="13" r="1.2" fill="#a46d2d"/>
+ `,
+ '토마토': `
+ <circle cx="34" cy="23" r="16" fill="#e53935" stroke="#b71c1c" stroke-width="2"/>
+ <ellipse cx="30" cy="18" rx="8" ry="4" fill="#ff7961" opacity=".7" transform="rotate(-15 30 18)"/>
+ <path d="M34 8 L31 2 M34 8 L37 2 M34 8 L27 6 M34 8 L41 6" stroke="#388e3c" stroke-width="3" stroke-linecap="round"/>
+ <circle cx="34" cy="8" r="2.5" fill="#2e7d32"/>
+ `,
+
+ // [버섯류]
+ '팽이버섯': `
+ <g stroke="#baa181" stroke-width="1.2">
+ <path d="M22 37 V14" stroke="#f5ede0" stroke-width="3.5" stroke-linecap="round"/>
+ <path d="M28 37 V11" stroke="#fcf8f2" stroke-width="3.5" stroke-linecap="round"/>
+ <path d="M34 37 V13" stroke="#f5ede0" stroke-width="3.5" stroke-linecap="round"/>
+ <path d="M40 37 V10" stroke="#fcf8f2" stroke-width="3.5" stroke-linecap="round"/>
+ <path d="M46 37 V15" stroke="#f5ede0" stroke-width="3.5" stroke-linecap="round"/>
+ </g>
+ <ellipse cx="22" cy="14" rx="4" ry="3" fill="#ecd9be" stroke="#9e7b57" stroke-width="1.2"/>
+ <ellipse cx="28" cy="11" rx="4.5" ry="3.5" fill="#fffaf0" stroke="#9e7b57" stroke-width="1.2"/>
+ <ellipse cx="34" cy="13" rx="4" ry="3" fill="#ecd9be" stroke="#9e7b57" stroke-width="1.2"/>
+ <ellipse cx="40" cy="10" rx="4.5" ry="3.5" fill="#fffaf0" stroke="#9e7b57" stroke-width="1.2"/>
+ <ellipse cx="46" cy="15" rx="4" ry="3" fill="#ecd9be" stroke="#9e7b57" stroke-width="1.2"/>
+ `,
+ '목이버섯': `
+ <path d="M8 29 Q6 8 28 11 Q48 4 60 22 Q52 38 32 32 Q16 41 8 29Z" fill="#362220" stroke="#1f1110" stroke-width="2.5"/>
+ <path d="M16 26 Q14 14 29 16 Q44 12 52 24 Q44 32 30 28 Q20 34 16 26Z" fill="#4d322f"/>
+ <path d="M22 22 Q32 17 40 22" stroke="#6e4a46" stroke-width="2" fill="none" opacity=".8"/>
+ `,
+ '새송이버섯': `
+ <path d="M23 36 V18 Q23 10 34 10 Q45 10 45 18 V36 Z" fill="#fcf8f2" stroke="#ba9e7d" stroke-width="2"/>
+ <ellipse cx="34" cy="34" rx="11" ry="3.5" fill="#ecdcc7"/>
+ <path d="M17 14 Q34 6 51 14 Q44 19 34 18 Q24 19 17 14 Z" fill="#a47547" stroke="#684420" stroke-width="2"/>
+ <ellipse cx="34" cy="13" rx="12" ry="4" fill="#c39462" opacity=".7"/>
+ `,
+ '표고버섯': `
+ <ellipse cx="34" cy="23" rx="24" ry="16" fill="#6d4227" stroke="#3e210e" stroke-width="2.5"/>
+ <ellipse cx="34" cy="22" rx="20" ry="12" fill="#8d5b38"/>
+ <path d="M34 10 L34 34 M20 22 L48 22 M24 14 L44 30 M24 30 L44 14" stroke="#fcf6ec" stroke-width="2.5" stroke-linecap="round"/>
+ `,
+
+ // [두부 & 가공품]
+ '건두부': `
+ <g transform="rotate(-6 34 21)">
+ <rect x="12" y="10" width="44" height="22" rx="3" fill="#fbe8be" stroke="#bfa06b" stroke-width="2"/>
+ <path d="M12 15 h44 M12 21 h44 M12 27 h44" stroke="#dfc28d" stroke-width="1.2" stroke-dasharray="2 2"/>
+ <path d="M20 10 v22 M32 10 v22 M44 10 v22" stroke="#dfc28d" stroke-width="1.2" stroke-dasharray="2 2"/>
+ </g>
+ `,
+ '푸주': `
+ <path d="M10 14 Q28 6 56 13 Q50 34 46 36 Q25 39 12 29 Z" fill="#ecd08e" stroke="#9c7834" stroke-width="2"/>
+ <path d="M13 18 Q28 11 51 17 M13 24 Q28 17 48 23 M13 29 Q27 24 45 28" stroke="#ca9e4f" stroke-width="2" fill="none"/>
+ <path d="M18 15 Q26 12 36 14" stroke="#fff8dc" stroke-width="2" fill="none" opacity=".8"/>
+ `,
+ '유부': `
+ <rect x="14" y="9" width="40" height="24" rx="8" fill="#d98938" stroke="#874a14" stroke-width="2.5"/>
+ <rect x="17" y="12" width="34" height="18" rx="6" fill="#f0ab56"/>
+ <ellipse cx="26" cy="18" rx="5" ry="3" fill="#d27b26" opacity=".5"/>
+ <ellipse cx="38" cy="23" rx="6" ry="3" fill="#d27b26" opacity=".5"/>
+ <path d="M20 15 Q34 11 46 16" stroke="#ffe0a3" stroke-width="2" fill="none" opacity=".8"/>
+ `,
+ '어묵': `
+ <path d="M10 28 Q22 8 42 8 Q58 10 58 26 Q40 37 10 28 Z" fill="#e8ae65" stroke="#945821" stroke-width="2"/>
+ <path d="M15 25 Q26 13 42 13 Q52 14 53 24" fill="#fad291"/>
+ <path d="M20 22 Q32 14 46 19" stroke="#b06c27" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ `,
+ '문어어묵': `
+ <circle cx="34" cy="20" r="15" fill="#e0a36a" stroke="#8c4e1f" stroke-width="2"/>
+ <ellipse cx="31" cy="16" rx="9" ry="5" fill="#fcdbb7" opacity=".6"/>
+ <circle cx="28" cy="17" r="1.8" fill="#5c2b0c"/><circle cx="40" cy="17" r="1.8" fill="#5c2b0c"/>
+ <path d="M22 28 Q20 38 25 38 Q28 35 29 29 M31 29 Q33 39 37 38 Q39 34 38 29 M40 29 Q43 38 47 37 Q48 33 45 28" stroke="#8c4e1f" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ `,
+ '피쉬어묵': `
+ <path d="M8 21 Q28 5 54 18 Q59 13 61 10 L59 21 L61 31 Q59 28 54 23 Q28 36 8 21 Z" fill="#eec47d" stroke="#8f571b" stroke-width="2"/>
+ <path d="M18 20 Q32 12 48 18" stroke="#ffffff" stroke-width="2" fill="none" opacity=".8"/>
+ <circle cx="22" cy="18" r="2.5" fill="#422108"/>
+ <circle cx="23" cy="17" r="0.8" fill="#ffffff"/>
+ `,
+ '오징어어묵': `
+ <path d="M15 28 Q16 8 34 8 Q52 8 53 28 Q34 35 15 28 Z" fill="#e9bc7e" stroke="#8d5420" stroke-width="2"/>
+ <path d="M22 26 Q24 13 34 13 Q44 13 46 26" fill="#fae0b8"/>
+ <path d="M24 18 Q34 14 44 18 M24 23 Q34 19 44 23" stroke="#a6672c" stroke-width="2" fill="none"/>
+ `,
+ '스모스햄': `
+ <g transform="rotate(-8 34 21)">
+ <ellipse cx="34" cy="21" rx="23" ry="14" fill="#df6b62" stroke="#8e2b26" stroke-width="2"/>
+ <ellipse cx="34" cy="21" rx="19" ry="10" fill="#f28d84"/>
+ <path d="M20 18 Q34 12 48 18 M22 24 Q34 18 46 24" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+ </g>
+ `,
+ '치즈햄': `
+ <rect x="11" y="10" width="46" height="23" rx="7" fill="#df6b62" stroke="#8e2b26" stroke-width="2"/>
+ <rect x="15" y="14" width="38" height="15" rx="4" fill="#f0887f"/>
+ <rect x="18" y="17" width="32" height="9" rx="3" fill="#fed049" stroke="#d49a17" stroke-width="1.5"/>
+ `,
+ '비엔나': `
+ <g transform="rotate(-10 34 21)">
+ <rect x="12" y="11" width="44" height="20" rx="10" fill="#d85b4b" stroke="#7e1f18" stroke-width="2"/>
+ <path d="M22 13 L26 29 M32 12 L36 29 M42 13 L46 29" stroke="#8a251e" stroke-width="2.5" stroke-linecap="round"/>
+ <path d="M16 16 Q34 11 50 16" stroke="#fcaea5" stroke-width="2" fill="none" opacity=".8"/>
+ </g>
+ `,
+ '청포묵': `
+ <rect x="12" y="10" width="44" height="22" rx="4" fill="#c4e9b8" stroke="#548f48" stroke-width="2"/>
+ <rect x="15" y="13" width="38" height="16" rx="2" fill="#e0f6d8"/>
+ <path d="M15 15 L53 15" stroke="#ffffff" stroke-width="2.5" opacity=".9"/>
+ `,
+
+ // [면 & 떡]
+ '분모자': `
+ <path d="M9 16 Q28 2 53 14 T59 29 Q36 41 15 31 Z" fill="#fff5dd" stroke="#cc9f5b" stroke-width="2.5"/>
+ <path d="M14 18 Q30 7 50 16 T54 27" fill="none" stroke="#ffe099" stroke-width="4" stroke-linecap="round"/>
+ <path d="M14 18 Q30 7 50 16" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".95"/>
+ `,
+ '연근분모자': `
+ <path d="M9 16 Q28 2 53 14 T59 29 Q36 41 15 31 Z" fill="#faebd0" stroke="#b08343" stroke-width="2"/>
+ <circle cx="24" cy="22" r="3.5" fill="#e2b97c"/><circle cx="36" cy="22" r="3.5" fill="#e2b97c"/><circle cx="47" cy="23" r="3.5" fill="#e2b97c"/>
+ <path d="M14 18 Q30 7 50 16" fill="none" stroke="#ffffff" stroke-width="2" opacity=".9"/>
+ `,
+ '중국당면': `
+ <path d="M8 12 Q30 0 60 14" stroke="#fdf4d8" stroke-width="7" stroke-linecap="round" fill="none"/>
+ <path d="M8 12 Q30 0 60 14" stroke="#d5b573" stroke-width="7.5" stroke-linecap="round" fill="none" opacity=".4"/>
+ <path d="M8 22 Q30 10 60 24" stroke="#fdf4d8" stroke-width="7" stroke-linecap="round" fill="none"/>
+ <path d="M8 22 Q30 10 60 24" stroke="#d5b573" stroke-width="7.5" stroke-linecap="round" fill="none" opacity=".4"/>
+ <path d="M9 11 Q30 1 58 13 M9 21 Q30 11 58 23" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".9"/>
+ `,
+ '녹두납작당면': `
+ <path d="M8 14 Q30 2 60 16" stroke="#dcedc8" stroke-width="8" stroke-linecap="round" fill="none"/>
+ <path d="M8 14 Q30 2 60 16" stroke="#81c784" stroke-width="8.5" stroke-linecap="round" fill="none" opacity=".4"/>
+ <path d="M8 26 Q30 14 60 28" stroke="#dcedc8" stroke-width="8" stroke-linecap="round" fill="none"/>
+ <path d="M8 26 Q30 14 60 28" stroke="#81c784" stroke-width="8.5" stroke-linecap="round" fill="none" opacity=".4"/>
+ <path d="M10 13 Q30 3 58 15 M10 25 Q30 15 58 27" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".9"/>
+ `,
+ '옥수수면': `
+ <g stroke="#fbc02d" stroke-width="3" fill="none" stroke-linecap="round">
+ <path d="M9 11 Q32 0 59 13"/>
+ <path d="M8 18 Q30 9 60 20"/>
+ <path d="M9 25 Q30 17 59 28"/>
+ <path d="M10 32 Q32 23 58 34"/>
+ </g>
+ <path d="M10 10 Q32 1 57 12 M10 24 Q30 16 57 27" stroke="#fff59d" stroke-width="1.5" fill="none" opacity=".9"/>
+ `,
+ '뉴진면': `
+ <path d="M8 14 Q32 4 60 16" stroke="#ffe082" stroke-width="9" stroke-linecap="round" fill="none"/>
+ <path d="M8 14 Q32 4 60 16" stroke="#ffb300" stroke-width="9.5" stroke-linecap="round" fill="none" opacity=".4"/>
+ <path d="M8 27 Q32 17 60 29" stroke="#ffe082" stroke-width="9" stroke-linecap="round" fill="none"/>
+ <path d="M8 27 Q32 17 60 29" stroke="#ffb300" stroke-width="9.5" stroke-linecap="round" fill="none" opacity=".4"/>
+ <path d="M10 13 Q32 5 57 15 M10 26 Q32 18 57 28" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".95"/>
+ `,
+ '라면사리': `
+ <path d="M12 18 Q16 11 21 18 T30 18 T39 18 T48 18 T56 18" fill="none" stroke="#fbc02d" stroke-width="4.5" stroke-linecap="round"/>
+ <path d="M12 25 Q16 18 21 25 T30 25 T39 25 T48 25 T56 25" fill="none" stroke="#fdd835" stroke-width="4.5" stroke-linecap="round"/>
+ <path d="M13 17 Q17 10 22 17 T31 17 T40 17" fill="none" stroke="#fff9c4" stroke-width="2" stroke-linecap="round"/>
+ `,
+ '떡': `
+ <rect x="12" y="11" width="44" height="20" rx="10" fill="#fdfbf7" stroke="#9e8b74" stroke-width="2"/>
+ <ellipse cx="34" cy="18" rx="17" ry="5" fill="#ffffff"/>
+ <path d="M18 15 Q34 11 50 15" stroke="#ffffff" stroke-width="2" opacity=".9"/>
+ `,
+ '치즈떡': `
+ <rect x="12" y="11" width="44" height="20" rx="10" fill="#fed65b" stroke="#a87f17" stroke-width="2"/>
+ <ellipse cx="34" cy="18" rx="17" ry="5" fill="#ffea88"/>
+ <circle cx="34" cy="21" r="5" fill="#ffb300" opacity=".7"/>
+ <path d="M18 15 Q34 11 50 15" stroke="#ffffff" stroke-width="2" opacity=".9"/>
+ `,
+ '고구마떡': `
+ <rect x="12" y="11" width="44" height="20" rx="10" fill="#a45bb3" stroke="#5d2369" stroke-width="2"/>
+ <ellipse cx="34" cy="18" rx="17" ry="5" fill="#c37dce"/>
+ <circle cx="34" cy="21" r="5" fill="#fdd835"/>
+ <path d="M18 15 Q34 11 50 15" stroke="#ffffff" stroke-width="2" opacity=".7"/>
+ `,
+
+ // [고기 & 해산물]
+ '소고기': `
+ <path d="M8 28 Q10 6 32 7 Q56 6 60 25 Q54 39 31 36 Q12 39 8 28 Z" fill="#9e2320" stroke="#540f0d" stroke-width="2"/>
+ <path d="M14 26 Q24 10 40 11 Q52 11 54 24" fill="#be3431"/>
+ <path d="M16 23 Q28 11 46 16" stroke="#ffcdd2" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ <path d="M18 29 Q32 20 50 25" stroke="#ffebee" stroke-width="3" fill="none" stroke-linecap="round"/>
+ <path d="M22 17 Q34 14 42 16" stroke="#ffffff" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+ `,
+ '양고기': `
+ <path d="M8 29 Q12 8 33 9 Q54 8 59 27 Q39 38 8 29 Z" fill="#c95042" stroke="#68211b" stroke-width="2"/>
+ <path d="M14 27 Q22 13 40 14 Q52 14 54 25" fill="#e0695c"/>
+ <path d="M16 23 Q26 12 44 17" stroke="#ffcdd2" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ <path d="M20 28 Q34 22 48 26" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ `,
+ '베이컨': `
+ <g transform="rotate(-4 34 21)">
+ <path d="M8 13 L58 9 L58 31 L8 35 Z" fill="#c64741" stroke="#681c18" stroke-width="2"/>
+ <path d="M8 17 Q32 13 58 14" stroke="#ffcdd2" stroke-width="3.5" fill="none"/>
+ <path d="M8 25 Q32 21 58 23" stroke="#ffeb3b" stroke-width="2.5" fill="none" opacity=".8"/>
+ <path d="M8 29 Q32 26 58 27" stroke="#ffebee" stroke-width="3" fill="none"/>
+ </g>
+ `,
+ '새우': `
+ <path d="M14 27 Q16 6 42 7 Q59 10 52 26 Q44 38 24 31 Z" fill="#f4511e" stroke="#942605" stroke-width="2"/>
+ <path d="M18 25 Q24 11 41 12 Q50 14 46 25" fill="#ff7043"/>
+ <path d="M24 18 Q35 15 45 22 M27 24 Q36 21 44 26" stroke="#ffe0b2" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ <circle cx="45" cy="13" r="2.2" fill="#1b0702"/>
+ <circle cx="45.6" cy="12.4" r="0.8" fill="#ffffff"/>
+ <path d="M15 28 L7 34 L11 26 Z" fill="#e64a19" stroke="#942605" stroke-width="1.5"/>
+ `,
+ '솔방울 오징어': `
+ <path d="M12 28 Q18 7 35 8 Q52 7 56 28 Q35 38 12 28 Z" fill="#f5ede4" stroke="#8d6e63" stroke-width="2"/>
+ <g stroke="#d7ccc8" stroke-width="1.8">
+ <path d="M20 16 L28 29 M28 12 L36 29 M36 12 L44 28 M44 14 L50 26"/>
+ <path d="M20 24 L30 12 M28 29 L42 12 M36 29 L48 14"/>
+ </g>
+ <ellipse cx="34" cy="18" rx="14" ry="5" fill="#ffffff" opacity=".8"/>
+ `,
+ '게맛살': `
+ <rect x="9" y="12" width="49" height="20" rx="5" fill="#e53935" stroke="#8e1715" stroke-width="2"/>
+ <rect x="12" y="18" width="43" height="11" rx="2" fill="#ffffff"/>
+ <path d="M10 16 L57 16" stroke="#ff8a80" stroke-width="2"/>
+ <path d="M12 22 L55 22 M12 25 L55 25" stroke="#ffebee" stroke-width="1"/>
+ `,
+ '메추리알': `
+ <ellipse cx="34" cy="22" rx="20" ry="15" fill="#fff9eb" stroke="#a1887f" stroke-width="2"/>
+ <ellipse cx="31" cy="18" rx="14" ry="9" fill="#ffffff"/>
+ <circle cx="23" cy="18" r="2.5" fill="#795548" opacity=".6"/><circle cx="42" cy="16" r="2" fill="#795548" opacity=".6"/>
+ <circle cx="36" cy="27" r="2.8" fill="#795548" opacity=".6"/><circle cx="29" cy="26" r="1.8" fill="#795548" opacity=".6"/>
+ `,
+
+ // [사이드 메뉴]
+ '꿔바로': `
+ <ellipse cx="34" cy="29" rx="31" ry="11" fill="#fdfbf7" stroke="#d7ccc8" stroke-width="1.5"/>
+ <ellipse cx="34" cy="28" rx="28" ry="9" fill="#efebe9"/>
+ <path d="M12 27 Q18 12 34 15 Q50 12 56 25 Q44 33 28 31 Q15 34 12 27 Z" fill="#f57c00" stroke="#8a4200" stroke-width="2"/>
+ <path d="M15 25 Q24 16 38 17 Q48 16 52 24" fill="#ffa726"/>
+ <path d="M18 22 L44 17 M24 28 L48 22" stroke="#fff3e0" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>
+ <circle cx="29" cy="20" r="1.8" fill="#2e7d32"/><circle cx="40" cy="22" r="1.8" fill="#2e7d32"/>
+ `,
+ '크림새우': `
+ <ellipse cx="34" cy="29" rx="29" ry="11" fill="#f8fdfa" stroke="#b2dfdb" stroke-width="1.5"/>
+ <ellipse cx="34" cy="28" rx="25" ry="8" fill="#e0f2f1"/>
+ <path d="M14 27 Q22 17 34 20 Q44 17 54 25 Q38 32 14 27 Z" fill="#66bb6a"/>
+ <path d="M18 24 Q22 11 38 13 Q50 14 46 26 Q36 33 23 27 Z" fill="#f4511e" stroke="#942605" stroke-width="1.5"/>
+ <path d="M14 18 Q34 8 54 18 Q42 27 16 23 Z" fill="#fffde7" stroke="#fff59d" stroke-width="2"/>
+ <path d="M22 16 Q34 11 46 15" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+ `,
+ '단무지': `
+ <ellipse cx="34" cy="28" rx="27" ry="11" fill="#f5f7fa" stroke="#cfd8dc" stroke-width="1.5"/>
+ <ellipse cx="34" cy="27" rx="23" ry="8" fill="#eceff1"/>
+ <ellipse cx="26" cy="22" rx="14" ry="7.5" fill="#fbc02d" stroke="#f57f17" stroke-width="1.5" transform="rotate(-15 26 22)"/>
+ <ellipse cx="26" cy="21" rx="12" ry="5.5" fill="#ffeb3b" transform="rotate(-15 26 21)"/>
+ <ellipse cx="40" cy="23" rx="14" ry="7.5" fill="#fbc02d" stroke="#f57f17" stroke-width="1.5" transform="rotate(15 40 23)"/>
+ <ellipse cx="40" cy="22" rx="12" ry="5.5" fill="#ffeb3b" transform="rotate(15 40 22)"/>
+ `,
+ '복숭아 주스': `
+ <path d="M21 7 H47 L43 38 H25 Z" fill="rgba(227,242,253,0.5)" stroke="#90caf9" stroke-width="1.5"/>
+ <path d="M22 14 H46 L43 37 H25 Z" fill="#ffab91"/>
+ <path d="M23 23 H45 L43 37 H25 Z" fill="#ff7043"/>
+ <rect x="27" y="16" width="7" height="7" rx="2" fill="#ffffff" opacity=".85"/>
+ <rect x="35" y="24" width="6" height="6" rx="1.5" fill="#ffffff" opacity=".85"/>
+ <path d="M39 3 L47 1" stroke="#e53935" stroke-width="3" stroke-linecap="round"/>
+ <ellipse cx="34" cy="7" rx="12" ry="3" fill="none" stroke="#90caf9" stroke-width="1.5"/>
+ `,
+
+ // [토핑류]
+ '치즈 토핑': `
+ <path d="M6 13 Q20 3 34 11 Q48 3 62 13 L60 25 Q52 35 48 27 Q42 38 36 28 Q30 39 24 28 Q18 36 12 26 Z" fill="#fbc02d" stroke="#e65100" stroke-width="2"/>
+ <path d="M12 16 Q24 7 38 13 Q48 8 56 16" fill="#ffee58"/>
+ <circle cx="22" cy="18" r="2.5" fill="#ffffff" opacity=".8"/><circle cx="42" cy="19" r="2.5" fill="#ffffff" opacity=".8"/>
+ `,
+ '유부 토핑': `
+ <rect x="12" y="10" width="44" height="22" rx="8" fill="#d98938" stroke="#7f3a09" stroke-width="2"/>
+ <rect x="16" y="13" width="36" height="16" rx="5" fill="#f3af65"/>
+ <path d="M20 18 Q34 13 46 17" stroke="#fff3e0" stroke-width="2.5" stroke-linecap="round"/>
+ `,
+ '땅콩 토핑': `
+ <ellipse cx="20" cy="20" rx="8" ry="6" fill="#bcaaa4" stroke="#5d4037" stroke-width="2" transform="rotate(-20 20 20)"/>
+ <ellipse cx="20" cy="19" rx="6" ry="4" fill="#d7ccc8" transform="rotate(-20 20 19)"/>
+ <ellipse cx="36" cy="26" rx="9" ry="6.5" fill="#bcaaa4" stroke="#5d4037" stroke-width="2" transform="rotate(15 36 26)"/>
+ <ellipse cx="36" cy="25" rx="7" ry="4.5" fill="#d7ccc8" transform="rotate(15 36 25)"/>
+ <ellipse cx="48" cy="16" rx="8" ry="6" fill="#bcaaa4" stroke="#5d4037" stroke-width="2" transform="rotate(-35 48 16)"/>
+ `,
+ '고수 토핑': `
+ <path d="M34 38 Q22 23 12 21 M34 38 Q32 18 30 6 M34 38 Q46 21 58 17" stroke="#2e7d32" stroke-width="2.5" fill="none"/>
+ <circle cx="12" cy="21" r="5.5" fill="#4caf50" stroke="#1b5e20" stroke-width="1.2"/>
+ <circle cx="30" cy="6" r="5.5" fill="#4caf50" stroke="#1b5e20" stroke-width="1.2"/>
+ <circle cx="58" cy="17" r="5.5" fill="#4caf50" stroke="#1b5e20" stroke-width="1.2"/>
+ <circle cx="21" cy="28" r="4" fill="#66bb6a"/><circle cx="45" cy="27" r="4" fill="#66bb6a"/>
+ `
+ }[name] || '<circle cx="34" cy="21" r="17" fill="#d66b43" stroke="#87352a" stroke-width="2"/>';
+
+ return `<svg class="art" viewBox="0 0 68 42" aria-hidden="true"><defs><linearGradient id="g_${Math.abs(name.split('').reduce((a,c)=>a+c.charCodeAt(0),0))}" x1="0" x2="1"><stop stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>${body}</svg>`;
+};
+
+// 2. 게임 마스터 데이터
+const items = [
+ ['청경채','🥬',800,80,'채소'],['숙주','🌱',700,70,'채소'],['배추','🥬',900,80,'채소'],['알배추','🥬',900,75,'채소'],
+ ['옥수수','🌽',1000,70,'채소'],['연근','🪷',1100,65,'채소'],['감자','🥔',900,75,'채소'],['시금치','🌿',800,60,'채소'],['토마토','🍅',900,70,'채소'],
+ ['팽이버섯','🍄',800,60,'버섯'],['목이버섯','🖤',900,55,'버섯'],['새송이버섯','🍄',900,60,'버섯'],['표고버섯','🍄',1000,55,'버섯'],
+ ['건두부','⬜',1500,50,'두부/가공품'],['푸주','🧣',1800,45,'두부/가공품'],['유부','🟨',1400,50,'두부/가공품'],['어묵','🍢',1500,55,'두부/가공품'],
+ ['문어어묵','🐙',1800,55,'두부/가공품'],['피쉬어묵','🐟',1700,55,'두부/가공품'],['오징어어묵','🦑',1900,55,'두부/가공품'],['스모스햄','🥩',1700,50,'두부/가공품'],
+ ['치즈햄','🧀',1900,50,'두부/가공품'],['비엔나','🌭',1600,50,'두부/가공품'],['청포묵','🟩',1000,60,'두부/가공품'],
+ ['분모자','🪢',1600,70,'면/떡'],['연근분모자','🪢',1800,70,'면/떡'],['중국당면','🍜',1500,80,'면/떡'],['녹두납작당면','🍜',1700,75,'면/떡'],
+ ['옥수수면','🍜',1500,70,'면/떡'],['뉴진면','🍜',1600,75,'면/떡'],['라면사리','🍜',1300,65,'면/떡'],['떡','🍡',1400,60,'면/떡'],
+ ['치즈떡','🧀',1800,60,'면/떡'],['고구마떡','🍠',1700,60,'면/떡'],
+ ['소고기','🥩',4000,45,'고기/해산물'],['양고기','🍖',4200,45,'고기/해산물'],['베이컨','🥓',3800,40,'고기/해산물'],['새우','🦐',2600,40,'고기/해산물'],
+ ['솔방울 오징어','🦑',2500,45,'고기/해산물'],['게맛살','🍢',2200,50,'고기/해산물'],['메추리알','🥚',1800,45,'고기/해산물']
+];
+
+const sides = [
+ ['꿔바로','🥠',12000],
+ ['크림새우','🍤',15000],
+ ['복숭아 주스','🍑',3000],
+ ['단무지','🥒',1000]
+];
+
+const cats = ['전체','채소','버섯','두부/가공품','면/떡','고기/해산물'];
+const spice = [['순한맛',0],['보통맛',500],['얼얼맛',1000],['마라폭풍',1500]];
+const extras = [['기본 육수',0],['토마토 육수',2000]];
+const toppings = [['유부 토핑',1500],['치즈 토핑',2000],['땅콩 토핑',1000],['고수 토핑',500]];
+
+const cards = [
+ {name:'MARA PASS',sub:'마라탕 전용 카드',num:'2025',bg:'linear-gradient(135deg,#25201e,#8d3028 55%,#f6b846)'},
+ {name:'SOPUNG CHECK',sub:'소풍 체크카드',num:'0717',bg:'linear-gradient(135deg,#17483a,#2f8f68 60%,#b9f0c8)'},
+ {name:'HOT POINT',sub:'얼얼 포인트카드',num:'4444',bg:'linear-gradient(135deg,#3b1f5e,#7d3cb8 55%,#ffb7e6)'},
+ {name:'DRAGON BLACK',sub:'프리미엄 블랙',num:'8888',bg:'linear-gradient(135deg,#0d0d0d,#3a3a3a 60%,#c9a24a)'}
+];
+
+// 헤어스타일 목록 4종
+const hairStyles = [
+ {
+ name: '마라 똥머리 🌶️',
+ html: `
+ <div class="hair-bun"></div>
+ <div class="hair-bun-band"></div>
+ <div class="hair-chili-pin">🌶️</div>
+ <div class="hair-top-base"></div>
+ <div class="hair-bangs"></div>
+ <div class="hair-sideburn-l"></div>
+ <div class="hair-sideburn-r"></div>
+ `
+ },
+ {
+ name: '양갈래 만두머리 🎀',
+ html: `
+ <div class="twin-bun-l"></div>
+ <div class="twin-ribbon-l">🎀</div>
+ <div class="twin-bun-r"></div>
+ <div class="twin-ribbon-r">🎀</div>
+ <div class="hair-top-base"></div>
+ <div class="hair-bangs"></div>
+ <div class="hair-sideburn-l"></div>
+ <div class="hair-sideburn-r"></div>
+ `
+ },
+ {
+ name: '상큼 보브 단발 ✨',
+ html: `
+ <div class="bob-hair-back"></div>
+ <div class="gold-hair-pin"></div>
+ <div class="hair-top-base"></div>
+ <div class="hair-bangs"></div>
+ <div class="hair-sideburn-l" style="height:38px;width:16px"></div>
+ <div class="hair-sideburn-r" style="height:38px;width:16px"></div>
+ `
+ },
+ {
+ name: '힙스터 캡모자 🧢',
+ html: `
+ <div class="cap-crown"></div>
+ <div class="cap-bill"></div>
+ <div class="cap-badge">마라❤️</div>
+ <div class="hair-bangs" style="top:24px"></div>
+ <div class="hair-sideburn-l" style="top:26px"></div>
+ <div class="hair-sideburn-r" style="top:26px"></div>
+ `
+ }
+];
+
+// 3. 상태 관리 변수
+let picked = [];
+let pickedSides = [];
+let isSideRelieved = false;
+let pickedTops = [];
+let quant = {};
+let sideQty = {};
+let topQty = {};
+let cat = '전체';
+let sp = 1;
+let extra = 0;
+let money = 50000;
+let cooked = false;
+let broth = 3;
+let cookTimer = null;
+let isEatingAnim = false;
+let eatAnimTimer = null;
+let paying = false;
+let selectedCard = null;
+let dragging = false;
+let dragStart = 0;
+let dragX = 0;
+let currentHair = 0;
+let mixedBowlItems = [];
+
+const STORE_KEY = 'maratang_wallet_v2';
+const savedWallet = localStorage.getItem(STORE_KEY);
+if (savedWallet !== null) money = Math.max(0, Number(savedWallet) || 0);
+else localStorage.setItem(STORE_KEY, '50000');
+
+const HAIR_KEY = 'maratang_hair_v6';
+const savedHair = localStorage.getItem(HAIR_KEY);
+if (savedHair !== null) currentHair = (Number(savedHair) || 0) % hairStyles.length;
+
+const $ = (id) => document.getElementById(id);
+
+function cost() {
+ return picked.reduce((a,i) => a + items[i][2], 0)
+ + pickedSides.reduce((a,i) => a + sides[i][2], 0)
+ + spice[sp][1]
+ + extras[extra][1]
+ + pickedTops.reduce((a,i) => a + toppings[i][1], 0);
+}
+
+function toast(t) {
+ const el = $('toast');
+ el.textContent = t;
+ el.classList.add('show');
+ clearTimeout(el._t);
+ el._t = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+function renderHair(showToast = false) {
+ const container = $('hairContainer');
+ const style = hairStyles[currentHair];
+ container.innerHTML = style.html;
+ container.classList.remove('hair-pop-anim');
+ void container.offsetWidth;
+ container.classList.add('hair-pop-anim');
+ $('hairName').textContent = style.name;
+ localStorage.setItem(HAIR_KEY, String(currentHair));
+ if (showToast) toast(`💇 헤어 변경: ${style.name}`);
+}
+
+function nextHair() {
+ currentHair = (currentHair + 1) % hairStyles.length;
+ renderHair(true);
+}
+
+function prepareMixedBowl() {
+ const list = [];
+ picked.forEach(i => { list.push({ type: 'item', id: i }); });
+ pickedTops.forEach(t => { list.push({ type: 'top', id: t }); });
+
+ for (let i = list.length - 1; i > 0; i--) {
+ const j = Math.floor(Math.random() * (i + 1));
+ [list[i], list[j]] = [list[j], list[i]];
+ }
+
+ mixedBowlItems = list.map((item, idx) => {
+ const rot = Math.round((Math.random() * 46) - 23);
+ const offX = Math.round((Math.random() * 18) - 9);
+ const offY = Math.round((Math.random() * 18) - 9);
+ const zIndex = Math.floor(Math.random() * 16) + 3;
+ return { ...item, rot, offX, offY, zIndex };
+ });
+}
+
+function render() {
+ $('money').textContent = money;
+
+ $('filters').innerHTML = cats.map(c => 
+`<button class="filter ${cat === c ? 'on' : ''}" data-c="${c}">${c}</button>`
+ ).join('');
+
+ const visible = items.map((x, i) => [x, i]).filter(([x]) => cat === '전체' || x[4] === cat);
+ $('shelf').innerHTML = visible.map(([x, i]) => {
+ const isPicked = picked.includes(i);
+ const subArt = art(x[0]);
+ return `
+ <button class="ing ${isPicked ? 'on' : ''}" data-i="${i}" title="${x[0]} 재료통 (보울에 담기)">
+ ${isPicked ? '<span class="tub-badge">보울 담김 ✓</span>' : ''}
+ <div class="tub-stack">
+ <div class="sub-item s1">${subArt}</div>
+ <div class="sub-item s2">${subArt}</div>
+ <div class="main-item">${subArt}</div>
+ </div>
+ <div>
+ <span>${x[0]}</span><br/>
+ <small>${x[2]}원</small>
+ <div class="tub-qty">보관 5+</div>
+ </div>
+ </button>
+ `;
+ }).join('');
+
+ $('sides').innerHTML = sides.map((x, i) => 
+`<button class="ing ${pickedSides.includes(i) ? 'on' : ''}" data-side="${i}">
+ <span class="emoji">${art(x[0])}</span>
+ ${x[0]}<br><small>${x[2]}원</small>
+ </button>`
+ ).join('');
+
+ $('spice').innerHTML = spice.map((x, i) => 
+`<button class="choice ${sp === i ? 'on' : ''}" data-s="${i}">
+ <i class="spice-dot d${i}"></i>${x[0]} · ${x[1]}원
+ </button>`
+ ).join('');
+
+ $('extras').innerHTML = extras.map((x, i) => 
+`<button class="choice ${extra === i ? 'on' : ''}" data-e="${i}">${x[0]} · ${x[1]}원</button>`
+ ).join('');
+
+ $('toppings').innerHTML = toppings.map((x, i) => 
+`<button class="choice top ${pickedTops.includes(i) ? 'on' : ''}" data-t="${i}">
+ <span style="display:inline-block;width:24px;height:18px;vertical-align:middle;margin-right:4px">${art(x[0])}</span>
+ ${x[0]} · ${x[1]}원
+ </button>`
+ ).join('');
+
+ const w = picked.reduce((a, i) => a + items[i][3], 0);
+ const curCost = cost();
+ $('price').textContent = curCost + '원';
+ $('weight').textContent = w + 'g';
+ $('detail').textContent = picked.length 
+? `탕 ${picked.length}가지 · ${spice[sp][0]} · ${extras[extra][0]}` + (pickedTops.length ? ' · ' + pickedTops.map(i => toppings[i][0]).join('·') : '')
+ : '아직 담은 재료가 없어요';
+ $('sideDetail').textContent = pickedSides.length 
+? '사이드: ' + pickedSides.map(i => sides[i][0]).join(' · ') 
+: '사이드 메뉴를 선택하지 않았어요';
+
+ $('bar').style.width = Math.min(100, (curCost / money) * 100) + '%';
+ $('status').textContent = (!picked.length && !pickedSides.length)
+ ? '스텐 볼에 재료나 사이드 메뉴를 골라 담아보세요.'
+ : curCost > money 
+? '예산 초과! 재료를 덜어내 보세요.'
+ : `${picked.length}가지 재료를 스텐 볼에 담았어요. 주문할 수 있어요! (남은 금액 ${money - curCost}원)`;
+
+ $('pay').disabled = (!picked.length && !pickedSides.length) || cooked;
+
+ document.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { cat = b.dataset.c; render(); });
+
+ document.querySelectorAll('[data-i]').forEach(b => b.onclick = () => {
+ if (cooked) return;
+ const i = +b.dataset.i;
+ if (picked.includes(i)) {
+ picked = picked.filter(x => x !== i);
+ delete quant[i];
+ } else {
+ if (picked.length >= 10) { toast('재료는 최대 10개까지 담을 수 있어요!'); return; }
+ picked.push(i);
+ if (cost() > money) {
+ picked.pop();
+ toast('예산을 초과할 수 없어요! 재료를 덜어내 주세요.');
+ return;
+ }
+ quant[i] = 3;
+ }
+ render();
+ plate();
+ updateEat();
+ });
+
+ document.querySelectorAll('[data-side]').forEach(b => b.onclick = () => {
+ if (cooked) return;
+ const i = +b.dataset.side;
+ if (pickedSides.includes(i)) {
+ pickedSides = pickedSides.filter(x => x !== i);
+ delete sideQty[i];
+ } else {
+ pickedSides.push(i);
+ if (cost() > money) {
+ pickedSides.pop();
+ toast('예산을 초과할 수 없어요! 남은 금액을 확인해 주세요.');
+ return;
+ }
+ sideQty[i] = 3;
+ }
+ render();
+ plate();
+ updateEat();
+ });
+
+ document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => {
+ const old = sp;
+ sp = +b.dataset.s;
+ if (cost() > money) {
+ sp = old;
+ toast('예산을 초과할 수 없어요!');
+ return;
+ }
+ render();
+ plate();
+ updateCharacterExpression('idle');
+ });
+
+ document.querySelectorAll('[data-e]').forEach(b => b.onclick = () => {
+ const old = extra;
+ extra = +b.dataset.e;
+ if (cost() > money) {
+ extra = old;
+ toast('예산을 초과할 수 없어요!');
+ return;
+ }
+ render();
+ plate();
+ });
+
+ document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
+ if (cooked) return;
+ const i = +b.dataset.t;
+ if (pickedTops.includes(i)) {
+ pickedTops = pickedTops.filter(x => x !== i);
+ delete topQty[i];
+ } else {
+ if (!picked.length) {
+ toast('토핑은 탕 재료를 먼저 담은 뒤 올릴 수 있어요!');
+ return;
+ }
+ pickedTops.push(i);
+ if (cost() > money) {
+ pickedTops.pop();
+ toast('예산을 초과할 수 없어요!');
+ return;
+ }
+ topQty[i] = 3;
+ }
+ render();
+ plate();
+ updateEat();
+ });
+}
+
+function artSideVessel(name, q, isCooked) {
+ const qty = q === null ? 3 : q;
+ const defs = `
+ <defs>
+ <linearGradient id="vMetal" x1="0" y1="0" x2="1" y2="1">
+ <stop offset="0%" stop-color="#ffffff"/>
+ <stop offset="35%" stop-color="#d8dde2"/>
+ <stop offset="75%" stop-color="#9ea7b0"/>
+ <stop offset="100%" stop-color="#6e7a85"/>
+ </linearGradient>
+ <radialGradient id="vCeramic" cx="45%" cy="40%" r="55%">
+ <stop offset="0%" stop-color="#ffffff"/>
+ <stop offset="80%" stop-color="#fdfbf7"/>
+ <stop offset="100%" stop-color="#eadbc8"/>
+ </radialGradient>
+ <radialGradient id="vGlass" cx="35%" cy="30%" r="70%">
+ <stop offset="0%" stop-color="rgba(255,255,255,0.7)"/>
+ <stop offset="60%" stop-color="rgba(235,248,255,0.3)"/>
+ <stop offset="100%" stop-color="rgba(179,229,252,0.45)"/>
+ </radialGradient>
+ </defs>
+ `;
+
+ if (name === '꿔바로') {
+ const vessel = !isCooked ? `
+ <ellipse cx="60" cy="46" rx="54" ry="24" fill="url(#vMetal)" stroke="#74808c" stroke-width="2.5"/>
+ <ellipse cx="60" cy="44" rx="46" ry="19" fill="#c7ced5" stroke="#9aa5b0" stroke-width="1.5"/>
+ <ellipse cx="44" cy="38" rx="20" ry="7" fill="#ffffff" opacity=".4"/>
+ ` : `
+ <ellipse cx="60" cy="48" rx="55" ry="24" fill="#ffffff" stroke="#e0caa0" stroke-width="3"/>
+ <ellipse cx="60" cy="48" rx="53" ry="22.5" fill="none" stroke="#d4af37" stroke-width="1.5"/>
+ <ellipse cx="60" cy="46" rx="46" ry="18" fill="url(#vCeramic)" stroke="#e8d5bc" stroke-width="1.5"/>
+ <ellipse cx="44" cy="40" rx="18" ry="6" fill="#ffffff" opacity=".6"/>
+ `;
+
+ let food = '';
+ if (qty >= 3) {
+ food = `
+ <path d="M25 45Q33 27 49 30Q61 33 55 44Q43 51 29 49Z" fill="#d8892f" stroke="#8e4b1d" stroke-width="2"/>
+ <path d="M53 46Q65 26 83 30Q95 33 89 45Q75 52 59 50Z" fill="#e29438" stroke="#8e4b1d" stroke-width="2"/>
+ <path d="M39 39Q51 21 71 23Q83 27 77 38Q61 45 43 42Z" fill="#f2a849" stroke="#9c5624" stroke-width="2"/>
+ <path d="M43 31l24-3M49 37l20-3" stroke="#ffde85" stroke-width="2.5" stroke-linecap="round"/>
+ <circle cx="56" cy="31" r="1.5" fill="#3e8e41"/><circle cx="65" cy="34" r="1.5" fill="#3e8e41"/>
+ `;
+ } else if (qty === 2) {
+ food = `
+ <ellipse cx="74" cy="44" rx="10" ry="4" fill="#f0be78" opacity=".5"/>
+ <path d="M28 45Q36 27 52 30Q64 33 58 44Q46 51 32 49Z" fill="#d8892f" stroke="#8e4b1d" stroke-width="2"/>
+ <path d="M48 40Q60 22 80 24Q92 28 86 39Q70 46 52 43Z" fill="#f2a849" stroke="#9c5624" stroke-width="2"/>
+ <path d="M52 32l20-3" stroke="#ffde85" stroke-width="2.5" stroke-linecap="round"/>
+ <circle cx="62" cy="32" r="1.5" fill="#3e8e41"/>
+ `;
+ } else if (qty === 1) {
+ food = `
+ <ellipse cx="64" cy="44" rx="20" ry="6" fill="#f0be78" opacity=".4"/>
+ <path d="M44 42Q56 24 76 26Q88 30 82 41Q66 48 48 45Z" fill="#f2a849" stroke="#9c5624" stroke-width="2"/>
+ <path d="M48 34l20-3" stroke="#ffde85" stroke-width="2.5" stroke-linecap="round"/>
+ <circle cx="58" cy="34" r="1.5" fill="#3e8e41"/>
+ `;
+ } else {
+ food = `
+ <path d="M38 46Q58 41 82 45" stroke="#e8b872" stroke-width="2" opacity=".5" stroke-dasharray="3 3"/>
+ <text x="60" y="49" font-size="11" font-weight="bold" fill="#ab855a" text-anchor="middle">빈 접시 ✨</text>
+ `;
+ }
+ return `<svg class="vessel-art" viewBox="0 0 120 75" aria-hidden="true">${defs}${vessel}${food}</svg>`;
+ }
+
+ if (name === '크림새우') {
+ const vessel = !isCooked ? `
+ <ellipse cx="60" cy="46" rx="48" ry="24" fill="url(#vMetal)" stroke="#74808c" stroke-width="2.5"/>
+ <ellipse cx="60" cy="44" rx="40" ry="18" fill="#c7ced5" stroke="#9aa5b0" stroke-width="1.5"/>
+ <ellipse cx="46" cy="38" rx="18" ry="6" fill="#ffffff" opacity=".4"/>
+ ` : `
+ <ellipse cx="60" cy="48" rx="49" ry="24" fill="#ffffff" stroke="#bcd9cb" stroke-width="3"/>
+ <ellipse cx="60" cy="46" rx="41" ry="18" fill="#f2f8f5" stroke="#d5e8df" stroke-width="1.5"/>
+ <ellipse cx="46" cy="40" rx="18" ry="6" fill="#ffffff" opacity=".6"/>
+ `;
+
+ let food = '';
+ if (qty >= 3) {
+ food = `
+ <path d="M28 44Q38 34 50 38Q66 32 84 41Q70 52 38 50Z" fill="#81c784"/>
+ <path d="M32 43Q37 28 52 30Q62 33 57 42Q46 48 35 45Z" fill="#ff7043" stroke="#bf360c" stroke-width="1.5"/>
+ <path d="M62 44Q67 29 82 31Q92 34 87 43Q76 49 65 46Z" fill="#ff7043" stroke="#bf360c" stroke-width="1.5"/>
+ <path d="M46 38Q52 23 68 25Q78 28 73 37Q62 43 49 41Z" fill="#ff8a65" stroke="#bf360c" stroke-width="1.5"/>
+ <path d="M40 34Q58 20 80 32Q64 42 36 38Z" fill="#fff9db" stroke="#f0e2a8" stroke-width="1.5" opacity=".95"/>
+ <path d="M84 40Q88 32 94 36Z" fill="#ffee58"/>
+ `;
+ } else if (qty === 2) {
+ food = `
+ <path d="M32 44Q45 36 60 40Q75 36 84 43Q68 50 40 48Z" fill="#a5d6a7"/>
+ <path d="M36 43Q41 28 56 30Q66 33 61 42Q50 48 39 45Z" fill="#ff7043" stroke="#bf360c" stroke-width="1.5"/>
+ <path d="M56 39Q62 24 78 26Q88 29 83 38Q72 44 59 42Z" fill="#ff8a65" stroke="#bf360c" stroke-width="1.5"/>
+ <path d="M44 33Q60 22 78 33Q64 42 42 37Z" fill="#fff9db" stroke="#f0e2a8" stroke-width="1.5" opacity=".95"/>
+ `;
+ } else if (qty === 1) {
+ food = `
+ <path d="M40 44Q52 38 68 42Q78 40 82 45Q68 50 46 48Z" fill="#c8e6c9"/>
+ <path d="M46 40Q52 25 68 27Q78 30 73 39Q62 45 49 43Z" fill="#ff8a65" stroke="#bf360c" stroke-width="1.5"/>
+ <path d="M44 36Q58 27 72 36Q62 43 44 39Z" fill="#fff9db" stroke="#f0e2a8" stroke-width="1.5" opacity=".95"/>
+ `;
+ } else {
+ food = `
+ <ellipse cx="60" cy="45" rx="16" ry="6" fill="#fdf6d8" opacity=".6"/>
+ <text x="60" y="49" font-size="11" font-weight="bold" fill="#7ba892" text-anchor="middle">빈 접시 ✨</text>
+ `;
+ }
+ return `<svg class="vessel-art" viewBox="0 0 120 75" aria-hidden="true">${defs}${vessel}${food}</svg>`;
+ }
+
+ if (name === '단무지') {
+ const vessel = !isCooked ? `
+ <ellipse cx="60" cy="47" rx="44" ry="22" fill="url(#vMetal)" stroke="#74808c" stroke-width="2.5"/>
+ <ellipse cx="60" cy="45" rx="36" ry="16" fill="#c7ced5" stroke="#9aa5b0" stroke-width="1.5"/>
+ <ellipse cx="48" cy="39" rx="16" ry="5" fill="#ffffff" opacity=".4"/>
+ ` : `
+ <ellipse cx="60" cy="48" rx="45" ry="22" fill="#ffffff" stroke="#c0d0dc" stroke-width="3"/>
+ <ellipse cx="60" cy="46" rx="37" ry="16" fill="#f0f5f8" stroke="#d5e3ec" stroke-width="1.5"/>
+ <ellipse cx="48" cy="40" rx="16" ry="5" fill="#ffffff" opacity=".7"/>
+ `;
+
+ let food = '';
+ if (qty >= 3) {
+ food = `
+ <ellipse cx="46" cy="41" rx="16" ry="8" fill="#fbc02d" stroke="#f57f17" stroke-width="1.5" transform="rotate(-20 46 41)"/>
+ <ellipse cx="72" cy="41" rx="16" ry="8" fill="#fdd835" stroke="#f57f17" stroke-width="1.5" transform="rotate(20 72 41)"/>
+ <ellipse cx="54" cy="44" rx="17" ry="8" fill="#ffee58" stroke="#f57f17" stroke-width="1.5" transform="rotate(-5 54 44)"/>
+ <ellipse cx="66" cy="45" rx="17" ry="8" fill="#fff176" stroke="#f57f17" stroke-width="1.5" transform="rotate(10 66 45)"/>
+ <ellipse cx="60" cy="48" rx="16" ry="7" fill="#fff59d" stroke="#f57f17" stroke-width="1.5"/>
+ `;
+ } else if (qty === 2) {
+ food = `
+ <ellipse cx="50" cy="43" rx="16" ry="8" fill="#fdd835" stroke="#f57f17" stroke-width="1.5" transform="rotate(-10 50 43)"/>
+ <ellipse cx="68" cy="44" rx="16" ry="8" fill="#ffee58" stroke="#f57f17" stroke-width="1.5" transform="rotate(10 68 44)"/>
+ <ellipse cx="60" cy="47" rx="15" ry="7" fill="#fff59d" stroke="#f57f17" stroke-width="1.5"/>
+ `;
+ } else if (qty === 1) {
+ food = `
+ <ellipse cx="60" cy="45" rx="16" ry="8" fill="#ffee58" stroke="#f57f17" stroke-width="1.5"/>
+ `;
+ } else {
+ food = `
+ <ellipse cx="60" cy="46" rx="14" ry="5" fill="#eef4f8" stroke="#d0e0eb" stroke-width="1"/>
+ <text x="60" y="49" font-size="11" font-weight="bold" fill="#85a3b8" text-anchor="middle">빈 종지 ✨</text>
+ `;
+ }
+ return `<svg class="vessel-art" viewBox="0 0 120 75" aria-hidden="true">${defs}${vessel}${food}</svg>`;
+ }
+
+ if (name === '복숭아 주스') {
+ if (!isCooked) {
+ return `<svg class="vessel-art" viewBox="0 0 120 75" aria-hidden="true">${defs}
+ <path d="M46 12h28l-4 54H50Z" fill="url(#vMetal)" stroke="#74808c" stroke-width="2.5"/>
+ <ellipse cx="60" cy="12" rx="14" ry="4" fill="#a8b3be" stroke="#74808c" stroke-width="1.5"/>
+ <ellipse cx="60" cy="66" rx="10" ry="3" fill="#6d7883"/>
+ <path d="M49 16l-3 46" stroke="#ffffff" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+ <text x="60" y="42" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">TUMBLER</text>
+ </svg>`;
+ }
+
+ const glassOutline = `
+ <path d="M44 12h32l-4 54H48Z" fill="url(#vGlass)" stroke="#90caf9" stroke-width="2"/>
+ <ellipse cx="60" cy="12" rx="16" ry="4.5" fill="none" stroke="#90caf9" stroke-width="1.5"/>
+ <ellipse cx="60" cy="66" rx="12" ry="3.5" fill="#bbdefb" stroke="#90caf9" stroke-width="1.5"/>
+ <path d="M47 16l-3 46" stroke="#ffffff" stroke-width="2" opacity=".8" stroke-linecap="round"/>
+ <path d="M66 4L78 1" stroke="#e53935" stroke-width="3.5" stroke-linecap="round"/>
+ <path d="M66 4L58 40" stroke="#e53935" stroke-width="3" stroke-linecap="round"/>
+ `;
+
+ let juice = '';
+ if (qty >= 3) {
+ juice = `
+ <path d="M45 20h30l-3 44H48Z" fill="#ffab91"/>
+ <path d="M46 30h28l-2 33H48Z" fill="#ff7043"/>
+ <rect x="50" y="22" width="8" height="8" rx="2" fill="#ffffff" opacity=".85"/>
+ <rect x="62" y="28" width="7" height="7" rx="2" fill="#ffffff" opacity=".85"/>
+ <ellipse cx="42" cy="12" rx="7" ry="5" fill="#ffa726" stroke="#e65100" stroke-width="1"/>
+ `;
+ } else if (qty === 2) {
+ juice = `
+ <path d="M47 36h26l-2 28H49Z" fill="#ffab91"/>
+ <path d="M47 44h25l-2 20H49Z" fill="#ff7043"/>
+ <rect x="54" y="40" width="7" height="7" rx="2" fill="#ffffff" opacity=".85"/>
+ `;
+ } else if (qty === 1) {
+ juice = `
+ <path d="M48 50h24l-1 14H49Z" fill="#ff8a65"/>
+ <rect x="55" y="53" width="6" height="6" rx="2" fill="#ffffff" opacity=".85"/>
+ `;
+ } else {
+ juice = `
+ <ellipse cx="60" cy="64" rx="7" ry="2" fill="#b3e5fc" opacity=".7"/>
+ <text x="60" y="42" font-size="11" font-weight="bold" fill="#64b5f6" text-anchor="middle">빈 잔 ✨</text>
+ `;
+ }
+ return `<svg class="vessel-art" viewBox="0 0 120 75" aria-hidden="true">${defs}${juice}${glassOutline}</svg>`;
+ }
+
+ return '';
+}
+
+function plate() {
+ const bowlWrap = $('bowlWrap');
+ const bowlEl = $('bowl');
+
+ $('sideList').innerHTML = pickedSides.length ? pickedSides.map(i => {
+ const q = cooked ? (sideQty[i] || 0) : null;
+ return `
+ <button type="button" class="side-vessel-btn ${q === 0 ? 'done' : ''}" 
+data-sideeat="${i}" onclick="eatSide(${i})" title="${sides[i][0]} 용기에서 먹기">
+ <div class="side-vessel-art">${artSideVessel(sides[i][0], q, cooked)}</div>
+ <div class="side-vessel-meta">
+ <span class="side-vessel-name">${sides[i][0]}</span>
+ <span class="side-vessel-badge">${q === null ? '🍳 스텐 용기에 준비 중' : q > 0 ? '남은 양 ' + q + ' / 3' : '✨ 완식 완료!'}</span>
+ </div>
+ </button>
+ `;
+ }).join('') : '<div style="color:#a89088;font-size:13px;padding:8px 0;grid-column:1/-1;">아직 주문한 사이드가 없어요</div>';
+
+ document.querySelectorAll('[data-sideeat]').forEach(b => {
+ b.onclick = () => eatSide(+b.dataset.sideeat);
+ });
+
+ if (!cooked) {
+ bowlWrap.className = 'bowl metal-bowl';
+ bowlEl.className = 'food uncooked';
+
+ if (!picked.length) {
+ bowlEl.innerHTML = pickedSides.length 
+? '<div class="empty-bowl-msg">사이드만 주문했어요<br><small>접시에서 드세요</small></div>'
+ : '<div class="empty-bowl-msg">텅—<br><small>집게로 스텐 볼에 재료를 담아주세요</small></div>';
+ return;
+ }
+
+ let html = '';
+ picked.forEach(i => {
+ html += `
+ <button title="${items[i][0]} (스텐 볼에 담음)">
+ ${art(items[i][0])}
+ <span class="food-name">${items[i][0]}</span>
+ </button>
+ `;
+ });
+ pickedTops.forEach(t => {
+ const topNm = toppings[t][0].replace(' 토핑', '');
+ html += `
+ <button class="topping" title="${toppings[t][0]} (추가 토핑)">
+ ${art(toppings[t][0])}
+ <span class="food-name">${topNm}</span>
+ </button>
+ `;
+ });
+ bowlEl.innerHTML = html;
+ return;
+ }
+
+ bowlWrap.className = 'bowl';
+ [0, 1, 2, 3].forEach(k => bowlWrap.classList.remove('spice' + k));
+ bowlWrap.classList.add('spice' + sp);
+ bowlWrap.classList.toggle('tomato', extra === 1);
+
+ bowlEl.className = 'food';
+ const activeItems = mixedBowlItems.filter(item => {
+ if (item.type === 'item') return (quant[item.id] || 0) > 0;
+ if (item.type === 'top') return (topQty[item.id] || 0) > 0;
+ return false;
+ });
+
+ if (!activeItems.length) {
+ bowlEl.innerHTML = '<div class="empty-bowl-msg" style="color:#fff;text-shadow:0 1px 3px #5f1712">재료는 싹싹 다 먹었어요!<br>국물과 사이드를 마저 즐기세요 😋</div>';
+ return;
+ }
+
+ let html = '';
+ activeItems.forEach(item => {
+ if (item.type === 'item') {
+ const idx = item.id;
+ html += `
+ <button data-eat="${idx}" title="${items[idx][0]} 한입 먹기" 
+style="transform:rotate(${item.rot}deg) translate(${item.offX}px,${item.offY}px);z-index:${item.zIndex};">
+ ${art(items[idx][0])}
+ <span class="food-name">${items[idx][0]}</span>
+ </button>
+ `;
+ } else if (item.type === 'top') {
+ const tIdx = item.id;
+ const topNm = toppings[tIdx][0].replace(' 토핑', '');
+ html += `
+ <button class="topping" data-top="${tIdx}" title="${toppings[tIdx][0]} 먹기" 
+style="transform:rotate(${item.rot}deg) translate(${item.offX}px,${item.offY}px);z-index:${item.zIndex};">
+ ${art(toppings[tIdx][0])}
+ <span class="food-name">${topNm}</span>
+ </button>
+ `;
+ }
+ });
+
+ bowlEl.innerHTML = html;
+
+ document.querySelectorAll('[data-top]').forEach(b => b.onclick = () => eatTop(+b.dataset.top));
+ document.querySelectorAll('[data-eat]').forEach(b => b.onclick = () => eat(+b.dataset.eat, b));
+ document.querySelectorAll('[data-sideeat]').forEach(b => b.onclick = () => eatSide(+b.dataset.sideeat));
+}
+
+function updateCharacterExpression(state, customLabel = null) {
+ const char = $('character');
+ const eyeL = $('eyeL');
+ const eyeR = $('eyeR');
+ const browL = $('browL');
+ const browR = $('browR');
+ const cheekL = $('cheekL');
+ const cheekR = $('cheekR');
+ const mouth = $('mouth');
+ const tongue = $('tongue');
+ const fireBreath = $('fireBreath');
+ const sweatDrop = $('sweatDrop');
+ const charFx = $('charFx');
+ const faceLabel = $('faceLabel');
+ const head = $('charHead');
+
+ eyeL.className = 'eye l';
+ eyeR.className = 'eye r';
+ browL.className = 'eyebrow l';
+ browR.className = 'eyebrow r';
+ cheekL.className = 'cheek l';
+ cheekR.className = 'cheek r';
+ mouth.className = 'mouth';
+ tongue.classList.add('hidden');
+ fireBreath.classList.add('hidden');
+ sweatDrop.classList.add('hidden');
+ charFx.innerHTML = '';
+ char.classList.remove('spicy-storm', 'chewing', 'eating-spoon', 'eating-chopsticks');
+ head.style.background = '#ffd0a6';
+
+ if (state === 'idle') {
+ if (isSideRelieved) {
+ faceLabel.textContent = customLabel || '사이드 메뉴로 매운맛을 달래서 편안해요! (*˘︶˘*)';
+ cheekL.classList.remove('hot');
+ cheekR.classList.remove('hot');
+ sweatDrop.classList.add('hidden');
+ fireBreath.classList.add('hidden');
+ charFx.innerHTML = '';
+ head.style.background = '#ffd0a6';
+ } else if (sp === 0) {
+ faceLabel.textContent = customLabel || '순하고 편안한 맛 기대중!';
+ } else if (sp === 1) {
+ faceLabel.textContent = customLabel || '맛있는 마라탕 기대 가득!';
+ } else if (sp === 2) {
+ faceLabel.textContent = customLabel || '얼얼할 텐데, 도전해볼까?!';
+ sweatDrop.classList.remove('hidden');
+ } else if (sp === 3) {
+ faceLabel.textContent = customLabel || '마라폭풍! 긴장감 최고조!! 🔥';
+ charFx.innerHTML = '<span class="fire-fx">🔥</span>';
+ cheekL.classList.add('hot');
+ cheekR.classList.add('hot');
+ }
+ } 
+else if (state === 'chew') {
+ char.classList.add('chewing');
+ mouth.classList.add('open');
+ faceLabel.textContent = customLabel || '아— 냠냠냠!';
+ }
+ else if (state === 'react') {
+ if (sp === 0) {
+ eyeL.classList.add('happy');
+ eyeR.classList.add('happy');
+ mouth.classList.add('happy');
+ faceLabel.textContent = customLabel || '음~ 담백하고 고소해! (*˘︶˘*)';
+ } 
+else if (sp === 1) {
+ eyeL.classList.add('happy');
+ eyeR.classList.add('happy');
+ mouth.classList.add('happy');
+ cheekL.classList.add('hot');
+ cheekR.classList.add('hot');
+ faceLabel.textContent = customLabel || '크으! 딱 맛있게 얼큰해! 😋';
+ } 
+else if (sp === 2) {
+ eyeL.classList.add('spicy');
+ eyeR.classList.add('spicy');
+ browL.classList.add('worried');
+ browR.classList.add('worried');
+ mouth.classList.add('spicy-gasp');
+ tongue.classList.remove('hidden');
+ sweatDrop.classList.remove('hidden');
+ head.style.background = '#ffc09f';
+ cheekL.classList.add('hot');
+ cheekR.classList.add('hot');
+ faceLabel.textContent = customLabel || '쓰읍— 하! 혀끝이 찌릿찌릿 얼얼해! 💦';
+ } 
+else if (sp === 3) {
+ char.classList.add('spicy-storm');
+ eyeL.classList.add('fire');
+ eyeR.classList.add('fire');
+ mouth.classList.add('spicy-gasp');
+ fireBreath.classList.remove('hidden');
+ charFx.innerHTML = '<span class="fire-fx">🔥</span><span class="steam">♨️</span><span class="fire-fx">🔥</span>';
+ head.style.background = '#ff9988';
+ cheekL.classList.add('hot');
+ cheekR.classList.add('hot');
+ faceLabel.textContent = customLabel || '으아악!! 불난다 불나!! 살려줘요!! 🔥🌋';
+ }
+ }
+ else if (state === 'side-react') {
+ eyeL.classList.add('happy');
+ eyeR.classList.add('happy');
+ mouth.classList.add('happy');
+ head.style.background = '#ffd0a6';
+ faceLabel.textContent = customLabel || '달콤바삭하고 편안해! (*˘︶˘*)';
+ }
+ else if (state === 'relief') {
+ eyeL.classList.add('happy');
+ eyeR.classList.add('happy');
+ mouth.classList.add('happy');
+ head.style.background = '#ffd0a6';
+ faceLabel.textContent = customLabel || '살았다~ 달콤한 복숭아 주스로 불 껐어요! 🍑✨';
+ }
+}
+
+function showChopEffect(txt) {
+ const p = document.createElement('span');
+ p.className = 'chop';
+ p.textContent = txt;
+ p.style.left = (35 + Math.random() * 30) + '%';
+ p.style.top = '35%';
+ $('bowl').append(p);
+ setTimeout(() => p.remove(), 600);
+}
+
+function eat(i, el) {
+ if (!cooked || quant[i] <= 0 || isEatingAnim) return;
+ isEatingAnim = true;
+ isSideRelieved = false;
+
+ const char = $('character');
+ char.classList.add('eating-chopsticks');
+ updateCharacterExpression('chew', `${items[i][0]} 한입 쏙!`);
+
+ quant[i]--;
+ showChopEffect('🥢 냠!');
+
+ setTimeout(() => {
+ updateCharacterExpression('react');
+ setTimeout(() => {
+ isEatingAnim = false;
+ updateCharacterExpression('idle', '다음 한입 기대중!');
+ }, 900);
+ }, 750);
+
+ if (quant[i] <= 0) {
+ plate();
+ toast(items[i][0] + '을(를) 다 먹었어요!');
+ }
+ updateEat();
+}
+
+function eatTop(i) {
+ if (!cooked || !(topQty[i] > 0) || isEatingAnim) return;
+ isEatingAnim = true;
+ isSideRelieved = false;
+
+ const char = $('character');
+ char.classList.add('eating-chopsticks');
+ const topNm = toppings[i][0].replace(' 토핑', '');
+ updateCharacterExpression('chew', `${topNm} 토핑 듬뿍!`);
+
+ topQty[i]--;
+ showChopEffect('🧀 냠!');
+
+ setTimeout(() => {
+ updateCharacterExpression('react');
+ setTimeout(() => {
+ isEatingAnim = false;
+ updateCharacterExpression('idle', '다음 한입 기대중!');
+ }, 900);
+ }, 750);
+
+ toast(topNm + ' 토핑 한입!' + (topQty[i] <= 0 ? ' 다 먹었어요' : ''));
+ plate();
+ updateEat();
+}
+
+function eatBroth() {
+ if (!cooked || broth <= 0 || isEatingAnim) return;
+ isEatingAnim = true;
+ isSideRelieved = false;
+ broth--;
+ AudioFX.slurp();
+
+ const spoon = $('spoon');
+ spoon.classList.remove('spoon-tap');
+ void spoon.offsetWidth;
+ spoon.classList.add('spoon-tap');
+
+ const char = $('character');
+ char.classList.add('eating-spoon');
+ updateCharacterExpression('chew', '호- 호- 후루룩—');
+ toast('후루룩— 국물을 마셨어요! 🥄');
+
+ setTimeout(() => {
+ updateCharacterExpression('react');
+ setTimeout(() => {
+ isEatingAnim = false;
+ updateCharacterExpression('idle', '다음 한입 기대중!');
+ }, 900);
+ }, 750);
+
+ if (broth === 0) $('spoon').disabled = true;
+ updateEat();
+}
+
+function showSideBiteEffect(i, txt) {
+ const btn = document.querySelector(`[data-sideeat="${i}"]`);
+ if (!btn) return;
+ btn.classList.remove('vessel-bite-pop');
+ void btn.offsetWidth;
+ btn.classList.add('vessel-bite-pop');
+
+ const p = document.createElement('span');
+ p.className = 'side-bite-float';
+ p.textContent = txt;
+ btn.append(p);
+ setTimeout(() => p.remove(), 700);
+}
+
+function eatSide(i) {
+ if (!cooked) {
+ toast('마라탕 결제 후 조리가 완료되면 맛있게 드실 수 있어요! ♨️');
+ return;
+ }
+ if (!(sideQty[i] > 0)) {
+ toast(`${sides[i][0]}은(는) 이미 싹싹 다 비웠어요! ✨`);
+ return;
+ }
+ if (isEatingAnim) return;
+ isEatingAnim = true;
+
+ sideQty[i]--;
+ const sName = sides[i][0];
+ const isCup = sName === '복숭아 주스';
+
+ const biteText = isCup ? '🥤 꿀꺽!' : (sName === '꿔바로' ? '🥢 바삭!' : (sName === '크림새우' ? '🍤 꿀맛!' : '🥢 아삭!'));
+ showSideBiteEffect(i, biteText);
+
+ if (isCup) {
+ $('character').classList.add('eating-spoon');
+ updateCharacterExpression('chew', '꿀꺽— 꿀꺽— 🍑');
+ clearTimeout(eatAnimTimer);
+ eatAnimTimer = setTimeout(() => {
+ isSideRelieved = true;
+ updateCharacterExpression('relief', '살았다~ 달콤 시원한 복숭아 주스로 매운 불을 껐어요! 🍑✨');
+ eatAnimTimer = setTimeout(() => {
+ isEatingAnim = false;
+ updateCharacterExpression('idle', '달콤 시원하게 매운맛 진정 완료! (*˘︶˘*)');
+ }, 500);
+ }, 450);
+ toast('시원 달콤한 복숭아 주스 한 모금! (매운맛 진정)');
+ } else {
+ $('character').classList.add('eating-chopsticks');
+ updateCharacterExpression('chew', `바삭! ${sName} 한입!`);
+
+ let sideMsg = `바삭 달콤! 마라탕이 매워도 ${sName}은(는) 꿀맛! (*˘︶˘*)`;
+ if (sName === '꿔바로') {
+ sideMsg = '바삭 달콤 쫀득! 마라탕이 매워도 꿔바로우가 입안을 사르르 녹여줘요~ 🍯';
+ } else if (sName === '크림새우') {
+ sideMsg = '부드럽고 고소해! 달콤한 크림새우가 매운맛을 싹 감싸줘요! 🍤💛';
+ } else if (sName === '단무지') {
+ sideMsg = '아삭아삭 새콤달콤! 시원한 단무지가 매운맛을 싹 잡아줘요! 💛';
+ }
+
+ clearTimeout(eatAnimTimer);
+ eatAnimTimer = setTimeout(() => {
+ isSideRelieved = true;
+ updateCharacterExpression('side-react', sideMsg);
+ eatAnimTimer = setTimeout(() => {
+ isEatingAnim = false;
+ updateCharacterExpression('idle', `${sName} 먹고 매운 입안이 편안해졌어요! 😋`);
+ }, 500);
+ }, 450);
+ toast(`${sName} 한입! (매운맛 중화)`);
+ }
+
+ plate();
+ updateEat();
+}
+
+function updateEat() {
+ const total = picked.length * 3 + pickedSides.length * 3 + pickedTops.length * 3 + (picked.length ? 3 : 0);
+ const left = picked.reduce((a, i) => a + (quant[i] || 0), 0)
+ + pickedSides.reduce((a, i) => a + (sideQty[i] || 0), 0)
+ + pickedTops.reduce((a, i) => a + (topQty[i] || 0), 0)
+ + (picked.length ? broth : 0);
+ const eaten = total - left;
+
+ $('remain').textContent = left + ' / ' + total;
+ $('full').textContent = (total ? Math.min(100, Math.round((eaten / total) * 100)) : 0) + '%';
+ $('eatbar').style.width = (total ? (eaten / total) * 100 : 0) + '%';
+
+ if (cooked && total > 0 && left === 0) {
+ setTimeout(() => finish(), 400);
+ }
+}
+
+function openPayment() {
+ if (cooked || paying || (!picked.length && !pickedSides.length)) return;
+ if (cost() > money) {
+ toast('잔액이 부족해 결제할 수 없어요. 재료를 덜어내 주세요.');
+ return;
+ }
+ paying = true;
+ $('payModal').classList.remove('hidden');
+ $('payAmount').textContent = cost() + '원';
+ $('payProgress').style.width = '0%';
+ $('scanline').style.width = '0';
+ openWallet();
+}
+
+function closePayment() {
+ paying = false;
+ dragging = false;
+ $('payModal').classList.add('hidden');
+}
+
+function openWallet() {
+ selectedCard = null;
+ $('virtualCard').classList.add('hidden');
+ $('cardSlot').classList.remove('hidden');
+ $('virtualCard').style.transform = '';
+ $('cardBack').classList.add('hidden');
+ $('payStatus').textContent = '지갑에서 카드를 한 장 꺼내 주세요.';
+ renderWallet();
+}
+
+function renderWallet() {
+ $('walletCards').innerHTML = cards.map((c, i) => `
+ <button type="button" class="wcard ${selectedCard === i ? 'taken' : ''}" data-card="${i}" 
+style="background:${c.bg}" aria-label="${c.sub} 꺼내기" ${selectedCard === i ? 'disabled' : ''}>
+ <span>${c.name}</span>
+ <span class="wsub">${c.sub}</span>
+ <i class="wchip"></i>
+ <span class="wnum">•••• ${c.num}</span>
+ </button>
+ `).join('');
+
+ $('walletHint').textContent = selectedCard === null ? '카드를 눌러 꺼내세요' : cards[selectedCard].sub + ' 꺼냄';
+ document.querySelectorAll('[data-card]').forEach(b => b.onclick = () => pickCard(+b.dataset.card));
+}
+
+function pickCard(i) {
+ if (!paying || dragging) return;
+ selectedCard = i;
+ const c = cards[i];
+ const vc = $('virtualCard');
+ vc.style.background = c.bg;
+ $('cardName').textContent = c.name;
+ $('cardSub').textContent = c.sub;
+ $('cardNum').textContent = '•••• •••• •••• ' + c.num;
+ vc.classList.remove('hidden');
+ $('cardSlot').classList.add('hidden');
+ $('cardBack').classList.remove('hidden');
+ $('payProgress').style.width = '0%';
+ $('scanline').style.width = '0';
+ $('payStatus').textContent = c.sub + '를 꺼냈어요. 카드를 잡고 리더기로 긁어주세요.';
+ localStorage.setItem('maratang_card', String(i));
+ renderWallet();
+ vc.focus();
+}
+
+function returnCard() {
+ if (dragging) return;
+ selectedCard = null;
+ $('virtualCard').classList.add('hidden');
+ $('cardSlot').classList.remove('hidden');
+ $('virtualCard').style.transform = '';
+ $('cardBack').classList.add('hidden');
+ $('payProgress').style.width = '0%';
+ $('scanline').style.width = '0';
+ $('payStatus').textContent = '카드를 지갑에 넣었어요. 다른 카드를 꺼내세요.';
+ renderWallet();
+}
+
+function paid() {
+ if (!paying) return;
+ paying = false;
+ sideQty = {};
+ pickedSides.forEach(i => sideQty[i] = 3);
+ topQty = {};
+ pickedTops.forEach(i => topQty[i] = 3);
+
+ money -= cost();
+ localStorage.setItem(STORE_KEY, String(money));
+ $('money').textContent = money;
+ $('pay').disabled = true;
+ $('payModal').classList.add('hidden');
+ $('status').textContent = '주방에서 보글보글 끓이며 재료를 섞는 중… 🍲';
+ toast('결제 성공! 주문이 접수됐어요 ♨️');
+
+ clearTimeout(cookTimer);
+
+ cookTimer = setTimeout(() => {
+ const smoke = $('smokeOverlay');
+ smoke.classList.remove('hidden');
+ smoke.classList.remove('smoke-active');
+ void smoke.offsetWidth;
+ smoke.classList.add('smoke-active');
+
+ setTimeout(() => {
+ cooked = true;
+ prepareMixedBowl();
+ plate();
+ updateEat();
+
+ const bowlWrap = $('bowlWrap');
+ bowlWrap.classList.remove('soup-boil-pop');
+ void bowlWrap.offsetWidth;
+ bowlWrap.classList.add('soup-boil-pop');
+
+ $('mode').textContent = '· 젓가락과 숟가락으로 먹기';
+ $('status').textContent = '김이 모락모락 피어오르는 뜨끈한 마라탕 완성! 맛있게 드세요!';
+ isSideRelieved = false;
+ updateCharacterExpression('idle', '우와, 김이 모락모락 갓 나온 마라탕이다! 😋');
+ toast('🍲 김이 모락모락! 완성된 마라탕이 나왔어요!');
+ }, 280);
+
+ setTimeout(() => {
+ smoke.classList.add('hidden');
+ smoke.classList.remove('smoke-active');
+ }, 1400);
+
+ }, 1000);
+}
+
+const virtualCard = $('virtualCard');
+virtualCard.addEventListener('pointerdown', e => {
+ if (!paying || selectedCard === null) return;
+ dragging = true;
+ dragStart = e.clientX;
+ dragX = 0;
+ virtualCard.setPointerCapture(e.pointerId);
+ $('payStatus').textContent = '좋아요! 오른쪽 리더기까지 쭉 긁어주세요.';
+});
+
+virtualCard.addEventListener('pointermove', e => {
+ if (!dragging) return;
+ dragX = Math.max(0, e.clientX - dragStart);
+ const pct = Math.min(100, (dragX / 190) * 100);
+ $('payProgress').style.width = pct + '%';
+ $('scanline').style.width = pct + '%';
+ virtualCard.style.transform = `translateX(${Math.min(190, dragX)}px)`;
+});
+
+virtualCard.addEventListener('pointercancel', () => {
+ dragging = false;
+ virtualCard.style.transform = '';
+ $('payProgress').style.width = '0%';
+ $('scanline').style.width = '0%';
+});
+
+virtualCard.addEventListener('pointerup', () => {
+ if (!dragging) return;
+ dragging = false;
+ virtualCard.style.transform = '';
+ if (dragX >= 150) {
+ $('payStatus').textContent = '결제 성공!';
+ $('reader').classList.add('successflash');
+ setTimeout(() => {
+ $('reader').classList.remove('successflash');
+ paid();
+ }, 450);
+ } else {
+ $('payProgress').style.width = '0%';
+ $('scanline').style.width = '0';
+ $('payStatus').textContent = '긁기가 짧아요. 카드를 리더기까지 다시 긁어주세요.';
+ toast('카드를 끝까지 긁어주세요!');
+ }
+});
+
+$('keyPay').onclick = () => {
+ if (paying && selectedCard === null) {
+ toast('먼저 지갑에서 카드를 꺼내 주세요!');
+ $('payStatus').textContent = '지갑에서 카드를 한 장 꺼내 주세요.';
+ return;
+ }
+ if (paying) {
+ $('payProgress').style.width = '100%';
+ $('scanline').style.width = '100%';
+ $('payStatus').textContent = '키보드 결제 성공!';
+ setTimeout(paid, 450);
+ }
+};
+$('cancelPay').onclick = closePayment;
+$('cardBack').onclick = returnCard;
+
+$('hairToggleBtn').onclick = nextHair;
+$('charHead').onclick = () => nextHair();
+
+function start() {
+ $('modal').classList.add('hidden');
+ picked = [];
+ pickedSides = [];
+ pickedTops = [];
+ quant = {};
+ sideQty = {};
+ topQty = {};
+ mixedBowlItems = [];
+ sp = 1;
+ extra = 0;
+ cat = '전체';
+ cooked = false;
+ broth = 3;
+ $('spoon').disabled = false;
+ $('mode').textContent = '';
+ isSideRelieved = false;
+ updateCharacterExpression('idle', '어떤 재료를 스텐 볼에 담아볼까?');
+ renderHair();
+ render();
+ plate();
+ updateEat();
+}
+
+function finish() {
+ $('modal').classList.remove('hidden');
+ $('modal').querySelector('.modal').innerHTML = `
+ <h2>싹싹— 완식이에요! ✨</h2>
+ <p>
+ 탕 ${picked.length}가지(${spice[sp][0]})와 사이드 ${pickedSides.length}가지를 즐겼어요.<br/>
+ <b>오늘의 포만감 100%</b><br/>
+ 남은 게임머니 <b>${money}원</b>
+ </p>
+ <button class="action" id="again">다시 한 그릇 만들기</button>
+ `;
+ $('again').onclick = start;
+}
+
+function reset() {
+ clearTimeout(cookTimer);
+ $('modal').classList.remove('hidden');
+ $('modal').querySelector('.modal').innerHTML = `
+ <h2>다시 놀러 와요! 👋</h2>
+ <p>새 스텐 볼과 맛있는 재료들을 준비했어요.</p>
+ <button class="action" id="beginAgain">셀프바 입장하기</button>
+ `;
+ $('beginAgain').onclick = start;
+}
+
+$('begin').onclick = start;
+$('clear').onclick = () => {
+ if (!cooked) {
+ picked = [];
+ pickedSides = [];
+ pickedTops = [];
+ quant = {};
+ sideQty = {};
+ topQty = {};
+ mixedBowlItems = [];
+ render();
+ plate();
+ updateEat();
+ toast('스텐 볼을 깨끗이 비웠어요');
+ }
+};
+$('reset').onclick = reset;
+$('spoon').onclick = eatBroth;
+$('pay').onclick = openPayment;
+
+// 알바 모드
+(() => {
+ let order = [];
+ let orderLevel = 0;
+ let jobSelected = [];
+ let jobQty = {};
+ let jobRunning = false;
+ let jobDone = false;
+ let jobTimer = null;
+ let jobLeft = 60;
+ let sessionActive = false;
+ let jobCount = 0;
+ let jobIncome = 0;
+ const groups = ['채소','버섯','면/떡','두부/가공품','고기/해산물'];
+
+ function stats() {
+ return `<div class="notice" style="margin-top:8px">이번 알바 · 완료 <b>${jobCount}건</b> · 수입 <b>${jobIncome.toLocaleString()}원</b></div>`;
+ }
+
+ function setMode(m) {
+ if (m === 'job') {
+ $('customerLayout').classList.add('hidden');
+ $('jobPanel').classList.remove('hidden');
+ $('customerTab').classList.remove('active');
+ $('workerTab').classList.add('active');
+ clearInterval(jobTimer);
+ jobRunning = false;
+ sessionActive = false;
+ jobCount = 0;
+ jobIncome = 0;
+ jobLeft = 60;
+ jobNew();
+ } else {
+ clearInterval(jobTimer);
+ jobRunning = false;
+ sessionActive = false;
+ $('customerLayout').classList.remove('hidden');
+ $('jobPanel').classList.add('hidden');
+ $('customerTab').classList.add('active');
+ $('workerTab').classList.remove('active');
+ $('money').textContent = money;
+ render();
+ plate();
+ updateEat();
+ }
+ }
+
+ function jobNew() {
+ if (!sessionActive) clearInterval(jobTimer);
+ jobRunning = sessionActive;
+ jobDone = false;
+ jobSelected = [];
+ jobQty = {};
+ order = [...items].sort(() => Math.random() - 0.5).slice(0, 3 + Math.floor(Math.random() * 3));
+ orderLevel = Math.floor(Math.random() * 4);
+
+ $('jobSeconds').textContent = jobLeft + '초';
+ $('jobBar').style.width = ((jobLeft / 60) * 100) + '%';
+ $('jobOrder').innerHTML = '<b>손님 주문</b>' 
++ order.map(x => `<div class="order-ingredient">${art(x[0])}<span>${x[0]}</span><span class="count">필요 1개</span></div>`).join('') 
++ `<b>🌶️ ${spice[orderLevel][0]}</b>` 
++ stats();
+
+ renderJob();
+ $('jobStatus').textContent = sessionActive ? '다음 주문 준비 완료! 바로 선택하세요.' : '주문표를 확인하고 시작하세요.';
+ $('startJob').disabled = sessionActive;
+ $('cookJob').disabled = !sessionActive;
+ }
+
+ function renderJob() {
+ $('jobItems').innerHTML = groups.map(g => `
+ <div class="jobgroup">
+ <h4>${g}</h4>
+ <div class="jobgroup-grid">
+ ${items.map((x, i) => [x, i]).filter(([x]) => x[4] === g).map(([x, i]) => `
+ <button class="jobitem ${jobSelected.includes(i) ? 'sel' : ''}" data-j="${i}">
+ ${art(x[0])}${x[0]}${jobSelected.includes(i) ? `<small> ×${jobQty[i]}</small>` : ''}
+ </button>
+ `).join('')}
+ </div>
+ </div>
+ `).join('');
+
+ $('jobSelected').innerHTML = '<b>선택한 조리 재료</b>' + (jobSelected.length ? jobSelected.map(i => `
+ <div class="selected-row">
+ ${art(items[i][0])}<span>${items[i][0]} × ${jobQty[i]}</span>
+ <button data-remove="${i}">제거</button>
+ </div>
+ `).join('') : '<p>아직 선택한 재료가 없어요.</p>');
+
+ document.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+ if (!jobRunning) return;
+ const i = +b.dataset.j;
+ if (jobSelected.includes(i)) {
+ jobSelected = jobSelected.filter(x => x !== i);
+ delete jobQty[i];
+ } else {
+ jobSelected.push(i);
+ jobQty[i] = 1;
+ }
+ renderJob();
+ });
+
+ document.querySelectorAll('[data-remove]').forEach(b => b.onclick = () => {
+ if (!jobRunning) return;
+ const i = +b.dataset.remove;
+ jobSelected = jobSelected.filter(x => x !== i);
+ delete jobQty[i];
+ renderJob();
+ });
+
+ $('jobSpice').innerHTML = spice.map((x, i) => `
+ <button class="choice ${i === orderLevel ? 'on' : ''}" disabled>${x[0]}</button>
+ `).join('');
+ }
+
+ function timeout() {
+ clearInterval(jobTimer);
+ jobRunning = false;
+ sessionActive = false;
+ $('cookJob').disabled = true;
+ $('startJob').disabled = true;
+ $('jobStatus').innerHTML = '⏰ 시간 초과! 이번 알바가 종료됐어요. ' + stats() 
++ '<button class="ghost" id="retry">재도전</button> <button class="ghost" id="customerAgain">손님 모드</button>';
+ $('retry').onclick = () => setMode('job');
+ $('customerAgain').onclick = () => setMode('customer');
+ }
+
+ function startJob() {
+ if (jobRunning) return;
+ sessionActive = true;
+ jobRunning = true;
+ $('startJob').disabled = true;
+ $('cookJob').disabled = false;
+ $('jobStatus').textContent = '타이머 시작! 60초 타임어택입니다.';
+ jobTimer = setInterval(() => {
+ jobLeft--;
+ $('jobSeconds').textContent = jobLeft + '초';
+ $('jobBar').style.width = ((jobLeft / 60) * 100) + '%';
+ $('jobTimer').style.background = jobLeft <= 10 ? '#ffd7bb' : '#fff0c9';
+ if (jobLeft <= 0) timeout();
+ }, 1000);
+ }
+
+ function cook() {
+ if (!jobRunning || jobDone) return;
+ const ok = jobSelected.length === order.length 
+&& order.every(x => jobSelected.includes(items.indexOf(x))) 
+&& jobSelected.every(i => jobQty[i] === 1);
+
+ if (!ok) {
+ $('jobStatus').textContent = '앗, 주문과 달라요. 필수 재료와 수량을 확인해 주세요!';
+ return;
+ }
+
+ jobDone = true;
+ money += 10000;
+ jobIncome += 10000;
+ jobCount++;
+ localStorage.setItem(STORE_KEY, String(money));
+ $('money').textContent = money;
+ $('cookJob').disabled = true;
+ toast('✅ 제공 성공! 10,000원 적립 · 다음 주문으로 이동합니다');
+
+ setTimeout(() => {
+ if (sessionActive && jobLeft > 0) jobNew();
+ }, 450);
+ }
+
+ $('customerTab').onclick = () => setMode('customer');
+ $('workerTab').onclick = () => setMode('job');
+ $('startJob').onclick = startJob;
+ $('cookJob').onclick = cook;
+ $('newJob').onclick = () => {
+ if (jobRunning) {
+ toast('새 주문으로 교체했어요');
+ jobNew();
+ }
+ };
+})();
+
+// 초기 실행
+window.onload = () => {
+ renderHair();
+ render();
+ plate();
+ updateEat();
+};
+</script>
+</body>
+</html>
