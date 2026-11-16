@@ -473,6 +473,12 @@
       --button-bg: #bbf0d0;
     }
 
+    .house-3d {
+      --card-bg: #f0f4ff;
+      --icon-bg: #dce7fe;
+      --button-bg: #cadcfd;
+    }
+
     footer {
       margin-top: 44px;
       text-align: center;
@@ -608,7 +614,7 @@
         <h2 id="games-heading">오늘은 뭐 하고 놀까? ✨</h2>
         <div class="heading-meta">
           <span class="count" id="liked-count" hidden>❤️ 0</span>
-          <span class="count">10 GAMES</span>
+          <span class="count">11 GAMES</span>
         </div>
       </div>
 
@@ -749,6 +755,20 @@
           <p>망치로 쾅! 시소를 쳐서<br>개구리를 골대에 쏙 날려봐!</p>
           <span class="play">
             날리러 가기
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+
+        <a class="game-card house-3d" data-game-id="3d-house" data-order="11" href="./3d-house/3d-house-v1.html">
+          <div class="card-top-right">
+            <span class="game-number" aria-hidden="true">11</span>
+            <button type="button" class="heart-btn" aria-label="3D House 하트 주기" aria-pressed="false">🤍</button>
+          </div>
+          <span class="game-icon" aria-hidden="true">🏠</span>
+          <h3>3D House</h3>
+          <p>아파트 탐색과 인테리어,<br>24시 마트 장보기까지 3D로!</p>
+          <span class="play">
+            구경하러 가기
             <span aria-hidden="true">→</span>
           </span>
         </a>
