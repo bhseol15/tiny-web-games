@@ -274,6 +274,7 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 20px;
+      align-items: start;
     }
 
     .game-card {
@@ -285,15 +286,105 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      padding: 24px;
       border: 2px solid #ffffff;
-      border-radius: 26px;
       background: var(--card-bg);
       color: inherit;
       text-decoration: none;
       box-shadow: 0 5px 0 var(--card-shadow), 0 10px 24px #67504f08;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
       -webkit-tap-highlight-color: transparent;
+    }
+
+    /* 코드 라인 수 규모에 따른 카드 크기 및 볼륨감 차등화 */
+    /* 1. 소형 (<1,000줄): Class, Pet Cafe, Pets */
+    .game-card.size-sm {
+      padding: 18px 16px;
+      border-radius: 22px;
+      min-height: 250px;
+    }
+    .game-card.size-sm .game-icon {
+      width: 58px;
+      height: 58px;
+      font-size: 32px;
+      border-radius: 18px;
+      margin-bottom: 14px;
+    }
+    .game-card.size-sm h3 {
+      font-size: 19px;
+    }
+    .game-card.size-sm p {
+      font-size: 13px;
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    /* 2. 중형 (1,000 ~ 2,000줄): Icecream, Sushi, Meat */
+    .game-card.size-md {
+      padding: 22px 20px;
+      border-radius: 24px;
+      min-height: 285px;
+    }
+    .game-card.size-md .game-icon {
+      width: 68px;
+      height: 68px;
+      font-size: 38px;
+      border-radius: 22px;
+      margin-bottom: 18px;
+    }
+    .game-card.size-md h3 {
+      font-size: 21px;
+    }
+    .game-card.size-md p {
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* 3. 대형 (2,000 ~ 4,000줄): Claw, Spa, Frog */
+    .game-card.size-lg {
+      padding: 26px 22px;
+      border-radius: 26px;
+      min-height: 320px;
+      box-shadow: 0 6px 0 var(--card-shadow), 0 12px 28px #67504f0c;
+    }
+    .game-card.size-lg .game-icon {
+      width: 78px;
+      height: 78px;
+      font-size: 42px;
+      border-radius: 24px;
+      margin-bottom: 20px;
+    }
+    .game-card.size-lg h3 {
+      font-size: 22px;
+    }
+    .game-card.size-lg p {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* 4. 특대형 (4,000줄 이상): Mala, 3D House */
+    .game-card.size-xl {
+      padding: 30px 24px;
+      border-radius: 28px;
+      min-height: 360px;
+      border-width: 2.5px;
+      box-shadow: 0 8px 0 var(--card-shadow), 0 16px 32px #67504f14;
+    }
+    .game-card.size-xl .game-icon {
+      width: 88px;
+      height: 88px;
+      font-size: 48px;
+      border-radius: 28px;
+      margin-bottom: 22px;
+    }
+    .game-card.size-xl h3 {
+      font-size: 24px;
+    }
+    .game-card.size-xl p {
+      font-size: 14.5px;
+      line-height: 1.65;
+      margin-bottom: 26px;
     }
 
     .game-card.is-liked {
@@ -391,7 +482,8 @@
       letter-spacing: -0.04em;
     }
 
-    .game-version {
+    .game-version,
+    .game-lines {
       display: inline-block;
       vertical-align: middle;
       font-size: 11px;
@@ -401,9 +493,15 @@
       border: 1px solid rgba(0, 0, 0, 0.08);
       padding: 1px 6px;
       border-radius: 999px;
-      margin-left: 6px;
+      margin-left: 4px;
       letter-spacing: 0.02em;
       line-height: 1.3;
+      white-space: nowrap;
+    }
+
+    .game-lines {
+      font-weight: 600;
+      opacity: 0.88;
     }
 
     .game-card p {
@@ -520,6 +618,22 @@
       .page {
         padding-top: 36px;
       }
+
+      .game-card.size-sm { min-height: 220px; padding: 14px 12px; }
+      .game-card.size-sm .game-icon { width: 48px; height: 48px; font-size: 26px; }
+      .game-card.size-sm h3 { font-size: 16px; }
+
+      .game-card.size-md { min-height: 240px; padding: 16px 14px; }
+      .game-card.size-md .game-icon { width: 54px; height: 54px; font-size: 30px; }
+      .game-card.size-md h3 { font-size: 17px; }
+
+      .game-card.size-lg { min-height: 265px; padding: 18px 16px; }
+      .game-card.size-lg .game-icon { width: 62px; height: 62px; font-size: 34px; }
+      .game-card.size-lg h3 { font-size: 18px; }
+
+      .game-card.size-xl { min-height: 290px; padding: 20px 18px; }
+      .game-card.size-xl .game-icon { width: 70px; height: 70px; font-size: 38px; }
+      .game-card.size-xl h3 { font-size: 20px; }
     }
 
     @media (max-width: 420px) {
@@ -568,10 +682,11 @@
         font-size: 19px;
       }
 
-      .game-version {
+      .game-version,
+      .game-lines {
         font-size: 10px;
         padding: 1px 5px;
-        margin-left: 4px;
+        margin-left: 3px;
       }
 
       .game-card p {
@@ -640,13 +755,13 @@
       </div>
 
       <nav class="games" id="games-grid" aria-labelledby="games-heading">
-        <a class="game-card class" data-game-id="class" data-order="1" href="./class/class-v4.html">
+        <a class="game-card size-sm class" data-game-id="class" data-order="1" href="./class/class-v4.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">01</span>
             <button type="button" class="heart-btn" aria-label="Class 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🏫</span>
-          <h3>Class <span class="game-version">v4</span></h3>
+          <h3>Class <span class="game-version">v4</span> <span class="game-lines">599</span></h3>
           <p>오늘도 즐거운<br>우리들의 교실 시간!</p>
           <span class="play">
             놀러 가기
@@ -654,13 +769,13 @@
           </span>
         </a>
 
-        <a class="game-card claw" data-game-id="claw" data-order="2" href="./claw/claw-v7.html">
+        <a class="game-card size-lg claw" data-game-id="claw" data-order="2" href="./claw/claw-v7.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">02</span>
             <button type="button" class="heart-btn" aria-label="Claw 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🧸</span>
-          <h3>Claw <span class="game-version">v7</span></h3>
+          <h3>Claw <span class="game-version">v7</span> <span class="game-lines">2,754</span></h3>
           <p>두근두근!<br>이번엔 꼭 뽑을 수 있을까?</p>
           <span class="play">
             도전하기
@@ -668,13 +783,13 @@
           </span>
         </a>
 
-        <a class="game-card icecream" data-game-id="icecream" data-order="3" href="./icecream/icecream-v1.html">
+        <a class="game-card size-md icecream" data-game-id="icecream" data-order="3" href="./icecream/icecream-v1.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">03</span>
             <button type="button" class="heart-btn" aria-label="Icecream 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🍦</span>
-          <h3>Icecream <span class="game-version">v1</span></h3>
+          <h3>Icecream <span class="game-version">v1</span> <span class="game-lines">1,120</span></h3>
           <p>달콤하고 시원한<br>아이스크림 한 스쿱!</p>
           <span class="play">
             만나러 가기
@@ -682,13 +797,13 @@
           </span>
         </a>
 
-        <a class="game-card pet-cafe" data-game-id="pet-cafe" data-order="4" href="./pet-cafe/pet-cafe-v2.html">
+        <a class="game-card size-sm pet-cafe" data-game-id="pet-cafe" data-order="4" href="./pet-cafe/pet-cafe-v2.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">04</span>
             <button type="button" class="heart-btn" aria-label="Pet Cafe 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🐱</span>
-          <h3>Pet Cafe <span class="game-version">v2</span></h3>
+          <h3>Pet Cafe <span class="game-version">v2</span> <span class="game-lines">666</span></h3>
           <p>귀여운 친구들과<br>포근한 카페에서 만나요.</p>
           <span class="play">
             놀러 가기
@@ -696,13 +811,13 @@
           </span>
         </a>
 
-        <a class="game-card pets" data-game-id="pets" data-order="5" href="./pets/pets-v2.html">
+        <a class="game-card size-sm pets" data-game-id="pets" data-order="5" href="./pets/pets-v2.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">05</span>
             <button type="button" class="heart-btn" aria-label="Pets 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🐶</span>
-          <h3>Pets <span class="game-version">v2</span></h3>
+          <h3>Pets <span class="game-version">v2</span> <span class="game-lines">936</span></h3>
           <p>보기만 해도 행복한<br>나의 작은 동물 친구들!</p>
           <span class="play">
             만나러 가기
@@ -710,13 +825,13 @@
           </span>
         </a>
 
-        <a class="game-card sushi" data-game-id="sushi" data-order="6" href="./sushi/sushi-v10.html">
+        <a class="game-card size-md sushi" data-game-id="sushi" data-order="6" href="./sushi/sushi-v10.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">06</span>
             <button type="button" class="heart-btn" aria-label="Sushi 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🍣</span>
-          <h3>Sushi <span class="game-version">v10</span></h3>
+          <h3>Sushi <span class="game-version">v10</span> <span class="game-lines">1,122</span></h3>
           <p>한 입 가득 행복!<br>맛있는 초밥 시간이야.</p>
           <span class="play">
             놀러 가기
@@ -724,13 +839,13 @@
           </span>
         </a>
 
-        <a class="game-card spa" data-game-id="spa" data-order="7" href="./spa/spa-v11.html">
+        <a class="game-card size-lg spa" data-game-id="spa" data-order="7" href="./spa/spa-v11.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">07</span>
             <button type="button" class="heart-btn" aria-label="Spa 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🧖</span>
-          <h3>Spa <span class="game-version">v11</span></h3>
+          <h3>Spa <span class="game-version">v11</span> <span class="game-lines">2,558</span></h3>
           <p>가족과 함께 찜질방!<br>불가마부터 식혜까지 힐링.</p>
           <span class="play">
             놀러 가기
@@ -738,13 +853,13 @@
           </span>
         </a>
 
-        <a class="game-card mala" data-game-id="mala" data-order="8" href="./mala/mala-v17.html">
+        <a class="game-card size-xl mala" data-game-id="mala" data-order="8" href="./mala/mala-v17.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">08</span>
             <button type="button" class="heart-btn" aria-label="Mala 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🍲</span>
-          <h3>Mala <span class="game-version">v17</span></h3>
+          <h3>Mala <span class="game-version">v17</span> <span class="game-lines">4,429</span></h3>
           <p>취향대로 재료 듬뿍!<br>얼큰하고 맛있는 마라탕.</p>
           <span class="play">
             먹으러 가기
@@ -752,13 +867,13 @@
           </span>
         </a>
 
-        <a class="game-card meat" data-game-id="meat" data-order="9" href="./meat/meat-v10.html">
+        <a class="game-card size-md meat" data-game-id="meat" data-order="9" href="./meat/meat-v10.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">09</span>
             <button type="button" class="heart-btn" aria-label="Meat 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🥩</span>
-          <h3>Meat <span class="game-version">v10</span></h3>
+          <h3>Meat <span class="game-version">v10</span> <span class="game-lines">1,378</span></h3>
           <p>지글지글 노릇노릇!<br>오늘은 내가 고기 굽는 날.</p>
           <span class="play">
             구우러 가기
@@ -766,13 +881,13 @@
           </span>
         </a>
 
-        <a class="game-card frog" data-game-id="frog" data-order="10" href="./frog/frog-v3.html">
+        <a class="game-card size-lg frog" data-game-id="frog" data-order="10" href="./frog/frog-v3.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">10</span>
             <button type="button" class="heart-btn" aria-label="Frog 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🐸</span>
-          <h3>Frog <span class="game-version">v3</span></h3>
+          <h3>Frog <span class="game-version">v3</span> <span class="game-lines">2,500</span></h3>
           <p>망치로 쾅! 시소를 쳐서<br>개구리를 골대에 쏙 날려봐!</p>
           <span class="play">
             날리러 가기
@@ -780,13 +895,13 @@
           </span>
         </a>
 
-        <a class="game-card house-3d" data-game-id="3d-house" data-order="11" href="./3d-house/3d-house-v2.html">
+        <a class="game-card size-xl house-3d" data-game-id="3d-house" data-order="11" href="./3d-house/3d-house-v2.html">
           <div class="card-top-right">
             <span class="game-number" aria-hidden="true">11</span>
             <button type="button" class="heart-btn" aria-label="3D House 하트 주기" aria-pressed="false">🤍</button>
           </div>
           <span class="game-icon" aria-hidden="true">🏠</span>
-          <h3>3D House <span class="game-version">v2</span></h3>
+          <h3>3D House <span class="game-version">v2</span> <span class="game-lines">6,033</span></h3>
           <p>아파트 탐색과 인테리어,<br>24시 마트 장보기까지 3D로!</p>
           <span class="play">
             구경하러 가기
